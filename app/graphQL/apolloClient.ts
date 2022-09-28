@@ -5,4 +5,12 @@ const apolloClient = new ApolloClient({
     cache: new InMemoryCache(),
 });
 
-export { apolloClient };
+const authApolloClient = new ApolloClient({
+    uri: process.env.NEXT_PUBLIC_HYGRAPH_CONTENT_API,
+    cache: new InMemoryCache(),
+    headers: {
+        Authorization: `Bearer ${process.env.HYGRAPH_TOKEN_AUTH}`,
+    },
+});
+
+export { apolloClient, authApolloClient };

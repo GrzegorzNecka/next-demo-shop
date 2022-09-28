@@ -15011,43 +15011,201 @@ export enum _SystemDateTimeFieldVariation {
   Localization = 'localization'
 }
 
-export type GetProductsSlugsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetAccountByEmailQueryVariables = Exact<{
+  email: Scalars['String'];
+}>;
 
 
-export type GetProductsSlugsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'Product', slug: string }> };
+export type GetAccountByEmailQuery = { __typename?: 'Query', account?: { __typename?: 'Account', id: string, email: string, password: string } | null };
+
+export type GetCartIdByAccountIdQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
 
 
-export const GetProductsSlugsDocument = gql`
-    query GetProductsSlugs {
-  products {
-    slug
+export type GetCartIdByAccountIdQuery = { __typename?: 'Query', account?: { __typename?: 'Account', cart?: { __typename?: 'Cart', id: string } | null } | null };
+
+export type GetProductsListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetProductsListQuery = { __typename?: 'Query', products: Array<{ __typename?: 'Product', id: string, slug: string, name: string, price: number, images: Array<{ __typename?: 'Asset', url: string, width?: number | null, height?: number | null, id: string }> }> };
+
+export type CartContentQueryFragment = { __typename?: 'Cart', id: string, cartItems: Array<{ __typename?: 'CartItem', id: string, quantity: number, product?: { __typename?: 'Product', id: string, name: string, price: number, slug: string, images: Array<{ __typename?: 'Asset', url: string }> } | null }> };
+
+export type GetCartItemsByCartIdQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetCartItemsByCartIdQuery = { __typename?: 'Query', cart?: { __typename?: 'Cart', id: string, cartItems: Array<{ __typename?: 'CartItem', id: string, quantity: number, product?: { __typename?: 'Product', id: string, name: string, price: number, slug: string, images: Array<{ __typename?: 'Asset', url: string }> } | null }> } | null };
+
+export const CartContentQueryFragmentDoc = gql`
+    fragment cartContentQuery on Cart {
+  id
+  cartItems {
+    id
+    quantity
+    product {
+      id
+      name
+      price
+      images {
+        url
+      }
+      slug
+    }
+  }
+}
+    `;
+export const GetAccountByEmailDocument = gql`
+    query GetAccountByEmail($email: String!) {
+  account(where: {email: $email}, stage: DRAFT) {
+    id
+    email
+    password
   }
 }
     `;
 
 /**
- * __useGetProductsSlugsQuery__
+ * __useGetAccountByEmailQuery__
  *
- * To run a query within a React component, call `useGetProductsSlugsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetProductsSlugsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetAccountByEmailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAccountByEmailQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetProductsSlugsQuery({
+ * const { data, loading, error } = useGetAccountByEmailQuery({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useGetAccountByEmailQuery(baseOptions: Apollo.QueryHookOptions<GetAccountByEmailQuery, GetAccountByEmailQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAccountByEmailQuery, GetAccountByEmailQueryVariables>(GetAccountByEmailDocument, options);
+      }
+export function useGetAccountByEmailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAccountByEmailQuery, GetAccountByEmailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAccountByEmailQuery, GetAccountByEmailQueryVariables>(GetAccountByEmailDocument, options);
+        }
+export type GetAccountByEmailQueryHookResult = ReturnType<typeof useGetAccountByEmailQuery>;
+export type GetAccountByEmailLazyQueryHookResult = ReturnType<typeof useGetAccountByEmailLazyQuery>;
+export type GetAccountByEmailQueryResult = Apollo.QueryResult<GetAccountByEmailQuery, GetAccountByEmailQueryVariables>;
+export const GetCartIdByAccountIdDocument = gql`
+    query GetCartIdByAccountId($id: ID!) {
+  account(where: {id: $id}) {
+    cart {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCartIdByAccountIdQuery__
+ *
+ * To run a query within a React component, call `useGetCartIdByAccountIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCartIdByAccountIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCartIdByAccountIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetCartIdByAccountIdQuery(baseOptions: Apollo.QueryHookOptions<GetCartIdByAccountIdQuery, GetCartIdByAccountIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCartIdByAccountIdQuery, GetCartIdByAccountIdQueryVariables>(GetCartIdByAccountIdDocument, options);
+      }
+export function useGetCartIdByAccountIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCartIdByAccountIdQuery, GetCartIdByAccountIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCartIdByAccountIdQuery, GetCartIdByAccountIdQueryVariables>(GetCartIdByAccountIdDocument, options);
+        }
+export type GetCartIdByAccountIdQueryHookResult = ReturnType<typeof useGetCartIdByAccountIdQuery>;
+export type GetCartIdByAccountIdLazyQueryHookResult = ReturnType<typeof useGetCartIdByAccountIdLazyQuery>;
+export type GetCartIdByAccountIdQueryResult = Apollo.QueryResult<GetCartIdByAccountIdQuery, GetCartIdByAccountIdQueryVariables>;
+export const GetProductsListDocument = gql`
+    query GetProductsList {
+  products {
+    id
+    slug
+    name
+    price
+    images(first: 1) {
+      url
+      width
+      height
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetProductsListQuery__
+ *
+ * To run a query within a React component, call `useGetProductsListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductsListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProductsListQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetProductsSlugsQuery(baseOptions?: Apollo.QueryHookOptions<GetProductsSlugsQuery, GetProductsSlugsQueryVariables>) {
+export function useGetProductsListQuery(baseOptions?: Apollo.QueryHookOptions<GetProductsListQuery, GetProductsListQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetProductsSlugsQuery, GetProductsSlugsQueryVariables>(GetProductsSlugsDocument, options);
+        return Apollo.useQuery<GetProductsListQuery, GetProductsListQueryVariables>(GetProductsListDocument, options);
       }
-export function useGetProductsSlugsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProductsSlugsQuery, GetProductsSlugsQueryVariables>) {
+export function useGetProductsListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProductsListQuery, GetProductsListQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetProductsSlugsQuery, GetProductsSlugsQueryVariables>(GetProductsSlugsDocument, options);
+          return Apollo.useLazyQuery<GetProductsListQuery, GetProductsListQueryVariables>(GetProductsListDocument, options);
         }
-export type GetProductsSlugsQueryHookResult = ReturnType<typeof useGetProductsSlugsQuery>;
-export type GetProductsSlugsLazyQueryHookResult = ReturnType<typeof useGetProductsSlugsLazyQuery>;
-export type GetProductsSlugsQueryResult = Apollo.QueryResult<GetProductsSlugsQuery, GetProductsSlugsQueryVariables>;
+export type GetProductsListQueryHookResult = ReturnType<typeof useGetProductsListQuery>;
+export type GetProductsListLazyQueryHookResult = ReturnType<typeof useGetProductsListLazyQuery>;
+export type GetProductsListQueryResult = Apollo.QueryResult<GetProductsListQuery, GetProductsListQueryVariables>;
+export const GetCartItemsByCartIdDocument = gql`
+    query GetCartItemsByCartId($id: ID!) {
+  cart(where: {id: $id}) {
+    ...cartContentQuery
+  }
+}
+    ${CartContentQueryFragmentDoc}`;
+
+/**
+ * __useGetCartItemsByCartIdQuery__
+ *
+ * To run a query within a React component, call `useGetCartItemsByCartIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCartItemsByCartIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCartItemsByCartIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetCartItemsByCartIdQuery(baseOptions: Apollo.QueryHookOptions<GetCartItemsByCartIdQuery, GetCartItemsByCartIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCartItemsByCartIdQuery, GetCartItemsByCartIdQueryVariables>(GetCartItemsByCartIdDocument, options);
+      }
+export function useGetCartItemsByCartIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCartItemsByCartIdQuery, GetCartItemsByCartIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCartItemsByCartIdQuery, GetCartItemsByCartIdQueryVariables>(GetCartItemsByCartIdDocument, options);
+        }
+export type GetCartItemsByCartIdQueryHookResult = ReturnType<typeof useGetCartItemsByCartIdQuery>;
+export type GetCartItemsByCartIdLazyQueryHookResult = ReturnType<typeof useGetCartItemsByCartIdLazyQuery>;
+export type GetCartItemsByCartIdQueryResult = Apollo.QueryResult<GetCartItemsByCartIdQuery, GetCartItemsByCartIdQueryVariables>;

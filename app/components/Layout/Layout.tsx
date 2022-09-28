@@ -1,7 +1,7 @@
 import Footer from "components/Layout/Footer/Footer";
 import Header from "components/Layout/Header/Header";
 import Head from "next/head";
-
+import Navigation from "components/Layout/Header/Navigation";
 interface LayoutProps {
     children: React.ReactNode;
 }
@@ -13,7 +13,10 @@ export const Layout = ({ children }: LayoutProps) => {
                 <title>demo sklep</title>
                 <meta name="description" content="opis sklepu"></meta>
             </Head>
-            <Header />
+
+            <Header>
+                <Navigation />
+            </Header>
 
             <div className="flex-grow">{children}</div>
 

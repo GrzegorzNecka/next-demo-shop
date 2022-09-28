@@ -1,1 +1,0 @@
-# next-demo-shop

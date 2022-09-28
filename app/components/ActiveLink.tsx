@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
-import React, { Children } from "react";
+import React, { Children, memo } from "react";
 import type { AppProps } from "next/app";
 
 interface ActiveLinkProps {
@@ -71,5 +71,7 @@ function ActiveRouteLink({ children, href, style }: ActiveRouteLinkProps) {
         </a>
     );
 }
+
+// const MemoizedActiveLink = memo(ActiveLink);
 
 export { ActiveLink, ActiveRouteLink };

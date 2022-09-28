@@ -1,5 +1,53 @@
-query GetProductsSlugs {
+query GetAccountByEmail($email: String!) {
+    account(where: { email: $email }, stage: DRAFT) {
+        id
+        email
+        password
+    }
+}
+
+query GetCartIdByAccountId($id: ID!) {
+    account(where: { id: $id }) {
+        cart {
+            id
+        }
+    }
+}
+
+query GetProductsList {
     products {
+        id
         slug
+        name
+        price
+        images(first: 1) {
+            url
+            width
+            height
+            id
+        }
+    }
+}
+
+fragment cartContentQuery on Cart {
+    id
+    cartItems {
+        id
+        quantity
+        product {
+            id
+            name
+            price
+            images {
+                url
+            }
+            slug
+        }
+    }
+}
+
+query GetCartItemsByCartId($id: ID!) {
+    cart(where: { id: $id }) {
+        ...cartContentQuery
     }
 }

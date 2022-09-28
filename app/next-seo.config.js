@@ -1,5 +1,5 @@
-const title = "nasz sklep zaiste";
-const description = "nasz sklep zaiste";
+const title = "sklep demo";
+const description = "sklep demo";
 
 const SEO = {
     title,
@@ -8,7 +8,7 @@ const SEO = {
     openGraph: {
         title,
         description,
-        site_name: "nasz sklep",
+        site_name: "sklep demo",
     },
     twitter: {
         handle: "@handle",
