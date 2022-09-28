@@ -7,6 +7,8 @@
 -   npm: 8.11.0
 -   yarn: 1.22.17
 
-# tips
+# tips and ads
 
 -   sipmle browser
+-   better graphQl package -> [urql](https://formidable.com/open-source/urql/)
+-   graphql-code-generator -> [link](https://www.the-guild.dev/graphql/codegen)
