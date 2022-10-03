@@ -6,10 +6,13 @@ import { Main } from "components/Main";
 import { useState } from "react";
 import { apolloClient } from "graphQL/apolloClient";
 import { GetProductsListDocument, GetProductsListQuery } from "graphQL/generated/graphql";
+import ProductList from "components/Products/ProductList/ProductList";
+import { changeToCurrency, moveTheComa } from "utils/currency";
+import { ProductListItem } from "components/Products/ProductList/ProductListItem";
 
-const ProductListIdPage = ({ data }: InferGetStaticPropsType<typeof getStaticProps>) => {
-    // const [targetButton, setTargetButton] = useState<string | null>(null);
+type ProductListIdPageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
+const ProductListIdPage = ({ data }: ProductListIdPageProps) => {
     if (!data) {
         return <div>nie znaleziono strony</div>;
     }
@@ -17,14 +20,23 @@ const ProductListIdPage = ({ data }: InferGetStaticPropsType<typeof getStaticPro
     return (
         <Main>
             <div className="relative p-16">
-                <ul className="relative  bg-white w-full mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8 ">
+                <ProductList>
                     {data.map((product) => (
                         <li key={product.slug} className={`className="group relative" ${product.slug}`}>
-                            <p>nazwa: {product.name}</p>
-                            <p>cena:{product.price}</p>
+                            <ProductListItem
+                                data={{
+                                    id: product.id,
+                                    slug: product.slug,
+                                    title: product.name,
+                                    thumbnailUrl: product.images[0].url,
+                                    thumbnailAlt: product.images[0].id,
+                                    price: product.price,
+                                    priceWithCurrency: changeToCurrency(moveTheComa(product.price)),
+                                }}
+                            />
                         </li>
                     ))}
-                </ul>
+                </ProductList>
             </div>
         </Main>
     );

@@ -16,17 +16,17 @@ export interface CartState {
 //--------- API --------------
 
 export interface Token {
-    token: string;
+    readonly token: string;
 }
 
 export interface ResponseCartItems {
-    status: string;
-    cartItems?: CartItem[];
-    error?: string;
-    message?: string;
+    readonly status: string;
+    readonly cartItems?: CartItem[];
+    readonly error?: string;
+    readonly message?: string;
 }
 
 export interface State {
-    token: string;
-    cartItems: CartItem[];
+    readonly token: string;
+    readonly cartItems: CartItem[];
 }

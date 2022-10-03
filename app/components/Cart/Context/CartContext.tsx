@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import { CartItem, CartState } from "components/Cart/types";
 import { useContext } from "react";
 import { useSession } from "next-auth/react";
@@ -9,58 +9,51 @@ export const CartStateContext = createContext<CartState | null>(null);
 // ----------------- Provider
 export const CartStateContextProvider = ({ children }: { children: React.ReactNode }) => {
     console.log("-----render context-----------");
-    // const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-    // const session = useSession();
-    // const isCartId = Boolean(session.data?.user?.cartId);
+    const session = useSession();
+    const [cartItems, setCartItems] = useState<CartItem[] | undefined>(undefined);
 
-    // const { data, refetch } = useGetCartItemsByCartIdQuery({
-    //     skip: !isCartId,
-    //     variables: {
-    //         id: session.data?.user?.cartId!,
-    //         // id: "cl7q56m7a1eqp0ateldaehrcs",
-    //     },
-    // });
+    const { data } = useGetCartItemsByCartIdQuery({
+        variables: {
+            id: session.data?.user?.cartId!,
+            // id: "cl7q56m7a1eqp0ateldaehrcs",
+        },
+    });
 
-    // useEffect(() => {
-    //     if (session.status !== "authenticated" || !data || !data.cart) {
-    //         return;
-    //     }
+    useEffect(() => {
+        if (session.status !== "authenticated" || !data || !data.cart) {
+            return;
+        }
 
-    //     console.log(data);
+        const initialCartItems = data.cart.cartItems.map((item) => {
+            return {
+                id: item.product!.id,
+                price: item.product!.price,
+                title: item.product!.name,
+                count: item.quantity,
+                imgUrl: item.product!.images[0].url,
+                slug: item.product!.slug,
+            };
+        });
 
-    //     const initialCartItems = data.cart.cartItems.map((item) => {
-    //         return {
-    //             id: item.product!.id,
-    //             price: item.product!.price,
-    //             title: item.product!.name,
-    //             count: item.quantity,
-    //             imgUrl: item.product!.images[0].url,
-    //             slug: item.product!.slug,
-    //         };
-    //     });
+        setCartItems(initialCartItems);
+    }, [session.status, data]);
 
-    //     setCartItems(initialCartItems);
-    // }, [data, session]);
+    // ------
 
-    // const handleAddItemToCart = (item: CartItem) => {
-    //     console.log(item);
-    //     refetch();
-    // };
+    const handleAddItemToCart = (item: CartItem) => {
+        console.log(item);
+    };
 
-    return (
-        <CartStateContext.Provider
-            value={{
-                items: [],
-                total: 0,
-                addItemToCart: (item) => {
-                    // handleAddItemToCart(item);
-                },
-            }}
-        >
-            {children}
-        </CartStateContext.Provider>
-    );
+    const initialCartState: CartState = {
+        items: cartItems || [],
+        total: 0,
+        addItemToCart: (item) => {
+            handleAddItemToCart(item);
+        },
+    };
+
+    return <CartStateContext.Provider value={initialCartState}>{children}</CartStateContext.Provider>;
 };
 
 // ----------------- Client
@@ -70,6 +63,10 @@ export const useCartState = () => {
 
     const itemsLength = cartState?.items.map((obj) => obj.count);
     const total = itemsLength?.reduce((prev, current) => prev + current, 0);
+
+    if (!cartState) {
+        throw new Error("you forgot CartStateContextProvider");
+    }
 
     return { ...cartState, total };
 };
