@@ -11,6 +11,7 @@ export interface CartState {
     readonly items: readonly CartItem[];
     readonly addItemToCart: (item: CartItem) => void;
     readonly total: number;
+    readonly isLoading: boolean;
 }
 
 //--------- API --------------

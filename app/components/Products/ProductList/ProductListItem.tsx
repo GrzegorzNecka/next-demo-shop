@@ -2,12 +2,22 @@
 import { useCartState } from "components/Cart/Context/CartContext";
 import Image from "next/image";
 import Link from "next/link";
+import React from "react";
+import { Dispatch, SetStateAction } from "react";
 import { ProductListItems } from "../types";
 
-export const ProductListItem = ({ data }: { data: ProductListItems }) => {
+interface ProductListItemProps {
+    data: ProductListItems;
+    targetButton: string | null;
+    setTargetButton: Dispatch<SetStateAction<string | null>>;
+}
+
+const ProductListItem = ({ data, targetButton, setTargetButton }: ProductListItemProps) => {
     const cartState = useCartState();
 
     const handleOnClick = () => {
+        setTargetButton(data.title);
+
         const newItem = {
             id: data.id,
             price: data.price,
@@ -51,10 +61,26 @@ export const ProductListItem = ({ data }: { data: ProductListItems }) => {
                 <p className="text-sm font-medium text-gray-900">{data.priceWithCurrency}</p>
             </div>
             <div className="pt-4">
-                <button className={`text-sm text-blackfont-semibold btn-custom-primary`} onClick={handleOnClick}>
-                    dodaj do koszyka
-                </button>
+                {cartState.isLoading && targetButton === data.title ? (
+                    <div className="flex mb-8">
+                        <button disabled className={`mb-0 w-3/4 text-blackfont-semibold btn-custom-primary`}>
+                            dodawanie
+                        </button>
+                    </div>
+                ) : (
+                    <div className="flex mb-8">
+                        <button
+                            className={` mb-0 w-3/4 text-blackfont-semibold btn-custom-primary`}
+                            onClick={handleOnClick}
+                        >
+                            dodaj do koszyka
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
 };
+
+const MemoizedProductListItem = React.memo(ProductListItem);
+export default MemoizedProductListItem;

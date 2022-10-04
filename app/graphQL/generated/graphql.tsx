@@ -15140,7 +15140,7 @@ export type GetProductsListLazyQueryHookResult = ReturnType<typeof useGetProduct
 export type GetProductsListQueryResult = Apollo.QueryResult<GetProductsListQuery, GetProductsListQueryVariables>;
 export const GetCartItemsByCartIdDocument = gql`
     query GetCartItemsByCartId($id: ID!) {
-  cart(where: {id: $id}) {
+  cart(where: {id: $id}, stage: DRAFT) {
     ...cartContentQuery
   }
 }

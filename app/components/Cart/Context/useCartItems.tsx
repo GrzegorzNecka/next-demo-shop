@@ -8,12 +8,16 @@ export const useCartItems = () => {
     const cartId = session.data?.user?.cartId!; //"cl7q56m7a1eqp0ateldaehrcs"
 
     const [cartItems, setCartItems] = useState<CartItem[] | undefined>(undefined);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // APOLLO
     const { data } = useGetCartItemsByCartIdQuery({
         skip: !Boolean(cartId),
         variables: {
             id: cartId,
+        },
+        onCompleted: () => {
+            setIsLoading(false);
         },
     });
 
@@ -44,6 +48,9 @@ export const useCartItems = () => {
         if (!cartId) {
             return;
         }
+
+        setIsLoading(true);
+
         const productId = product.id;
 
         addItemToCartByCartIdMutation({
@@ -56,5 +63,5 @@ export const useCartItems = () => {
 
     const removeItems = (id: CartItem["id"]) => {};
 
-    return [cartItems, handleAddItemToCart, removeItems] as const;
+    return [cartItems, isLoading, handleAddItemToCart, removeItems] as const;
 };

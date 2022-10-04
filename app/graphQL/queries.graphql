@@ -47,7 +47,7 @@ fragment cartContentQuery on Cart {
 }
 
 query GetCartItemsByCartId($id: ID!) {
-    cart(where: { id: $id }) {
+    cart(where: { id: $id }, stage: DRAFT) {
         ...cartContentQuery
     }
 }
