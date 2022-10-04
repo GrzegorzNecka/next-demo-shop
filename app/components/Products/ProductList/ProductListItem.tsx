@@ -32,6 +32,7 @@ export const ProductListItem = ({ data }: { data: ProductListItems }) => {
                     height={3}
                     objectFit="contain"
                     objectPosition="center"
+                    priority
                 />
             </div>
 
@@ -50,7 +51,7 @@ export const ProductListItem = ({ data }: { data: ProductListItems }) => {
                 <p className="text-sm font-medium text-gray-900">{data.priceWithCurrency}</p>
             </div>
             <div className="pt-4">
-                <button className={` mb-0 w-3/4 text-blackfont-semibold btn-custom-primary`} onClick={handleOnClick}>
+                <button className={`text-sm text-blackfont-semibold btn-custom-primary`} onClick={handleOnClick}>
                     dodaj do koszyka
                 </button>
             </div>

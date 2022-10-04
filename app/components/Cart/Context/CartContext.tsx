@@ -1,8 +1,7 @@
-import { createContext, useEffect, useRef, useState } from "react";
-import { CartItem, CartState } from "components/Cart/types";
+import { createContext } from "react";
 import { useContext } from "react";
-import { useSession } from "next-auth/react";
-import { useGetCartItemsByCartIdQuery } from "graphQL/generated/graphql";
+import { CartState } from "../types";
+import { useCartItems } from "./useCartItems";
 
 export const CartStateContext = createContext<CartState | null>(null);
 
@@ -10,40 +9,7 @@ export const CartStateContext = createContext<CartState | null>(null);
 export const CartStateContextProvider = ({ children }: { children: React.ReactNode }) => {
     console.log("-----render context-----------");
 
-    const session = useSession();
-    const [cartItems, setCartItems] = useState<CartItem[] | undefined>(undefined);
-
-    const { data } = useGetCartItemsByCartIdQuery({
-        variables: {
-            id: session.data?.user?.cartId!,
-            // id: "cl7q56m7a1eqp0ateldaehrcs",
-        },
-    });
-
-    useEffect(() => {
-        if (session.status !== "authenticated" || !data || !data.cart) {
-            return;
-        }
-
-        const initialCartItems = data.cart.cartItems.map((item) => {
-            return {
-                id: item.product!.id,
-                price: item.product!.price,
-                title: item.product!.name,
-                count: item.quantity,
-                imgUrl: item.product!.images[0].url,
-                slug: item.product!.slug,
-            };
-        });
-
-        setCartItems(initialCartItems);
-    }, [session.status, data]);
-
-    // ------
-
-    const handleAddItemToCart = (item: CartItem) => {
-        console.log(item);
-    };
+    const [cartItems, handleAddItemToCart] = useCartItems();
 
     const initialCartState: CartState = {
         items: cartItems || [],
@@ -65,7 +31,7 @@ export const useCartState = () => {
     const total = itemsLength?.reduce((prev, current) => prev + current, 0);
 
     if (!cartState) {
-        throw new Error("you forgot CartStateContextProvider");
+        throw new Error("you forgot CartStateContext.Provider");
     }
 
     return { ...cartState, total };

@@ -1879,7 +1879,6 @@ export type CartItem = Node & {
   publishedBy?: Maybe<User>;
   quantity: Scalars['Int'];
   scheduledIn: Array<ScheduledOperation>;
-  sign: Scalars['String'];
   /** System stage field */
   stage: Stage;
   /** The time the document was updated */
@@ -1960,7 +1959,6 @@ export type CartItemCreateInput = {
   createdAt?: InputMaybe<Scalars['DateTime']>;
   product?: InputMaybe<ProductCreateOneInlineInput>;
   quantity: Scalars['Int'];
-  sign: Scalars['String'];
   updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
@@ -2071,25 +2069,6 @@ export type CartItemManyWhereInput = {
   scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
   scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
   scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
-  sign?: InputMaybe<Scalars['String']>;
-  /** All values containing the given string. */
-  sign_contains?: InputMaybe<Scalars['String']>;
-  /** All values ending with the given string. */
-  sign_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are contained in given list. */
-  sign_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  /** All values that are not equal to given value. */
-  sign_not?: InputMaybe<Scalars['String']>;
-  /** All values not containing the given string. */
-  sign_not_contains?: InputMaybe<Scalars['String']>;
-  /** All values not ending with the given string */
-  sign_not_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are not contained in given list. */
-  sign_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  /** All values not starting with the given string. */
-  sign_not_starts_with?: InputMaybe<Scalars['String']>;
-  /** All values starting with the given string. */
-  sign_starts_with?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -2117,8 +2096,6 @@ export enum CartItemOrderByInput {
   PublishedAtDesc = 'publishedAt_DESC',
   QuantityAsc = 'quantity_ASC',
   QuantityDesc = 'quantity_DESC',
-  SignAsc = 'sign_ASC',
-  SignDesc = 'sign_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC'
 }
@@ -2127,7 +2104,6 @@ export type CartItemUpdateInput = {
   cart?: InputMaybe<CartUpdateOneInlineInput>;
   product?: InputMaybe<ProductUpdateOneInlineInput>;
   quantity?: InputMaybe<Scalars['Int']>;
-  sign?: InputMaybe<Scalars['String']>;
 };
 
 export type CartItemUpdateManyInlineInput = {
@@ -2149,7 +2125,6 @@ export type CartItemUpdateManyInlineInput = {
 
 export type CartItemUpdateManyInput = {
   quantity?: InputMaybe<Scalars['Int']>;
-  sign?: InputMaybe<Scalars['String']>;
 };
 
 export type CartItemUpdateManyWithNestedWhereInput = {
@@ -2285,25 +2260,6 @@ export type CartItemWhereInput = {
   scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
   scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
   scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
-  sign?: InputMaybe<Scalars['String']>;
-  /** All values containing the given string. */
-  sign_contains?: InputMaybe<Scalars['String']>;
-  /** All values ending with the given string. */
-  sign_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are contained in given list. */
-  sign_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  /** All values that are not equal to given value. */
-  sign_not?: InputMaybe<Scalars['String']>;
-  /** All values not containing the given string. */
-  sign_not_contains?: InputMaybe<Scalars['String']>;
-  /** All values not ending with the given string */
-  sign_not_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are not contained in given list. */
-  sign_not_in?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  /** All values not starting with the given string. */
-  sign_not_starts_with?: InputMaybe<Scalars['String']>;
-  /** All values starting with the given string. */
-  sign_starts_with?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -15039,6 +14995,14 @@ export type GetCartItemsByCartIdQueryVariables = Exact<{
 
 export type GetCartItemsByCartIdQuery = { __typename?: 'Query', cart?: { __typename?: 'Cart', id: string, cartItems: Array<{ __typename?: 'CartItem', id: string, quantity: number, product?: { __typename?: 'Product', id: string, name: string, price: number, slug: string, images: Array<{ __typename?: 'Asset', url: string }> } | null }> } | null };
 
+export type AddItemToCartByCartIdMutationVariables = Exact<{
+  cartId: Scalars['ID'];
+  productId: Scalars['ID'];
+}>;
+
+
+export type AddItemToCartByCartIdMutation = { __typename?: 'Mutation', updateCart?: { __typename?: 'Cart', id: string, cartItems: Array<{ __typename?: 'CartItem', id: string, quantity: number, product?: { __typename?: 'Product', id: string, name: string, price: number, slug: string, images: Array<{ __typename?: 'Asset', url: string }> } | null }> } | null };
+
 export const CartContentQueryFragmentDoc = gql`
     fragment cartContentQuery on Cart {
   id
@@ -15209,3 +15173,40 @@ export function useGetCartItemsByCartIdLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetCartItemsByCartIdQueryHookResult = ReturnType<typeof useGetCartItemsByCartIdQuery>;
 export type GetCartItemsByCartIdLazyQueryHookResult = ReturnType<typeof useGetCartItemsByCartIdLazyQuery>;
 export type GetCartItemsByCartIdQueryResult = Apollo.QueryResult<GetCartItemsByCartIdQuery, GetCartItemsByCartIdQueryVariables>;
+export const AddItemToCartByCartIdDocument = gql`
+    mutation AddItemToCartByCartId($cartId: ID!, $productId: ID!) {
+  updateCart(
+    where: {id: $cartId}
+    data: {cartItems: {create: {quantity: 1, product: {connect: {id: $productId}}}}}
+  ) {
+    ...cartContentQuery
+  }
+}
+    ${CartContentQueryFragmentDoc}`;
+export type AddItemToCartByCartIdMutationFn = Apollo.MutationFunction<AddItemToCartByCartIdMutation, AddItemToCartByCartIdMutationVariables>;
+
+/**
+ * __useAddItemToCartByCartIdMutation__
+ *
+ * To run a mutation, you first call `useAddItemToCartByCartIdMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddItemToCartByCartIdMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addItemToCartByCartIdMutation, { data, loading, error }] = useAddItemToCartByCartIdMutation({
+ *   variables: {
+ *      cartId: // value for 'cartId'
+ *      productId: // value for 'productId'
+ *   },
+ * });
+ */
+export function useAddItemToCartByCartIdMutation(baseOptions?: Apollo.MutationHookOptions<AddItemToCartByCartIdMutation, AddItemToCartByCartIdMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddItemToCartByCartIdMutation, AddItemToCartByCartIdMutationVariables>(AddItemToCartByCartIdDocument, options);
+      }
+export type AddItemToCartByCartIdMutationHookResult = ReturnType<typeof useAddItemToCartByCartIdMutation>;
+export type AddItemToCartByCartIdMutationResult = Apollo.MutationResult<AddItemToCartByCartIdMutation>;
+export type AddItemToCartByCartIdMutationOptions = Apollo.BaseMutationOptions<AddItemToCartByCartIdMutation, AddItemToCartByCartIdMutationVariables>;

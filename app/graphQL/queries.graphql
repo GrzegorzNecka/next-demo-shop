@@ -51,3 +51,12 @@ query GetCartItemsByCartId($id: ID!) {
         ...cartContentQuery
     }
 }
+
+mutation AddItemToCartByCartId($cartId: ID!, $productId: ID!) {
+    updateCart(
+        where: { id: $cartId }
+        data: { cartItems: { create: { quantity: 1, product: { connect: { id: $productId } } } } }
+    ) {
+        ...cartContentQuery
+    }
+}

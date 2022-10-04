@@ -11,7 +11,7 @@
     }
 
     .btn-custom-primary {
-        @apply mb-8 bg-transparent hover:bg-black hover:text-white py-2 px-4 border-2 border-black hover:border-transparent rounded;
+        @apply mb-8 bg-transparent hover:bg-black hover:text-white py-1 px-2 border-2 border-black hover:border-transparent;
     }
 }
 
