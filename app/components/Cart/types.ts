@@ -2,7 +2,7 @@ export interface CartItem {
     readonly id: string;
     readonly price: number;
     readonly title: string;
-    readonly count: number;
+    readonly quantity: number;
     readonly imgUrl: string;
     readonly slug: string;
 }

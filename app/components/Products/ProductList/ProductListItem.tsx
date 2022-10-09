@@ -19,16 +19,16 @@ const ProductListItem = ({ data, targetButton, setTargetButton }: ProductListIte
         setTargetButton(data.title);
         console.log("🚀 ~ file: ProductListItem.tsx ~ line 20 ~ handleOnClick ~ data", data);
 
-        const newItem = {
+        const newCartItem = {
             id: data.id,
             price: data.price,
             title: data.title,
-            count: 1,
+            quantity: 1,
             imgUrl: data.thumbnailUrl,
             slug: data.slug,
         };
 
-        cartState.addItemToCart(newItem);
+        cartState.addItemToCart(newCartItem);
     };
 
     return (

@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { useCartState } from "./Context/CartContext";
 
-//  import { ShoppingBagIcon } from "@heroicons/react/outline";
+import { ShoppingBagIcon } from "@heroicons/react/24/outline";
+
 export default function CartBar() {
     const cartState = useCartState();
 
@@ -12,7 +13,7 @@ export default function CartBar() {
                     <div className=" flex">
                         <span> {cartState.total}</span>
 
-                        {/* <ShoppingBagIcon className="h-6 w-6" /> */}
+                        <ShoppingBagIcon className="h-6 w-6" />
                     </div>
                 </a>
             </Link>

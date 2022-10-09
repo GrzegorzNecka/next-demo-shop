@@ -33,13 +33,15 @@ export const useCartItems = () => {
             return;
         }
 
+        //! a może lepiej jak to będzie relacja w dwie strony wtedy w ramcha jednego cart items mogędodawać elementy do [] ...
+
         const initialCartItems = data.cart.cartItems.map((item) => {
             console.log("ditem?.product?.id", item?.id);
             return {
                 id: item?.product?.id!, //! czy item.id
                 price: item?.product?.price!,
                 title: item?.product?.name!, // todo title zmień na name
-                count: item.quantity!, //todo zmień na quantity
+                quantity: item.quantity!,
                 imgUrl: item.product?.images.at(0)?.url!,
                 slug: item.product?.slug!,
             };
