@@ -4344,9 +4344,9 @@ export type ImageTransformationInput = {
 
 /** Locale system enumeration */
 export enum Locale {
-  De = 'de',
   /** System locale */
-  En = 'en'
+  En = 'en',
+  Pl = 'pl'
 }
 
 /** Representing a geolocation point with latitude and longitude */
@@ -9071,7 +9071,6 @@ export type PersongenderUnionWhereUniqueInput = {
 export type Product = Node & {
   __typename?: 'Product';
   categories: Array<Category>;
-  checkoutItemTests: Array<CartItem>;
   collections: Array<Collection>;
   /** The time the document was created */
   createdAt: Scalars['DateTime'];
@@ -9118,18 +9117,6 @@ export type ProductCategoriesArgs = {
   orderBy?: InputMaybe<CategoryOrderByInput>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<CategoryWhereInput>;
-};
-
-
-export type ProductCheckoutItemTestsArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: InputMaybe<Array<Locale>>;
-  orderBy?: InputMaybe<CartItemOrderByInput>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<CartItemWhereInput>;
 };
 
 
@@ -9803,7 +9790,7 @@ export type ProductConnection = {
 
 export type ProductCreateInput = {
   categories?: InputMaybe<CategoryCreateManyInlineInput>;
-  checkoutItemTests?: InputMaybe<CartItemCreateManyInlineInput>;
+  cl919bo8i1z1t01t60h9ver9l?: InputMaybe<CartItemCreateManyInlineInput>;
   collections?: InputMaybe<CollectionCreateManyInlineInput>;
   createdAt?: InputMaybe<Scalars['DateTime']>;
   /** description input for default locale (en) */
@@ -9877,9 +9864,6 @@ export type ProductManyWhereInput = {
   categories_every?: InputMaybe<CategoryWhereInput>;
   categories_none?: InputMaybe<CategoryWhereInput>;
   categories_some?: InputMaybe<CategoryWhereInput>;
-  checkoutItemTests_every?: InputMaybe<CartItemWhereInput>;
-  checkoutItemTests_none?: InputMaybe<CartItemWhereInput>;
-  checkoutItemTests_some?: InputMaybe<CartItemWhereInput>;
   collections_every?: InputMaybe<CollectionWhereInput>;
   collections_none?: InputMaybe<CollectionWhereInput>;
   collections_some?: InputMaybe<CollectionWhereInput>;
@@ -11089,7 +11073,7 @@ export type ProductSizeVariantWhereUniqueInput = {
 
 export type ProductUpdateInput = {
   categories?: InputMaybe<CategoryUpdateManyInlineInput>;
-  checkoutItemTests?: InputMaybe<CartItemUpdateManyInlineInput>;
+  cl919bo8i1z1t01t60h9ver9l?: InputMaybe<CartItemUpdateManyInlineInput>;
   collections?: InputMaybe<CollectionUpdateManyInlineInput>;
   /** description input for default locale (en) */
   description?: InputMaybe<Scalars['String']>;
@@ -11332,9 +11316,6 @@ export type ProductWhereInput = {
   categories_every?: InputMaybe<CategoryWhereInput>;
   categories_none?: InputMaybe<CategoryWhereInput>;
   categories_some?: InputMaybe<CategoryWhereInput>;
-  checkoutItemTests_every?: InputMaybe<CartItemWhereInput>;
-  checkoutItemTests_none?: InputMaybe<CartItemWhereInput>;
-  checkoutItemTests_some?: InputMaybe<CartItemWhereInput>;
   collections_every?: InputMaybe<CollectionWhereInput>;
   collections_none?: InputMaybe<CollectionWhereInput>;
   collections_some?: InputMaybe<CollectionWhereInput>;

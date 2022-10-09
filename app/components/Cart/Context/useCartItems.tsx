@@ -21,6 +21,11 @@ export const useCartItems = () => {
         },
     });
 
+    // todo - po tej mutacji aktualizuje się model "Product" - tak nie powinno być
+    // todo - stwórz najpierw pusty cart itme i za pomocą connect połacz się
+    // albo stórz pusty cart item z wykorzystaniem cart id oraz quantity a pote
+    // przypisz go do cart oraz product
+
     const [addItemToCartByCartIdMutation] = useAddItemToCartByCartIdMutation({});
 
     useEffect(() => {
@@ -29,13 +34,14 @@ export const useCartItems = () => {
         }
 
         const initialCartItems = data.cart.cartItems.map((item) => {
+            console.log("ditem?.product?.id", item?.id);
             return {
-                id: item.product!.id,
-                price: item.product!.price,
-                title: item.product!.name,
-                count: item.quantity,
-                imgUrl: item.product!.images[0].url,
-                slug: item.product!.slug,
+                id: item?.product?.id!, //! czy item.id
+                price: item?.product?.price!,
+                title: item?.product?.name!, // todo title zmień na name
+                count: item.quantity!, //todo zmień na quantity
+                imgUrl: item.product?.images.at(0)?.url!,
+                slug: item.product?.slug!,
             };
         });
 

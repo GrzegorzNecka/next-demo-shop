@@ -17,6 +17,7 @@ const ProductListItem = ({ data, targetButton, setTargetButton }: ProductListIte
 
     const handleOnClick = () => {
         setTargetButton(data.title);
+        console.log("🚀 ~ file: ProductListItem.tsx ~ line 20 ~ handleOnClick ~ data", data);
 
         const newItem = {
             id: data.id,
@@ -83,4 +84,5 @@ const ProductListItem = ({ data, targetButton, setTargetButton }: ProductListIte
 };
 
 const MemoizedProductListItem = React.memo(ProductListItem);
+
 export default MemoizedProductListItem;

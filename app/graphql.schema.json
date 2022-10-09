@@ -2735,7 +2735,7 @@
                     }
                   }
                 },
-                "defaultValue": "[en, de]",
+                "defaultValue": "[pl, en]",
                 "isDeprecated": false,
                 "deprecationReason": null
               }
@@ -7499,7 +7499,7 @@
                     }
                   }
                 },
-                "defaultValue": "[en, de]",
+                "defaultValue": "[pl, en]",
                 "isDeprecated": false,
                 "deprecationReason": null
               }
@@ -18256,7 +18256,7 @@
                     }
                   }
                 },
-                "defaultValue": "[en, de]",
+                "defaultValue": "[pl, en]",
                 "isDeprecated": false,
                 "deprecationReason": null
               }
@@ -22314,7 +22314,7 @@
                     }
                   }
                 },
-                "defaultValue": "[en, de]",
+                "defaultValue": "[pl, en]",
                 "isDeprecated": false,
                 "deprecationReason": null
               }
@@ -29979,14 +29979,14 @@
         "interfaces": null,
         "enumValues": [
           {
-            "name": "de",
-            "description": null,
+            "name": "en",
+            "description": "System locale",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "en",
-            "description": "System locale",
+            "name": "pl",
+            "description": null,
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -62615,135 +62615,6 @@
             "deprecationReason": null
           },
           {
-            "name": "checkoutItemTests",
-            "description": null,
-            "args": [
-              {
-                "name": "after",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "before",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "first",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "last",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "locales",
-                "description": "Allows to optionally override locale filtering behaviour in the query's subtree.\n\nNote that `checkoutItemTests` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.\nFor related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.\n\nThis argument will overwrite any existing locale filtering defined in the query's tree for the subtree.",
-                "type": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "ENUM",
-                      "name": "Locale",
-                      "ofType": null
-                    }
-                  }
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "orderBy",
-                "description": null,
-                "type": {
-                  "kind": "ENUM",
-                  "name": "CartItemOrderByInput",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "skip",
-                "description": null,
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              },
-              {
-                "name": "where",
-                "description": null,
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "CartItemWhereInput",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "CartItem",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "collections",
             "description": null,
             "args": [
@@ -63305,7 +63176,7 @@
                     }
                   }
                 },
-                "defaultValue": "[en, de]",
+                "defaultValue": "[pl, en]",
                 "isDeprecated": false,
                 "deprecationReason": null
               }
@@ -64352,7 +64223,7 @@
                     }
                   }
                 },
-                "defaultValue": "[en, de]",
+                "defaultValue": "[pl, en]",
                 "isDeprecated": false,
                 "deprecationReason": null
               }
@@ -67850,7 +67721,7 @@
             "deprecationReason": null
           },
           {
-            "name": "checkoutItemTests",
+            "name": "cl919bo8i1z1t01t60h9ver9l",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
@@ -68420,42 +68291,6 @@
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "CategoryWhereInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "checkoutItemTests_every",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "CartItemWhereInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "checkoutItemTests_none",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "CartItemWhereInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "checkoutItemTests_some",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "CartItemWhereInput",
               "ofType": null
             },
             "defaultValue": null,
@@ -69744,7 +69579,7 @@
                     }
                   }
                 },
-                "defaultValue": "[en, de]",
+                "defaultValue": "[pl, en]",
                 "isDeprecated": false,
                 "deprecationReason": null
               }
@@ -73590,7 +73425,7 @@
                     }
                   }
                 },
-                "defaultValue": "[en, de]",
+                "defaultValue": "[pl, en]",
                 "isDeprecated": false,
                 "deprecationReason": null
               }
@@ -76998,7 +76833,7 @@
             "deprecationReason": null
           },
           {
-            "name": "checkoutItemTests",
+            "name": "cl919bo8i1z1t01t60h9ver9l",
             "description": null,
             "type": {
               "kind": "INPUT_OBJECT",
@@ -78789,42 +78624,6 @@
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "CategoryWhereInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "checkoutItemTests_every",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "CartItemWhereInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "checkoutItemTests_none",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "CartItemWhereInput",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "checkoutItemTests_some",
-            "description": null,
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "CartItemWhereInput",
               "ofType": null
             },
             "defaultValue": null,
