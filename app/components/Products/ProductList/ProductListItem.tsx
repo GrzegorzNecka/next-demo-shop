@@ -17,10 +17,9 @@ const ProductListItem = ({ data, targetButton, setTargetButton }: ProductListIte
 
     const handleOnClick = () => {
         setTargetButton(data.title);
-        console.log("🚀 ~ file: ProductListItem.tsx ~ line 20 ~ handleOnClick ~ data", data);
 
         const newCartItem = {
-            id: data.id,
+            productId: data.id,
             price: data.price,
             title: data.title,
             quantity: 1,

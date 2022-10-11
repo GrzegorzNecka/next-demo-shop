@@ -60,3 +60,9 @@ mutation AddItemToCartByCartId($cartId: ID!, $productId: ID!) {
         ...cartContentQuery
     }
 }
+
+mutation RemoveItemFromCartByCartId($cartId: ID!, $itemId: ID!) {
+    updateCart(where: { id: $cartId }, data: { cartItems: { delete: { id: $itemId } } }) {
+        ...cartContentQuery
+    }
+}

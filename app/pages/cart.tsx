@@ -4,10 +4,21 @@ import { changeToCurrency, moveTheComa } from "utils/currency";
 // import { loadStripe } from "@stripe/stripe-js";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { useCartState } from "components/Cart/Context/CartContext";
+import { CartItem } from "components/Cart/types";
 // import Stripe from "stripe";
 
 const CartContent = () => {
     const cartState = useCartState();
+
+    const onclickHandler = (event: React.MouseEvent<HTMLButtonElement>, existItem: CartItem) => {
+        if (!existItem?.itemId) {
+            return;
+        }
+        event.currentTarget.disabled = true;
+        cartState.removeItemFromCart(existItem.itemId);
+    };
+
+    //! if prev cartState.items, current cartState.items use React.memo
 
     return (
         <div className="col-span-2">
@@ -26,7 +37,7 @@ const CartContent = () => {
                                 <div className="flex items-center">
                                     {changeToCurrency(moveTheComa(item.price))}
                                     <button
-                                        // onClick={() => cartState.removeItemFromCart(item.id)}
+                                        onClick={(event) => onclickHandler(event, item)}
                                         className="ml-4 text-red-500"
                                     >
                                         <TrashIcon

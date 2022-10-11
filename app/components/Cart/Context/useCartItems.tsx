@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import { CartItem } from "components/Cart/types";
 import { useSession } from "next-auth/react";
-import { useAddItemToCartByCartIdMutation, useGetCartItemsByCartIdQuery } from "graphQL/generated/graphql";
+import {
+    useAddItemToCartByCartIdMutation,
+    useGetCartItemsByCartIdQuery,
+    useRemoveItemFromCartByCartIdMutation,
+} from "graphQL/generated/graphql";
 
 export const useCartItems = () => {
     const session = useSession();
@@ -27,21 +31,21 @@ export const useCartItems = () => {
     // przypisz go do cart oraz product
 
     const [addItemToCartByCartIdMutation] = useAddItemToCartByCartIdMutation({});
+    const [removeItemFromCartByCartIdMutation] = useRemoveItemFromCartByCartIdMutation({});
 
     useEffect(() => {
         if (session.status !== "authenticated" || !data || !data.cart) {
             return;
         }
 
-        //! a może lepiej jak to będzie relacja w dwie strony wtedy w ramcha jednego cart items mogędodawać elementy do [] ...
-
         const initialCartItems = data.cart.cartItems.map((item) => {
-            console.log("ditem?.product?.id", item?.id);
+            console.log("ditem?.product?.id", item);
             return {
-                id: item?.product?.id!, //! czy item.id
-                price: item?.product?.price!,
-                title: item?.product?.name!, // todo title zmień na name
+                itemId: item.id,
                 quantity: item.quantity!,
+                productId: item?.product?.id!,
+                price: item?.product?.price!,
+                title: item?.product?.name!,
                 imgUrl: item.product?.images.at(0)?.url!,
                 slug: item.product?.slug!,
             };
@@ -59,7 +63,7 @@ export const useCartItems = () => {
 
         setIsLoading(true);
 
-        const productId = product.id;
+        const { productId } = product;
 
         addItemToCartByCartIdMutation({
             variables: {
@@ -69,7 +73,14 @@ export const useCartItems = () => {
         });
     };
 
-    const removeItems = (id: CartItem["id"]) => {};
+    const handleRemoveItemFromCart = (itemId: CartItem["productId"]) => {
+        removeItemFromCartByCartIdMutation({
+            variables: {
+                cartId,
+                itemId,
+            },
+        });
+    };
 
-    return [cartItems, isLoading, handleAddItemToCart, removeItems] as const;
+    return [cartItems, isLoading, handleAddItemToCart, handleRemoveItemFromCart] as const;
 };

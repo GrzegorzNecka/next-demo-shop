@@ -1,5 +1,6 @@
 export interface CartItem {
-    readonly id: string;
+    readonly itemId?: string;
+    readonly productId: string;
     readonly price: number;
     readonly title: string;
     readonly quantity: number;
@@ -10,6 +11,7 @@ export interface CartItem {
 export interface CartState {
     readonly items: readonly CartItem[];
     readonly addItemToCart: (item: CartItem) => void;
+    readonly removeItemFromCart: (id: string) => void;
     readonly total: number;
     readonly isLoading: boolean;
 }
