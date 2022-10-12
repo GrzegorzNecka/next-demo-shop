@@ -122,6 +122,17 @@ const CartSummary = () => {
             <div className="pt-2">Suma: {changeToCurrency(moveTheComa(cartState.totalPrice))}</div> */}
             <div className="mt-4">
                 <button
+                    onClick={() => {
+                        cartState.clearCartItems();
+                    }}
+                    type="button"
+                    className="w-full btn-custom-primary"
+                >
+                    wyczyść koszyk
+                </button>
+            </div>
+            <div className="mt-4">
+                <button
                     // onClick={pay}
                     type="button"
                     className="w-full btn-custom-primary"

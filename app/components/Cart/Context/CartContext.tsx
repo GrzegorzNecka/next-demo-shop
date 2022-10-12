@@ -9,17 +9,21 @@ export const CartStateContext = createContext<CartState | null>(null);
 export const CartStateContextProvider = ({ children }: { children: React.ReactNode }) => {
     console.log("-----render context-----------");
 
-    const [cartItems, isLoading, handleAddItemToCart, handleRemoveItemFromCart] = useCartItems();
+    const [cartItems, isLoading, handleAddItemToCart, handleRemoveItemFromCart, handleClearCartItems] = useCartItems();
 
     const initialCartState: CartState = {
         items: cartItems || [],
         total: 0,
         isLoading,
+
         addItemToCart: (item) => {
             handleAddItemToCart(item);
         },
         removeItemFromCart: (itemId) => {
             handleRemoveItemFromCart(itemId);
+        },
+        clearCartItems: () => {
+            handleClearCartItems();
         },
     };
 

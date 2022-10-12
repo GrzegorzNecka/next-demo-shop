@@ -3,6 +3,7 @@ import { CartItem } from "components/Cart/types";
 import { useSession } from "next-auth/react";
 import {
     useAddItemToCartByCartIdMutation,
+    useClearCartItemsMutation,
     useGetCartItemsByCartIdQuery,
     useRemoveItemFromCartByCartIdMutation,
     useUpdateItemQuantityByCartIdMutation,
@@ -35,6 +36,7 @@ export const useCartItems = () => {
     const [addItemToCartByCartIdMutation] = useAddItemToCartByCartIdMutation({});
     const [removeItemFromCartByCartIdMutation] = useRemoveItemFromCartByCartIdMutation({});
     const [updateItemQuantityByCartIdMutation] = useUpdateItemQuantityByCartIdMutation({});
+    const [clearCartItemsMutation] = useClearCartItemsMutation({});
 
     useEffect(() => {
         if (session.status !== "authenticated" || !data || !data.cart) {
@@ -126,5 +128,17 @@ export const useCartItems = () => {
         });
     };
 
-    return [cartItems, isLoading, handleAddItemToCart, handleRemoveItemFromCart] as const;
+    const handleClearCartItems = () => {
+        if (!cartId || !data) {
+            return;
+        }
+
+        clearCartItemsMutation({
+            variables: {
+                cartId,
+            },
+        });
+    };
+
+    return [cartItems, isLoading, handleAddItemToCart, handleRemoveItemFromCart, handleClearCartItems] as const;
 };

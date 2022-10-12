@@ -12,6 +12,7 @@ export interface CartState {
     readonly items: readonly CartItem[];
     readonly addItemToCart: (item: CartItem) => void;
     readonly removeItemFromCart: (id: string) => void;
+    readonly clearCartItems: () => void;
     readonly total: number;
     readonly isLoading: boolean;
 }

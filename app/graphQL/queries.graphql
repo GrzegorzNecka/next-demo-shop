@@ -75,3 +75,9 @@ mutation UpdateItemQuantityByCartId($cartId: ID!, $itemId: ID!, $quantity: Int!)
         ...cartContentQuery
     }
 }
+
+mutation ClearCartItems($cartId: ID!) {
+    updateCart(where: { id: $cartId }, data: { cartItems: { set: [] } }) {
+        ...cartContentQuery
+    }
+}

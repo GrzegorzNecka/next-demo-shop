@@ -2,8 +2,8 @@
 import { useCartState } from "components/Cart/Context/CartContext";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
-import { Dispatch, SetStateAction } from "react";
+import React, { useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { ProductListItems } from "../types";
 
 interface ProductListItemProps {
@@ -15,6 +15,8 @@ interface ProductListItemProps {
 const ProductListItem = ({ data, targetButton, setTargetButton }: ProductListItemProps) => {
     const cartState = useCartState();
 
+    const [quantity, setQuantity] = useState<number>(1);
+    // todo - quantity to powinine być stan , lktóry spływa z serwera, tak aby nie przekroczyć limitu
     const handleOnClick = () => {
         setTargetButton(data.title);
 
@@ -22,7 +24,7 @@ const ProductListItem = ({ data, targetButton, setTargetButton }: ProductListIte
             productId: data.id,
             price: data.price,
             title: data.title,
-            quantity: 1,
+            quantity: quantity,
             imgUrl: data.thumbnailUrl,
             slug: data.slug,
         };
@@ -63,12 +65,24 @@ const ProductListItem = ({ data, targetButton, setTargetButton }: ProductListIte
             <div className="pt-4">
                 {cartState.isLoading && targetButton === data.title ? (
                     <div className="flex mb-8">
+                        <input
+                            disabled
+                            value={quantity}
+                            type="number"
+                            className="mb-0 w-1/4 mr-4 bg-transparent py-2 px-4 border-2 border-black rounded"
+                        />
                         <button disabled className={`mb-0 w-3/4 text-blackfont-semibold btn-custom-primary`}>
                             dodawanie
                         </button>
                     </div>
                 ) : (
                     <div className="flex mb-8">
+                        <input
+                            value={quantity}
+                            onChange={(e) => setQuantity(Number(e.target.value))}
+                            type="number"
+                            className="mb-0 w-1/4 mr-4 bg-transparent py-2 px-4 border-2 border-black rounded"
+                        />
                         <button
                             className={` mb-0 w-3/4 text-blackfont-semibold btn-custom-primary`}
                             onClick={handleOnClick}
