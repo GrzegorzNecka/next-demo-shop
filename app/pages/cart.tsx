@@ -5,16 +5,26 @@ import { changeToCurrency, moveTheComa } from "utils/currency";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { useCartState } from "components/Cart/Context/CartContext";
 import { CartItem } from "components/Cart/types";
+import { useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 // import Stripe from "stripe";
 
-const CartContent = () => {
+interface CartContentProps {
+    targetButton: string | null;
+    setTargetButton: Dispatch<SetStateAction<string | null>>;
+}
+
+const CartContent = ({ targetButton, setTargetButton }: CartContentProps) => {
     const cartState = useCartState();
 
-    const onclickHandler = (event: React.MouseEvent<HTMLButtonElement>, existItem: CartItem) => {
+    const handleOnClick = (existItem: CartItem) => {
         if (!existItem?.itemId) {
             return;
         }
-        event.currentTarget.disabled = true;
+
+        setTargetButton(existItem.title);
+
+        // event.currentTarget.disabled = true;
         cartState.removeItemFromCart(existItem.itemId);
     };
 
@@ -36,17 +46,28 @@ const CartContent = () => {
                                 </div>
                                 <div className="flex items-center">
                                     {changeToCurrency(moveTheComa(item.price))}
-                                    <button
-                                        onClick={(event) => onclickHandler(event, item)}
-                                        className="ml-4 text-red-500"
-                                    >
-                                        <TrashIcon
-                                            stroke="currentColor"
-                                            aria-label="usuń element"
-                                            strokeWidth={2}
-                                            className="h-6 w-6"
-                                        />
-                                    </button>
+
+                                    <div>
+                                        {cartState.isLoading && targetButton === item.title ? (
+                                            <button disabled className="ml-4 text-red-300">
+                                                <TrashIcon
+                                                    stroke="currentColor"
+                                                    aria-label="usuń element"
+                                                    strokeWidth={2}
+                                                    className="h-6 w-6"
+                                                />
+                                            </button>
+                                        ) : (
+                                            <button onClick={() => handleOnClick(item)} className="ml-4 text-red-500">
+                                                <TrashIcon
+                                                    stroke="currentColor"
+                                                    aria-label="usuń element"
+                                                    strokeWidth={2}
+                                                    className="h-6 w-6"
+                                                />
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </li>
@@ -113,10 +134,12 @@ const CartSummary = () => {
 };
 
 const CartPage = () => {
+    const [targetButton, setTargetButton] = useState<string | null>(null);
+
     return (
         <Main>
             <div className="grid grid-cols-3 gap-20">
-                <CartContent />
+                <CartContent targetButton={targetButton} setTargetButton={setTargetButton} />
                 <CartSummary />
             </div>
         </Main>

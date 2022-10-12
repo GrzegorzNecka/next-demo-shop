@@ -4,8 +4,8 @@ import { useSession } from "next-auth/react";
 import {
     useAddItemToCartByCartIdMutation,
     useGetCartItemsByCartIdQuery,
-    useIncrementItemToCartByCartIdMutation,
     useRemoveItemFromCartByCartIdMutation,
+    useUpdateItemQuantityByCartIdMutation,
 } from "graphQL/generated/graphql";
 
 export const useCartItems = () => {
@@ -28,12 +28,13 @@ export const useCartItems = () => {
 
     // todo - po tej mutacji aktualizuje się model "Product" - tak nie powinno być
     // todo - stwórz najpierw pusty cart itme i za pomocą connect połacz się
+    // todo - useMemo
     // albo stórz pusty cart item z wykorzystaniem cart id oraz quantity a pote
     // przypisz go do cart oraz product
 
     const [addItemToCartByCartIdMutation] = useAddItemToCartByCartIdMutation({});
     const [removeItemFromCartByCartIdMutation] = useRemoveItemFromCartByCartIdMutation({});
-    const [incrementItemToCartByCartIdMutation] = useIncrementItemToCartByCartIdMutation({});
+    const [updateItemQuantityByCartIdMutation] = useUpdateItemQuantityByCartIdMutation({});
 
     useEffect(() => {
         if (session.status !== "authenticated" || !data || !data.cart) {
@@ -76,11 +77,13 @@ export const useCartItems = () => {
                     productId,
                 },
             });
+
+            return;
         }
 
         const itemId = existProduct?.id!;
 
-        incrementItemToCartByCartIdMutation({
+        updateItemQuantityByCartIdMutation({
             variables: {
                 cartId,
                 itemId,
@@ -90,6 +93,31 @@ export const useCartItems = () => {
     };
 
     const handleRemoveItemFromCart = (itemId: CartItem["productId"]) => {
+        if (!cartId || !data) {
+            return;
+        }
+
+        setIsLoading(true);
+
+        const item = data.cart?.cartItems.find((item) => {
+            return item.id === itemId;
+        });
+        if (!item) {
+            return;
+        }
+
+        if (item.quantity > 1) {
+            updateItemQuantityByCartIdMutation({
+                variables: {
+                    cartId,
+                    itemId,
+                    quantity: item.quantity - 1,
+                },
+            });
+
+            return;
+        }
+
         removeItemFromCartByCartIdMutation({
             variables: {
                 cartId,

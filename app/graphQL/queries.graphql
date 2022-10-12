@@ -67,7 +67,7 @@ mutation RemoveItemFromCartByCartId($cartId: ID!, $itemId: ID!) {
     }
 }
 
-mutation IncrementItemToCartByCartId($cartId: ID!, $itemId: ID!, $quantity: Int!) {
+mutation UpdateItemQuantityByCartId($cartId: ID!, $itemId: ID!, $quantity: Int!) {
     updateCart(
         where: { id: $cartId }
         data: { cartItems: { update: { where: { id: $itemId }, data: { quantity: $quantity } } } }
