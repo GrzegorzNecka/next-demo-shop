@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import {
     useAddItemToCartByCartIdMutation,
     useGetCartItemsByCartIdQuery,
+    useIncrementItemToCartByCartIdMutation,
     useRemoveItemFromCartByCartIdMutation,
 } from "graphQL/generated/graphql";
 
@@ -32,6 +33,7 @@ export const useCartItems = () => {
 
     const [addItemToCartByCartIdMutation] = useAddItemToCartByCartIdMutation({});
     const [removeItemFromCartByCartIdMutation] = useRemoveItemFromCartByCartIdMutation({});
+    const [incrementItemToCartByCartIdMutation] = useIncrementItemToCartByCartIdMutation({});
 
     useEffect(() => {
         if (session.status !== "authenticated" || !data || !data.cart) {
@@ -57,7 +59,7 @@ export const useCartItems = () => {
     // ---------------- handleAddItemToCart React Context
 
     const handleAddItemToCart = (product: CartItem) => {
-        if (!cartId) {
+        if (!cartId || !data) {
             return;
         }
 
@@ -65,10 +67,24 @@ export const useCartItems = () => {
 
         const { productId } = product;
 
-        addItemToCartByCartIdMutation({
+        const existProduct = data.cart?.cartItems.find((item) => item?.product?.id === productId);
+
+        if (!existProduct) {
+            addItemToCartByCartIdMutation({
+                variables: {
+                    cartId,
+                    productId,
+                },
+            });
+        }
+
+        const itemId = existProduct?.id!;
+
+        incrementItemToCartByCartIdMutation({
             variables: {
                 cartId,
-                productId,
+                itemId,
+                quantity: existProduct?.quantity! + product.quantity,
             },
         });
     };

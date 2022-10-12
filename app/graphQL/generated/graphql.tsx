@@ -14992,6 +14992,15 @@ export type RemoveItemFromCartByCartIdMutationVariables = Exact<{
 
 export type RemoveItemFromCartByCartIdMutation = { readonly __typename?: 'Mutation', readonly updateCart?: { readonly __typename?: 'Cart', readonly id: string, readonly cartItems: ReadonlyArray<{ readonly __typename?: 'CartItem', readonly id: string, readonly quantity: number, readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly name: string, readonly price: number, readonly slug: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null }> } | null };
 
+export type IncrementItemToCartByCartIdMutationVariables = Exact<{
+  cartId: Scalars['ID'];
+  itemId: Scalars['ID'];
+  quantity: Scalars['Int'];
+}>;
+
+
+export type IncrementItemToCartByCartIdMutation = { readonly __typename?: 'Mutation', readonly updateCart?: { readonly __typename?: 'Cart', readonly id: string, readonly cartItems: ReadonlyArray<{ readonly __typename?: 'CartItem', readonly id: string, readonly quantity: number, readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly name: string, readonly price: number, readonly slug: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null }> } | null };
+
 export const CartContentQueryFragmentDoc = gql`
     fragment cartContentQuery on Cart {
   id
@@ -15233,3 +15242,41 @@ export function useRemoveItemFromCartByCartIdMutation(baseOptions?: Apollo.Mutat
 export type RemoveItemFromCartByCartIdMutationHookResult = ReturnType<typeof useRemoveItemFromCartByCartIdMutation>;
 export type RemoveItemFromCartByCartIdMutationResult = Apollo.MutationResult<RemoveItemFromCartByCartIdMutation>;
 export type RemoveItemFromCartByCartIdMutationOptions = Apollo.BaseMutationOptions<RemoveItemFromCartByCartIdMutation, RemoveItemFromCartByCartIdMutationVariables>;
+export const IncrementItemToCartByCartIdDocument = gql`
+    mutation IncrementItemToCartByCartId($cartId: ID!, $itemId: ID!, $quantity: Int!) {
+  updateCart(
+    where: {id: $cartId}
+    data: {cartItems: {update: {where: {id: $itemId}, data: {quantity: $quantity}}}}
+  ) {
+    ...cartContentQuery
+  }
+}
+    ${CartContentQueryFragmentDoc}`;
+export type IncrementItemToCartByCartIdMutationFn = Apollo.MutationFunction<IncrementItemToCartByCartIdMutation, IncrementItemToCartByCartIdMutationVariables>;
+
+/**
+ * __useIncrementItemToCartByCartIdMutation__
+ *
+ * To run a mutation, you first call `useIncrementItemToCartByCartIdMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useIncrementItemToCartByCartIdMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [incrementItemToCartByCartIdMutation, { data, loading, error }] = useIncrementItemToCartByCartIdMutation({
+ *   variables: {
+ *      cartId: // value for 'cartId'
+ *      itemId: // value for 'itemId'
+ *      quantity: // value for 'quantity'
+ *   },
+ * });
+ */
+export function useIncrementItemToCartByCartIdMutation(baseOptions?: Apollo.MutationHookOptions<IncrementItemToCartByCartIdMutation, IncrementItemToCartByCartIdMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<IncrementItemToCartByCartIdMutation, IncrementItemToCartByCartIdMutationVariables>(IncrementItemToCartByCartIdDocument, options);
+      }
+export type IncrementItemToCartByCartIdMutationHookResult = ReturnType<typeof useIncrementItemToCartByCartIdMutation>;
+export type IncrementItemToCartByCartIdMutationResult = Apollo.MutationResult<IncrementItemToCartByCartIdMutation>;
+export type IncrementItemToCartByCartIdMutationOptions = Apollo.BaseMutationOptions<IncrementItemToCartByCartIdMutation, IncrementItemToCartByCartIdMutationVariables>;
