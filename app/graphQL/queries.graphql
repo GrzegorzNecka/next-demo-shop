@@ -81,3 +81,22 @@ mutation ClearCartItems($cartId: ID!) {
         ...cartContentQuery
     }
 }
+
+query GetProductsSlugs {
+    products {
+        slug
+    }
+}
+
+query GetProductDetailsBySlug($slug: String) {
+    product(where: { slug: $slug }) {
+        id
+        slug
+        name
+        price
+        description
+        images {
+            url
+        }
+    }
+}

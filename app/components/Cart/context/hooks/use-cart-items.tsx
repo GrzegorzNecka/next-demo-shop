@@ -29,7 +29,7 @@ export const useCartItems = () => {
 
     // todo - po tej mutacji aktualizuje się model "Product" - tak nie powinno być
     // todo - stwórz najpierw pusty cart itme i za pomocą connect połacz się
-    // todo - useMemo
+    // todo - (useMemo)[https://kattya.dev/articles/2021-04-17-fixing-re-renders-when-using-context-in-react/]
     // albo stórz pusty cart item z wykorzystaniem cart id oraz quantity a pote
     // przypisz go do cart oraz product
 

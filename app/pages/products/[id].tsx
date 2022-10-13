@@ -3,21 +3,21 @@ import { InferGetStaticPathsType } from "types/types";
 import { apolloClient } from "graphQL/apolloClient";
 import { GetProductsListDocument, GetProductsListQuery } from "graphQL/generated/graphql";
 import { Main } from "components/Main";
-import ProductList from "components/Products/ProductList/ProductList";
+import ProductListUI from "components/Products/products-list-ui/products-list";
 
 export type ProductListIdPageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
-const ProductListIdPage = ({ data }: ProductListIdPageProps) => {
+const ProductsListIdPage = ({ data }: ProductListIdPageProps) => {
     return (
         <Main>
             <div className="relative p-16">
-                <ProductList data={data} />
+                <ProductListUI data={data} />
             </div>
         </Main>
     );
 };
 
-export default ProductListIdPage;
+export default ProductsListIdPage;
 
 // -----------------
 
@@ -29,7 +29,7 @@ export const getStaticPaths = async () => {
         paths: products.map((id) => {
             return {
                 params: {
-                    productId: `${id}`,
+                    id: `${id}`,
                 },
             };
         }),
@@ -39,7 +39,7 @@ export const getStaticPaths = async () => {
 // -----------------
 
 export const getStaticProps = async ({ params }: InferGetStaticPathsType<typeof getStaticPaths>) => {
-    if (!params?.productId) {
+    if (!params?.id) {
         return { props: {}, notFound: true };
     }
 

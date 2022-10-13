@@ -1,7 +1,7 @@
 import { Main } from "components/Main";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import FormInput from "components/Hook-Forms/FormInput";
+import FormInput from "components/forms/form-input";
 import { useForm } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";

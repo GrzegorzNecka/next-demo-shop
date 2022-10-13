@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useCartState } from "components/Cart/Context/CartContext";
+import { useCartState } from "components/Cart/context/cart-context";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { ProductListIdPageProps } from "pages/products/[productId]";
+import { ProductListIdPageProps } from "pages/products/[id]";
 import { changeToCurrency, moveTheComa } from "utils/currency";
-import ProductListItem from "./ProductListItem";
+import ProductListItem from "./products-list-item";
 
-const ProductList = ({ data }: ProductListIdPageProps) => {
+const ProductListUI = ({ data }: ProductListIdPageProps) => {
     const [targetButton, setTargetButton] = useState<string | null>(null);
 
     if (!data) {
@@ -33,4 +33,4 @@ const ProductList = ({ data }: ProductListIdPageProps) => {
     );
 };
 
-export default ProductList;
+export default ProductListUI;

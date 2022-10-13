@@ -3,7 +3,7 @@ import Link from "next/link";
 import { changeToCurrency, moveTheComa } from "utils/currency";
 // import { loadStripe } from "@stripe/stripe-js";
 import { TrashIcon } from "@heroicons/react/24/outline";
-import { useCartState } from "components/Cart/Context/CartContext";
+import { useCartState } from "components/Cart/context/cart-context";
 import { CartItem } from "components/Cart/types";
 import { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";

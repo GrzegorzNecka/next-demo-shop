@@ -5,7 +5,7 @@ import { ApolloProvider } from "@apollo/client";
 import { apolloClient } from "graphQL/apolloClient";
 import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
-import { CartStateContextProvider } from "components/Cart/Context/CartContext";
+import { CartStateContextProvider } from "components/Cart/context/cart-context";
 
 function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
     return (
