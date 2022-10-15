@@ -1,3 +1,5 @@
+import { ProductVariants } from "graphQL/generated/graphql";
+
 export interface CartItem {
     readonly itemId?: string;
     readonly productId: string;
@@ -6,6 +8,7 @@ export interface CartItem {
     readonly quantity: number;
     readonly imgUrl: string;
     readonly slug: string;
+    readonly variants: string[];
 }
 
 export interface CartState {

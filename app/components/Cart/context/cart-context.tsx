@@ -15,7 +15,6 @@ export const CartStateContextProvider = ({ children }: { children: React.ReactNo
         items: cartItems || [],
         total: 0,
         isLoading,
-
         addItemToCart: (item) => {
             handleAddItemToCart(item);
         },

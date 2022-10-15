@@ -16,3 +16,5 @@ export type InferGetStaticPathsType<T> = T extends () => Promise<{
         ? GetStaticPropsContext<R>
         : never
     : never;
+
+export type ValueOf<T> = T[keyof T];

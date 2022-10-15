@@ -23,8 +23,6 @@ const CartContent = ({ targetButton, setTargetButton }: CartContentProps) => {
         }
 
         setTargetButton(existItem.title);
-
-        // event.currentTarget.disabled = true;
         cartState.removeItemFromCart(existItem.itemId);
     };
 
@@ -41,6 +39,7 @@ const CartContent = ({ targetButton, setTargetButton }: CartContentProps) => {
                                     <Link href={`/product/${item.slug}`}>
                                         <a className="hover:underline">
                                             {item.title} {`x  ${item.quantity}`}
+                                            <pre>{JSON.stringify(item, null, 2)}</pre>
                                         </a>
                                     </Link>
                                 </div>

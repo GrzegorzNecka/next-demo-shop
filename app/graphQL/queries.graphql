@@ -98,5 +98,19 @@ query GetProductDetailsBySlug($slug: String) {
         images {
             url
         }
+        variants {
+            ... on ProductSizeColorVariant {
+                id
+                name
+            }
+            ... on ProductColorVariant {
+                id
+                name
+            }
+            ... on ProductSizeVariant {
+                id
+                name
+            }
+        }
     }
 }

@@ -1,13 +1,24 @@
 /* eslint-disable @next/next/no-img-element */
 import Image from "next/image";
 import { NextSeo } from "next-seo";
-
-import type { ProductDetailsProps } from "./types";
+import type { ProductDetailsProps, UnionVariants } from "./types";
 import { useCartState } from "components/Cart/context/cart-context";
 import Markdown from "components/markdown";
+import { ChangeEvent, useMemo, useState } from "react";
+import { ProductVariants } from "components/Products/types";
+
+import ProductVariant from "./product-variant";
+import useProductVariant from "./hooks/use-product-variant";
 
 export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
     const cartState = useCartState();
+
+    const [colorVariant, sizeVariant, sizeColorVariant] = useProductVariant(data.variants!);
+
+    const variants = [colorVariant.active, sizeVariant.active, sizeColorVariant.active].filter(
+        (el) => el !== undefined
+    );
+
     return (
         <>
             <SeoProvider data={data} />
@@ -34,6 +45,34 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
                             {/* <ProductArithmeticRating productSlug={data.slug} /> */}
                         </div>
 
+                        <ProductVariant
+                            variant={colorVariant.variant}
+                            activeVariantId={colorVariant.active}
+                            updateVariant={colorVariant.update}
+                        >
+                            Kolor
+                        </ProductVariant>
+
+                        <ProductVariant
+                            variant={sizeVariant.variant}
+                            activeVariantId={sizeVariant.active}
+                            updateVariant={sizeVariant.update}
+                        >
+                            Rozmiar
+                        </ProductVariant>
+
+                        <ProductVariant
+                            variant={sizeColorVariant.variant}
+                            activeVariantId={sizeColorVariant.active}
+                            updateVariant={sizeColorVariant.update}
+                        >
+                            Rozmiar/Kolor
+                        </ProductVariant>
+
+                        <div>{colorVariant.active}</div>
+                        <div>{sizeVariant.active}</div>
+                        <div>{sizeColorVariant.active}</div>
+
                         <button
                             onClick={() =>
                                 cartState.addItemToCart({
@@ -43,6 +82,7 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
                                     quantity: 1,
                                     imgUrl: data.thumbnailUrl,
                                     slug: data.slug,
+                                    variants: variants,
                                 })
                             }
                             className="btn-custom-primary"
@@ -62,8 +102,7 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
     );
 };
 
-//todo tutaj należy zastosować typ generyczny
-// todo oraz jakąś formę memoizacji
+// todo memoizazja na seo
 
 const SeoProvider = ({ data }: ProductDetailsProps) => {
     return (

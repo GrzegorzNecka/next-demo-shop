@@ -1,4 +1,5 @@
-import { MarkdownResult } from "types/types";
+import { ProductColorVariant, ProductSizeColorVariant, ProductSizeVariant } from "graphQL/generated/graphql";
+import { MarkdownResult, ValueOf } from "types/types";
 
 /*
  
@@ -6,17 +7,22 @@ import { MarkdownResult } from "types/types";
  
  */
 
+export type UnionVariants = ProductColorVariant | ProductSizeColorVariant | ProductSizeVariant;
+export type VariantsTypeNamesUnion = ValueOf<Pick<UnionVariants, "__typename">>;
+export type ProductVariants = readonly UnionVariants[] | null;
+
 export interface ProductDetails {
-    id: string;
-    title: string;
-    description: string;
-    thumbnailUrl: string;
-    thumbnailAlt: string;
-    slug: string;
-    price: number;
-    priceWithCurrency: string;
+    readonly id: string;
+    readonly title: string;
+    readonly description: string;
+    readonly thumbnailUrl: string;
+    readonly thumbnailAlt: string;
+    readonly slug: string;
+    readonly price: number;
+    readonly priceWithCurrency: string;
+    readonly variants?: ProductVariants;
     // rating: number;
-    longDescription: MarkdownResult;
+    readonly longDescription: MarkdownResult;
 }
 
 export interface ProductDetailsProps {
@@ -31,5 +37,5 @@ export interface ProductDetailsProps {
 
 export type ProductListItems = Pick<
     ProductDetails,
-    "id" | "slug" | "price" | "priceWithCurrency" | "title" | "thumbnailUrl" | "thumbnailAlt"
+    "id" | "slug" | "price" | "priceWithCurrency" | "title" | "thumbnailUrl" | "thumbnailAlt" | "variants"
 >;

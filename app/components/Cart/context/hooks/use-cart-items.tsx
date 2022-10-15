@@ -53,6 +53,7 @@ export const useCartItems = () => {
                 title: item?.product?.name!,
                 imgUrl: item.product?.images.at(0)?.url!,
                 slug: item.product?.slug!,
+                variants: [],
             };
         });
 
@@ -62,6 +63,7 @@ export const useCartItems = () => {
     // ---------------- handleAddItemToCart React Context
 
     const handleAddItemToCart = (product: CartItem) => {
+        console.log("🚀 ~ file: use-cart-items.tsx ~ line 66 ~ handleAddItemToCart ~ product", product);
         if (!cartId || !data) {
             return;
         }

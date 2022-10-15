@@ -15018,7 +15018,7 @@ export type GetProductDetailsBySlugQueryVariables = Exact<{
 }>;
 
 
-export type GetProductDetailsBySlugQuery = { readonly __typename?: 'Query', readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly slug: string, readonly name: string, readonly price: number, readonly description: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null };
+export type GetProductDetailsBySlugQuery = { readonly __typename?: 'Query', readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly slug: string, readonly name: string, readonly price: number, readonly description: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }>, readonly variants: ReadonlyArray<{ readonly __typename?: 'ProductColorVariant', readonly id: string, readonly name: string } | { readonly __typename?: 'ProductSizeColorVariant', readonly id: string, readonly name: string } | { readonly __typename?: 'ProductSizeVariant', readonly id: string, readonly name: string }> } | null };
 
 export const CartContentQueryFragmentDoc = gql`
     fragment cartContentQuery on Cart {
@@ -15376,6 +15376,20 @@ export const GetProductDetailsBySlugDocument = gql`
     description
     images {
       url
+    }
+    variants {
+      ... on ProductSizeColorVariant {
+        id
+        name
+      }
+      ... on ProductColorVariant {
+        id
+        name
+      }
+      ... on ProductSizeVariant {
+        id
+        name
+      }
     }
   }
 }

@@ -31,6 +31,7 @@ const ProductSingleSlugPage = ({ product }: InferGetStaticPropsType<typeof getSt
                     thumbnailUrl: product.images[0].url,
                     thumbnailAlt: product.name,
                     slug: product.slug,
+                    variants: product.variants,
                     // rating: product.rating.rate,
                     longDescription: product.longDescription,
                     price: product.price,
