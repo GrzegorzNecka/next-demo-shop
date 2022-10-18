@@ -1,3 +1,27 @@
+mutation CreateAccount($email: String!, $password: String!) {
+    createAccount(data: { email: $email, password: $password }) {
+        id
+    }
+}
+
+mutation CreateCart {
+    createCart(data: {}) {
+        id
+    }
+}
+
+mutation ConnectAccountWithCartAndPublish($accountId: ID!, $cartId: ID!) {
+    updateAccount(where: { id: $accountId }, data: { cart: { connect: { id: $cartId } } }) {
+        id
+    }
+    publishAccount(to: PUBLISHED, where: { id: $accountId }) {
+        id
+    }
+    publishCart(to: PUBLISHED, where: { id: $cartId }) {
+        id
+    }
+}
+
 query GetAccountByEmail($email: String!) {
     account(where: { email: $email }, stage: DRAFT) {
         id
