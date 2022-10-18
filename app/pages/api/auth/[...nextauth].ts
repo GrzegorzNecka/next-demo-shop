@@ -3,7 +3,6 @@ import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import * as bcrypt from "bcrypt";
 import { authApolloClient } from "graphQL/apolloClient";
-
 import {
     GetAccountByEmailDocument,
     GetAccountByEmailQuery,
