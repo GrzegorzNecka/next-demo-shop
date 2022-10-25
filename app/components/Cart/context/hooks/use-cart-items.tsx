@@ -53,7 +53,7 @@ export const useCartItems = () => {
                 title: item?.product?.name!,
                 imgUrl: item.product?.images.at(0)?.url!,
                 slug: item.product?.slug!,
-                variants: [],
+                // variants: [],
             };
         });
 

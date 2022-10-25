@@ -5,24 +5,32 @@ import type { ProductDetailsProps, UnionVariants } from "./types";
 import { useCartState } from "components/Cart/context/cart-context";
 import Markdown from "components/markdown";
 import { ChangeEvent, useMemo, useState } from "react";
-import { ProductVariants } from "components/Products/types";
-
+import type { ProductVariants, Option } from "components/Products/types";
 import ProductVariant from "./product-variant";
 import useProductVariant from "./hooks/use-product-variant";
+import { ProductColor, ProductSize } from "graphQL/generated/graphql";
+import { ValueOf } from "types/types";
+import { groupOptions } from "utils/product-options";
 
 export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
     const cartState = useCartState();
 
-    const [colorVariant, sizeVariant, sizeColorVariant] = useProductVariant(data.variants!);
+    // const optionColor = data.option?.filter((obj) => !!obj.color);
+    // const optionSize = data.option?.filter((obj) => !!obj.size);
 
-    const variants = [colorVariant.active, sizeVariant.active, sizeColorVariant.active].filter(
-        (el) => el !== undefined
-    );
+    const groupedBySizes = groupOptions(data.option, "size");
+
+    // const [colorVariant, sizeVariant, sizeColorVariant] = useProductVariant(data.variants!);
+
+    // const variants = [colorVariant.active, sizeVariant.active, sizeColorVariant.active].filter(
+    //     (el) => el !== undefined
+    // );
 
     return (
         <>
             <SeoProvider data={data} />
 
+            <pre>{JSON.stringify(groupedBySizes, null, 2)}</pre>
             <div className="font-mono ">
                 <div className="grid grid-cols-2 gap">
                     <div>
@@ -44,7 +52,7 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
                             <span className=" font-medium text-xl justify-self-end">{data.priceWithCurrency}</span>
                             {/* <ProductArithmeticRating productSlug={data.slug} /> */}
                         </div>
-
+                        {/* 
                         <ProductVariant
                             variant={colorVariant.variant}
                             activeVariantId={colorVariant.active}
@@ -67,11 +75,46 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
                             updateVariant={sizeColorVariant.update}
                         >
                             Rozmiar/Kolor
-                        </ProductVariant>
-
+                        </ProductVariant> */}
+                        {/* 
                         <div>{colorVariant.active}</div>
                         <div>{sizeVariant.active}</div>
-                        <div>{sizeColorVariant.active}</div>
+                        <div>{sizeColorVariant.active}</div> */}
+
+                        {data.option && data.option.length >= 1 ? (
+                            <div className="md:w-3/4 px-3 mb-6">
+                                <label
+                                    className="block text-sm font-bold tracking-widest uppercase mb-2 text-slategray"
+                                    htmlFor="style"
+                                >
+                                    wariant
+                                </label>
+                                <div className="relative">
+                                    {/* <select
+                            id="style"
+                            name="style"
+                            value={activeVariantId}
+                            className="block appearance-none w-full bg-gainsboro border-2 border-gainsboro focus:border-slategray px-4 py-3 pr-8 focus:outline-none focus:bg-white text-slategray focus:text-slategray rounded-lg"
+                            onChange={onChange}
+                        >
+                            {variant.map((el) => (
+                                <option key={el.id} value={el.id}>
+                                    {el.name}
+                                </option>
+                            ))}
+                        </select> */}
+
+                                    {data.option.map((el) => (
+                                        <option key={el.id} value={el.id}>
+                                            <div>size: {el.size}</div>
+                                            <div>color: {el.color}</div>
+                                        </option>
+                                    ))}
+
+                                    <div className="pointer-events-none absolute inset-y-0 right-0 px-2 flex items-center"></div>
+                                </div>
+                            </div>
+                        ) : null}
 
                         <button
                             onClick={() =>
@@ -82,7 +125,8 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
                                     quantity: 1,
                                     imgUrl: data.thumbnailUrl,
                                     slug: data.slug,
-                                    variants: variants,
+                                    // option: data.option,
+                                    // variants: variants,
                                 })
                             }
                             className="btn-custom-primary"
