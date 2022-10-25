@@ -138,22 +138,3 @@ query GetProductDetailsBySlug($slug: String) {
         }
     }
 }
-
-query GetProductBySlug($slug: String) {
-    product(where: { slug: $slug }) {
-        id
-        slug
-        name
-        price
-        description
-        images {
-            url
-        }
-        option {
-            quantity
-            id
-            color
-            size
-        }
-    }
-}

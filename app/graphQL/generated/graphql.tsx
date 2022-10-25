@@ -2531,15 +2531,13 @@ export type CartItemUpsertWithNestedWhereUniqueInput = {
   readonly where: CartItemWhereUniqueInput;
 };
 
-export type CartItemVariants = ProductColorVariant | ProductSizeVariant;
+export type CartItemVariants = ProductSizeVariant;
 
 export type CartItemVariantsConnectInput = {
-  readonly ProductColorVariant?: InputMaybe<ProductColorVariantConnectInput>;
   readonly ProductSizeVariant?: InputMaybe<ProductSizeVariantConnectInput>;
 };
 
 export type CartItemVariantsCreateInput = {
-  readonly ProductColorVariant?: InputMaybe<ProductColorVariantCreateInput>;
   readonly ProductSizeVariant?: InputMaybe<ProductSizeVariantCreateInput>;
 };
 
@@ -2558,7 +2556,6 @@ export type CartItemVariantsCreateOneInlineInput = {
 };
 
 export type CartItemVariantsUpdateInput = {
-  readonly ProductColorVariant?: InputMaybe<ProductColorVariantUpdateInput>;
   readonly ProductSizeVariant?: InputMaybe<ProductSizeVariantUpdateInput>;
 };
 
@@ -2580,7 +2577,6 @@ export type CartItemVariantsUpdateManyInlineInput = {
 };
 
 export type CartItemVariantsUpdateManyWithNestedWhereInput = {
-  readonly ProductColorVariant?: InputMaybe<ProductColorVariantUpdateManyWithNestedWhereInput>;
   readonly ProductSizeVariant?: InputMaybe<ProductSizeVariantUpdateManyWithNestedWhereInput>;
 };
 
@@ -2600,22 +2596,18 @@ export type CartItemVariantsUpdateOneInlineInput = {
 };
 
 export type CartItemVariantsUpdateWithNestedWhereUniqueInput = {
-  readonly ProductColorVariant?: InputMaybe<ProductColorVariantUpdateWithNestedWhereUniqueInput>;
   readonly ProductSizeVariant?: InputMaybe<ProductSizeVariantUpdateWithNestedWhereUniqueInput>;
 };
 
 export type CartItemVariantsUpsertWithNestedWhereUniqueInput = {
-  readonly ProductColorVariant?: InputMaybe<ProductColorVariantUpsertWithNestedWhereUniqueInput>;
   readonly ProductSizeVariant?: InputMaybe<ProductSizeVariantUpsertWithNestedWhereUniqueInput>;
 };
 
 export type CartItemVariantsWhereInput = {
-  readonly ProductColorVariant?: InputMaybe<ProductColorVariantWhereInput>;
   readonly ProductSizeVariant?: InputMaybe<ProductSizeVariantWhereInput>;
 };
 
 export type CartItemVariantsWhereUniqueInput = {
-  readonly ProductColorVariant?: InputMaybe<ProductColorVariantWhereUniqueInput>;
   readonly ProductSizeVariant?: InputMaybe<ProductSizeVariantWhereUniqueInput>;
 };
 
@@ -4216,6 +4208,292 @@ export type ColorInput = {
   readonly rgba?: InputMaybe<RgbaInput>;
 };
 
+export type ColorVariant = {
+  readonly __typename?: 'ColorVariant';
+  /** The unique identifier */
+  readonly id: Scalars['ID'];
+  /** System stage field */
+  readonly stage: Stage;
+};
+
+export type ColorVariantConnectInput = {
+  /** Allow to specify document position in list of connected documents, will default to appending at end of list */
+  readonly position?: InputMaybe<ConnectPositionInput>;
+  /** Document to connect */
+  readonly where: ColorVariantWhereUniqueInput;
+};
+
+/** A connection to a list of items. */
+export type ColorVariantConnection = {
+  readonly __typename?: 'ColorVariantConnection';
+  readonly aggregate: Aggregate;
+  /** A list of edges. */
+  readonly edges: ReadonlyArray<ColorVariantEdge>;
+  /** Information to aid in pagination. */
+  readonly pageInfo: PageInfo;
+};
+
+export type ColorVariantCreateInput = {
+  /** No fields in create input */
+  readonly _?: InputMaybe<Scalars['String']>;
+};
+
+export type ColorVariantCreateManyInlineInput = {
+  /** Create and connect multiple existing ColorVariant documents */
+  readonly create?: InputMaybe<ReadonlyArray<ColorVariantCreateInput>>;
+};
+
+export type ColorVariantCreateOneInlineInput = {
+  /** Create and connect one ColorVariant document */
+  readonly create?: InputMaybe<ColorVariantCreateInput>;
+};
+
+export type ColorVariantCreateWithPositionInput = {
+  /** Document to create */
+  readonly data: ColorVariantCreateInput;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  readonly position?: InputMaybe<ConnectPositionInput>;
+};
+
+/** An edge in a connection. */
+export type ColorVariantEdge = {
+  readonly __typename?: 'ColorVariantEdge';
+  /** A cursor for use in pagination. */
+  readonly cursor: Scalars['String'];
+  /** The item at the end of the edge. */
+  readonly node: ColorVariant;
+};
+
+/** Identifies documents */
+export type ColorVariantManyWhereInput = {
+  /** Logical AND on all given filters. */
+  readonly AND?: InputMaybe<ReadonlyArray<ColorVariantWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  readonly NOT?: InputMaybe<ReadonlyArray<ColorVariantWhereInput>>;
+  /** Logical OR on all given filters. */
+  readonly OR?: InputMaybe<ReadonlyArray<ColorVariantWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  readonly _search?: InputMaybe<Scalars['String']>;
+  readonly id?: InputMaybe<Scalars['ID']>;
+  /** All values containing the given string. */
+  readonly id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  readonly id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  readonly id_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
+  /** All values that are not equal to given value. */
+  readonly id_not?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  readonly id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  readonly id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are not contained in given list. */
+  readonly id_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
+  /** All values not starting with the given string. */
+  readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  readonly id_starts_with?: InputMaybe<Scalars['ID']>;
+};
+
+export enum ColorVariantOrderByInput {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC'
+}
+
+export type ColorVariantParent = Variant4;
+
+export type ColorVariantParentConnectInput = {
+  readonly Variant4?: InputMaybe<Variant4ConnectInput>;
+};
+
+export type ColorVariantParentCreateInput = {
+  readonly Variant4?: InputMaybe<Variant4CreateInput>;
+};
+
+export type ColorVariantParentCreateManyInlineInput = {
+  /** Connect multiple existing ColorVariantParent documents */
+  readonly connect?: InputMaybe<ReadonlyArray<ColorVariantParentWhereUniqueInput>>;
+  /** Create and connect multiple existing ColorVariantParent documents */
+  readonly create?: InputMaybe<ReadonlyArray<ColorVariantParentCreateInput>>;
+};
+
+export type ColorVariantParentCreateOneInlineInput = {
+  /** Connect one existing ColorVariantParent document */
+  readonly connect?: InputMaybe<ColorVariantParentWhereUniqueInput>;
+  /** Create and connect one ColorVariantParent document */
+  readonly create?: InputMaybe<ColorVariantParentCreateInput>;
+};
+
+export type ColorVariantParentUpdateInput = {
+  readonly Variant4?: InputMaybe<Variant4UpdateInput>;
+};
+
+export type ColorVariantParentUpdateManyInlineInput = {
+  /** Connect multiple existing ColorVariantParent documents */
+  readonly connect?: InputMaybe<ReadonlyArray<ColorVariantParentConnectInput>>;
+  /** Create and connect multiple ColorVariantParent documents */
+  readonly create?: InputMaybe<ReadonlyArray<ColorVariantParentCreateInput>>;
+  /** Delete multiple ColorVariantParent documents */
+  readonly delete?: InputMaybe<ReadonlyArray<ColorVariantParentWhereUniqueInput>>;
+  /** Disconnect multiple ColorVariantParent documents */
+  readonly disconnect?: InputMaybe<ReadonlyArray<ColorVariantParentWhereUniqueInput>>;
+  /** Override currently-connected documents with multiple existing ColorVariantParent documents */
+  readonly set?: InputMaybe<ReadonlyArray<ColorVariantParentWhereUniqueInput>>;
+  /** Update multiple ColorVariantParent documents */
+  readonly update?: InputMaybe<ReadonlyArray<ColorVariantParentUpdateWithNestedWhereUniqueInput>>;
+  /** Upsert multiple ColorVariantParent documents */
+  readonly upsert?: InputMaybe<ReadonlyArray<ColorVariantParentUpsertWithNestedWhereUniqueInput>>;
+};
+
+export type ColorVariantParentUpdateManyWithNestedWhereInput = {
+  readonly Variant4?: InputMaybe<Variant4UpdateManyWithNestedWhereInput>;
+};
+
+export type ColorVariantParentUpdateOneInlineInput = {
+  /** Connect existing ColorVariantParent document */
+  readonly connect?: InputMaybe<ColorVariantParentWhereUniqueInput>;
+  /** Create and connect one ColorVariantParent document */
+  readonly create?: InputMaybe<ColorVariantParentCreateInput>;
+  /** Delete currently connected ColorVariantParent document */
+  readonly delete?: InputMaybe<Scalars['Boolean']>;
+  /** Disconnect currently connected ColorVariantParent document */
+  readonly disconnect?: InputMaybe<Scalars['Boolean']>;
+  /** Update single ColorVariantParent document */
+  readonly update?: InputMaybe<ColorVariantParentUpdateWithNestedWhereUniqueInput>;
+  /** Upsert single ColorVariantParent document */
+  readonly upsert?: InputMaybe<ColorVariantParentUpsertWithNestedWhereUniqueInput>;
+};
+
+export type ColorVariantParentUpdateWithNestedWhereUniqueInput = {
+  readonly Variant4?: InputMaybe<Variant4UpdateWithNestedWhereUniqueInput>;
+};
+
+export type ColorVariantParentUpsertWithNestedWhereUniqueInput = {
+  readonly Variant4?: InputMaybe<Variant4UpsertWithNestedWhereUniqueInput>;
+};
+
+export type ColorVariantParentWhereInput = {
+  readonly Variant4?: InputMaybe<Variant4WhereInput>;
+};
+
+export type ColorVariantParentWhereUniqueInput = {
+  readonly Variant4?: InputMaybe<Variant4WhereUniqueInput>;
+};
+
+export type ColorVariantUpdateInput = {
+  /** No fields in update input */
+  readonly _?: InputMaybe<Scalars['String']>;
+};
+
+export type ColorVariantUpdateManyInlineInput = {
+  /** Create and connect multiple ColorVariant component instances */
+  readonly create?: InputMaybe<ReadonlyArray<ColorVariantCreateWithPositionInput>>;
+  /** Delete multiple ColorVariant documents */
+  readonly delete?: InputMaybe<ReadonlyArray<ColorVariantWhereUniqueInput>>;
+  /** Update multiple ColorVariant component instances */
+  readonly update?: InputMaybe<ReadonlyArray<ColorVariantUpdateWithNestedWhereUniqueAndPositionInput>>;
+  /** Upsert multiple ColorVariant component instances */
+  readonly upsert?: InputMaybe<ReadonlyArray<ColorVariantUpsertWithNestedWhereUniqueAndPositionInput>>;
+};
+
+export type ColorVariantUpdateManyInput = {
+  /** No fields in updateMany data input */
+  readonly _?: InputMaybe<Scalars['String']>;
+};
+
+export type ColorVariantUpdateManyWithNestedWhereInput = {
+  /** Update many input */
+  readonly data: ColorVariantUpdateManyInput;
+  /** Document search */
+  readonly where: ColorVariantWhereInput;
+};
+
+export type ColorVariantUpdateOneInlineInput = {
+  /** Create and connect one ColorVariant document */
+  readonly create?: InputMaybe<ColorVariantCreateInput>;
+  /** Delete currently connected ColorVariant document */
+  readonly delete?: InputMaybe<Scalars['Boolean']>;
+  /** Update single ColorVariant document */
+  readonly update?: InputMaybe<ColorVariantUpdateWithNestedWhereUniqueInput>;
+  /** Upsert single ColorVariant document */
+  readonly upsert?: InputMaybe<ColorVariantUpsertWithNestedWhereUniqueInput>;
+};
+
+export type ColorVariantUpdateWithNestedWhereUniqueAndPositionInput = {
+  /** Document to update */
+  readonly data?: InputMaybe<ColorVariantUpdateInput>;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  readonly position?: InputMaybe<ConnectPositionInput>;
+  /** Unique component instance search */
+  readonly where: ColorVariantWhereUniqueInput;
+};
+
+export type ColorVariantUpdateWithNestedWhereUniqueInput = {
+  /** Document to update */
+  readonly data: ColorVariantUpdateInput;
+  /** Unique document search */
+  readonly where: ColorVariantWhereUniqueInput;
+};
+
+export type ColorVariantUpsertInput = {
+  /** Create document if it didn't exist */
+  readonly create: ColorVariantCreateInput;
+  /** Update document if it exists */
+  readonly update: ColorVariantUpdateInput;
+};
+
+export type ColorVariantUpsertWithNestedWhereUniqueAndPositionInput = {
+  /** Document to upsert */
+  readonly data?: InputMaybe<ColorVariantUpsertInput>;
+  /** Position in the list of existing component instances, will default to appending at the end of list */
+  readonly position?: InputMaybe<ConnectPositionInput>;
+  /** Unique component instance search */
+  readonly where: ColorVariantWhereUniqueInput;
+};
+
+export type ColorVariantUpsertWithNestedWhereUniqueInput = {
+  /** Upsert data */
+  readonly data: ColorVariantUpsertInput;
+  /** Unique document search */
+  readonly where: ColorVariantWhereUniqueInput;
+};
+
+/** Identifies documents */
+export type ColorVariantWhereInput = {
+  /** Logical AND on all given filters. */
+  readonly AND?: InputMaybe<ReadonlyArray<ColorVariantWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  readonly NOT?: InputMaybe<ReadonlyArray<ColorVariantWhereInput>>;
+  /** Logical OR on all given filters. */
+  readonly OR?: InputMaybe<ReadonlyArray<ColorVariantWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  readonly _search?: InputMaybe<Scalars['String']>;
+  readonly id?: InputMaybe<Scalars['ID']>;
+  /** All values containing the given string. */
+  readonly id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  readonly id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  readonly id_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
+  /** All values that are not equal to given value. */
+  readonly id_not?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  readonly id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  readonly id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are not contained in given list. */
+  readonly id_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
+  /** All values not starting with the given string. */
+  readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  readonly id_starts_with?: InputMaybe<Scalars['ID']>;
+};
+
+/** References ColorVariant record uniquely */
+export type ColorVariantWhereUniqueInput = {
+  readonly id?: InputMaybe<Scalars['ID']>;
+};
+
 export type ConnectPositionInput = {
   /** Connect document after specified document */
   readonly after?: InputMaybe<Scalars['ID']>;
@@ -4841,6 +5119,8 @@ export type Mutation = {
   readonly createCollection?: Maybe<Collection>;
   /** Create one currency */
   readonly createCurrency?: Maybe<Currency>;
+  /** Create one option */
+  readonly createOption?: Maybe<Option>;
   /** Create one order */
   readonly createOrder?: Maybe<Order>;
   /** Create one orderItem */
@@ -4863,8 +5143,6 @@ export type Mutation = {
   readonly createScheduledRelease?: Maybe<ScheduledRelease>;
   /** Create one variant2 */
   readonly createVariant2?: Maybe<Variant2>;
-  /** Create one variant3 */
-  readonly createVariant3?: Maybe<Variant3>;
   /** Create one variant4 */
   readonly createVariant4?: Maybe<Variant4>;
   /** Delete one account from _all_ existing stages. Returns deleted document. */
@@ -4949,6 +5227,13 @@ export type Mutation = {
   /** Delete many Currency documents, return deleted documents */
   readonly deleteManyCurrenciesConnection: CurrencyConnection;
   /**
+   * Delete many Option documents
+   * @deprecated Please use the new paginated many mutation (deleteManyOptionsConnection)
+   */
+  readonly deleteManyOptions: BatchPayload;
+  /** Delete many Option documents, return deleted documents */
+  readonly deleteManyOptionsConnection: OptionConnection;
+  /**
    * Delete many OrderItem documents
    * @deprecated Please use the new paginated many mutation (deleteManyOrderItemsConnection)
    */
@@ -5019,19 +5304,14 @@ export type Mutation = {
   /** Delete many Variant2 documents, return deleted documents */
   readonly deleteManyVariant2SConnection: Variant2Connection;
   /**
-   * Delete many Variant3 documents
-   * @deprecated Please use the new paginated many mutation (deleteManyVariant3SConnection)
-   */
-  readonly deleteManyVariant3S: BatchPayload;
-  /** Delete many Variant3 documents, return deleted documents */
-  readonly deleteManyVariant3SConnection: Variant3Connection;
-  /**
    * Delete many Variant4 documents
    * @deprecated Please use the new paginated many mutation (deleteManyVariant4SConnection)
    */
   readonly deleteManyVariant4S: BatchPayload;
   /** Delete many Variant4 documents, return deleted documents */
   readonly deleteManyVariant4SConnection: Variant4Connection;
+  /** Delete one option from _all_ existing stages. Returns deleted document. */
+  readonly deleteOption?: Maybe<Option>;
   /** Delete one order from _all_ existing stages. Returns deleted document. */
   readonly deleteOrder?: Maybe<Order>;
   /** Delete one orderItem from _all_ existing stages. Returns deleted document. */
@@ -5056,8 +5336,6 @@ export type Mutation = {
   readonly deleteScheduledRelease?: Maybe<ScheduledRelease>;
   /** Delete one variant2 from _all_ existing stages. Returns deleted document. */
   readonly deleteVariant2?: Maybe<Variant2>;
-  /** Delete one variant3 from _all_ existing stages. Returns deleted document. */
-  readonly deleteVariant3?: Maybe<Variant3>;
   /** Delete one variant4 from _all_ existing stages. Returns deleted document. */
   readonly deleteVariant4?: Maybe<Variant4>;
   /** Publish one account */
@@ -5142,6 +5420,13 @@ export type Mutation = {
   /** Publish many Currency documents */
   readonly publishManyCurrenciesConnection: CurrencyConnection;
   /**
+   * Publish many Option documents
+   * @deprecated Please use the new paginated many mutation (publishManyOptionsConnection)
+   */
+  readonly publishManyOptions: BatchPayload;
+  /** Publish many Option documents */
+  readonly publishManyOptionsConnection: OptionConnection;
+  /**
    * Publish many OrderItem documents
    * @deprecated Please use the new paginated many mutation (publishManyOrderItemsConnection)
    */
@@ -5212,19 +5497,14 @@ export type Mutation = {
   /** Publish many Variant2 documents */
   readonly publishManyVariant2SConnection: Variant2Connection;
   /**
-   * Publish many Variant3 documents
-   * @deprecated Please use the new paginated many mutation (publishManyVariant3SConnection)
-   */
-  readonly publishManyVariant3S: BatchPayload;
-  /** Publish many Variant3 documents */
-  readonly publishManyVariant3SConnection: Variant3Connection;
-  /**
    * Publish many Variant4 documents
    * @deprecated Please use the new paginated many mutation (publishManyVariant4SConnection)
    */
   readonly publishManyVariant4S: BatchPayload;
   /** Publish many Variant4 documents */
   readonly publishManyVariant4SConnection: Variant4Connection;
+  /** Publish one option */
+  readonly publishOption?: Maybe<Option>;
   /** Publish one order */
   readonly publishOrder?: Maybe<Order>;
   /** Publish one orderItem */
@@ -5245,8 +5525,6 @@ export type Mutation = {
   readonly publishReview?: Maybe<Review>;
   /** Publish one variant2 */
   readonly publishVariant2?: Maybe<Variant2>;
-  /** Publish one variant3 */
-  readonly publishVariant3?: Maybe<Variant3>;
   /** Publish one variant4 */
   readonly publishVariant4?: Maybe<Variant4>;
   /** Schedule to publish one account */
@@ -5267,6 +5545,8 @@ export type Mutation = {
   readonly schedulePublishCollection?: Maybe<Collection>;
   /** Schedule to publish one currency */
   readonly schedulePublishCurrency?: Maybe<Currency>;
+  /** Schedule to publish one option */
+  readonly schedulePublishOption?: Maybe<Option>;
   /** Schedule to publish one order */
   readonly schedulePublishOrder?: Maybe<Order>;
   /** Schedule to publish one orderItem */
@@ -5287,8 +5567,6 @@ export type Mutation = {
   readonly schedulePublishReview?: Maybe<Review>;
   /** Schedule to publish one variant2 */
   readonly schedulePublishVariant2?: Maybe<Variant2>;
-  /** Schedule to publish one variant3 */
-  readonly schedulePublishVariant3?: Maybe<Variant3>;
   /** Schedule to publish one variant4 */
   readonly schedulePublishVariant4?: Maybe<Variant4>;
   /** Unpublish one account from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
@@ -5309,6 +5587,8 @@ export type Mutation = {
   readonly scheduleUnpublishCollection?: Maybe<Collection>;
   /** Unpublish one currency from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly scheduleUnpublishCurrency?: Maybe<Currency>;
+  /** Unpublish one option from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
+  readonly scheduleUnpublishOption?: Maybe<Option>;
   /** Unpublish one order from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly scheduleUnpublishOrder?: Maybe<Order>;
   /** Unpublish one orderItem from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
@@ -5329,8 +5609,6 @@ export type Mutation = {
   readonly scheduleUnpublishReview?: Maybe<Review>;
   /** Unpublish one variant2 from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly scheduleUnpublishVariant2?: Maybe<Variant2>;
-  /** Unpublish one variant3 from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
-  readonly scheduleUnpublishVariant3?: Maybe<Variant3>;
   /** Unpublish one variant4 from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly scheduleUnpublishVariant4?: Maybe<Variant4>;
   /** Unpublish one account from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
@@ -5415,6 +5693,13 @@ export type Mutation = {
   /** Find many Currency documents that match criteria in specified stage and unpublish from target stages */
   readonly unpublishManyCurrenciesConnection: CurrencyConnection;
   /**
+   * Unpublish many Option documents
+   * @deprecated Please use the new paginated many mutation (unpublishManyOptionsConnection)
+   */
+  readonly unpublishManyOptions: BatchPayload;
+  /** Find many Option documents that match criteria in specified stage and unpublish from target stages */
+  readonly unpublishManyOptionsConnection: OptionConnection;
+  /**
    * Unpublish many OrderItem documents
    * @deprecated Please use the new paginated many mutation (unpublishManyOrderItemsConnection)
    */
@@ -5485,19 +5770,14 @@ export type Mutation = {
   /** Find many Variant2 documents that match criteria in specified stage and unpublish from target stages */
   readonly unpublishManyVariant2SConnection: Variant2Connection;
   /**
-   * Unpublish many Variant3 documents
-   * @deprecated Please use the new paginated many mutation (unpublishManyVariant3SConnection)
-   */
-  readonly unpublishManyVariant3S: BatchPayload;
-  /** Find many Variant3 documents that match criteria in specified stage and unpublish from target stages */
-  readonly unpublishManyVariant3SConnection: Variant3Connection;
-  /**
    * Unpublish many Variant4 documents
    * @deprecated Please use the new paginated many mutation (unpublishManyVariant4SConnection)
    */
   readonly unpublishManyVariant4S: BatchPayload;
   /** Find many Variant4 documents that match criteria in specified stage and unpublish from target stages */
   readonly unpublishManyVariant4SConnection: Variant4Connection;
+  /** Unpublish one option from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
+  readonly unpublishOption?: Maybe<Option>;
   /** Unpublish one order from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly unpublishOrder?: Maybe<Order>;
   /** Unpublish one orderItem from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
@@ -5518,8 +5798,6 @@ export type Mutation = {
   readonly unpublishReview?: Maybe<Review>;
   /** Unpublish one variant2 from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly unpublishVariant2?: Maybe<Variant2>;
-  /** Unpublish one variant3 from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
-  readonly unpublishVariant3?: Maybe<Variant3>;
   /** Unpublish one variant4 from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly unpublishVariant4?: Maybe<Variant4>;
   /** Update one account */
@@ -5604,6 +5882,13 @@ export type Mutation = {
   /** Update many Currency documents */
   readonly updateManyCurrenciesConnection: CurrencyConnection;
   /**
+   * Update many options
+   * @deprecated Please use the new paginated many mutation (updateManyOptionsConnection)
+   */
+  readonly updateManyOptions: BatchPayload;
+  /** Update many Option documents */
+  readonly updateManyOptionsConnection: OptionConnection;
+  /**
    * Update many orderItems
    * @deprecated Please use the new paginated many mutation (updateManyOrderItemsConnection)
    */
@@ -5674,19 +5959,14 @@ export type Mutation = {
   /** Update many Variant2 documents */
   readonly updateManyVariant2SConnection: Variant2Connection;
   /**
-   * Update many variant3S
-   * @deprecated Please use the new paginated many mutation (updateManyVariant3SConnection)
-   */
-  readonly updateManyVariant3S: BatchPayload;
-  /** Update many Variant3 documents */
-  readonly updateManyVariant3SConnection: Variant3Connection;
-  /**
    * Update many variant4S
    * @deprecated Please use the new paginated many mutation (updateManyVariant4SConnection)
    */
   readonly updateManyVariant4S: BatchPayload;
   /** Update many Variant4 documents */
   readonly updateManyVariant4SConnection: Variant4Connection;
+  /** Update one option */
+  readonly updateOption?: Maybe<Option>;
   /** Update one order */
   readonly updateOrder?: Maybe<Order>;
   /** Update one orderItem */
@@ -5709,8 +5989,6 @@ export type Mutation = {
   readonly updateScheduledRelease?: Maybe<ScheduledRelease>;
   /** Update one variant2 */
   readonly updateVariant2?: Maybe<Variant2>;
-  /** Update one variant3 */
-  readonly updateVariant3?: Maybe<Variant3>;
   /** Update one variant4 */
   readonly updateVariant4?: Maybe<Variant4>;
   /** Upsert one account */
@@ -5731,6 +6009,8 @@ export type Mutation = {
   readonly upsertCollection?: Maybe<Collection>;
   /** Upsert one currency */
   readonly upsertCurrency?: Maybe<Currency>;
+  /** Upsert one option */
+  readonly upsertOption?: Maybe<Option>;
   /** Upsert one order */
   readonly upsertOrder?: Maybe<Order>;
   /** Upsert one orderItem */
@@ -5751,8 +6031,6 @@ export type Mutation = {
   readonly upsertReview?: Maybe<Review>;
   /** Upsert one variant2 */
   readonly upsertVariant2?: Maybe<Variant2>;
-  /** Upsert one variant3 */
-  readonly upsertVariant3?: Maybe<Variant3>;
   /** Upsert one variant4 */
   readonly upsertVariant4?: Maybe<Variant4>;
 };
@@ -5800,6 +6078,11 @@ export type MutationCreateCollectionArgs = {
 
 export type MutationCreateCurrencyArgs = {
   data: CurrencyCreateInput;
+};
+
+
+export type MutationCreateOptionArgs = {
+  data: OptionCreateInput;
 };
 
 
@@ -5855,11 +6138,6 @@ export type MutationCreateScheduledReleaseArgs = {
 
 export type MutationCreateVariant2Args = {
   data: Variant2CreateInput;
-};
-
-
-export type MutationCreateVariant3Args = {
-  data: Variant3CreateInput;
 };
 
 
@@ -6048,6 +6326,21 @@ export type MutationDeleteManyCurrenciesConnectionArgs = {
 };
 
 
+export type MutationDeleteManyOptionsArgs = {
+  where?: InputMaybe<OptionManyWhereInput>;
+};
+
+
+export type MutationDeleteManyOptionsConnectionArgs = {
+  after?: InputMaybe<Scalars['ID']>;
+  before?: InputMaybe<Scalars['ID']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<OptionManyWhereInput>;
+};
+
+
 export type MutationDeleteManyOrderItemsArgs = {
   where?: InputMaybe<OrderItemManyWhereInput>;
 };
@@ -6198,21 +6491,6 @@ export type MutationDeleteManyVariant2SConnectionArgs = {
 };
 
 
-export type MutationDeleteManyVariant3SArgs = {
-  where?: InputMaybe<Variant3ManyWhereInput>;
-};
-
-
-export type MutationDeleteManyVariant3SConnectionArgs = {
-  after?: InputMaybe<Scalars['ID']>;
-  before?: InputMaybe<Scalars['ID']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<Variant3ManyWhereInput>;
-};
-
-
 export type MutationDeleteManyVariant4SArgs = {
   where?: InputMaybe<Variant4ManyWhereInput>;
 };
@@ -6225,6 +6503,11 @@ export type MutationDeleteManyVariant4SConnectionArgs = {
   last?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<Variant4ManyWhereInput>;
+};
+
+
+export type MutationDeleteOptionArgs = {
+  where: OptionWhereUniqueInput;
 };
 
 
@@ -6285,11 +6568,6 @@ export type MutationDeleteScheduledReleaseArgs = {
 
 export type MutationDeleteVariant2Args = {
   where: Variant2WhereUniqueInput;
-};
-
-
-export type MutationDeleteVariant3Args = {
-  where: Variant3WhereUniqueInput;
 };
 
 
@@ -6541,6 +6819,30 @@ export type MutationPublishManyCurrenciesConnectionArgs = {
 };
 
 
+export type MutationPublishManyOptionsArgs = {
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+  publishBase?: InputMaybe<Scalars['Boolean']>;
+  to?: ReadonlyArray<Stage>;
+  where?: InputMaybe<OptionManyWhereInput>;
+  withDefaultLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+
+export type MutationPublishManyOptionsConnectionArgs = {
+  after?: InputMaybe<Scalars['ID']>;
+  before?: InputMaybe<Scalars['ID']>;
+  first?: InputMaybe<Scalars['Int']>;
+  from?: InputMaybe<Stage>;
+  last?: InputMaybe<Scalars['Int']>;
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+  publishBase?: InputMaybe<Scalars['Boolean']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  to?: ReadonlyArray<Stage>;
+  where?: InputMaybe<OptionManyWhereInput>;
+  withDefaultLocale?: InputMaybe<Scalars['Boolean']>;
+};
+
+
 export type MutationPublishManyOrderItemsArgs = {
   to?: ReadonlyArray<Stage>;
   where?: InputMaybe<OrderItemManyWhereInput>;
@@ -6757,30 +7059,6 @@ export type MutationPublishManyVariant2SConnectionArgs = {
 };
 
 
-export type MutationPublishManyVariant3SArgs = {
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  publishBase?: InputMaybe<Scalars['Boolean']>;
-  to?: ReadonlyArray<Stage>;
-  where?: InputMaybe<Variant3ManyWhereInput>;
-  withDefaultLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-
-export type MutationPublishManyVariant3SConnectionArgs = {
-  after?: InputMaybe<Scalars['ID']>;
-  before?: InputMaybe<Scalars['ID']>;
-  first?: InputMaybe<Scalars['Int']>;
-  from?: InputMaybe<Stage>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  publishBase?: InputMaybe<Scalars['Boolean']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  to?: ReadonlyArray<Stage>;
-  where?: InputMaybe<Variant3ManyWhereInput>;
-  withDefaultLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-
 export type MutationPublishManyVariant4SArgs = {
   to?: ReadonlyArray<Stage>;
   where?: InputMaybe<Variant4ManyWhereInput>;
@@ -6796,6 +7074,15 @@ export type MutationPublishManyVariant4SConnectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   to?: ReadonlyArray<Stage>;
   where?: InputMaybe<Variant4ManyWhereInput>;
+};
+
+
+export type MutationPublishOptionArgs = {
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+  publishBase?: InputMaybe<Scalars['Boolean']>;
+  to?: ReadonlyArray<Stage>;
+  where: OptionWhereUniqueInput;
+  withDefaultLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 
@@ -6873,15 +7160,6 @@ export type MutationPublishVariant2Args = {
   publishBase?: InputMaybe<Scalars['Boolean']>;
   to?: ReadonlyArray<Stage>;
   where: Variant2WhereUniqueInput;
-  withDefaultLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-
-export type MutationPublishVariant3Args = {
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  publishBase?: InputMaybe<Scalars['Boolean']>;
-  to?: ReadonlyArray<Stage>;
-  where: Variant3WhereUniqueInput;
   withDefaultLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
@@ -6970,6 +7248,17 @@ export type MutationSchedulePublishCurrencyArgs = {
   releaseId?: InputMaybe<Scalars['String']>;
   to?: ReadonlyArray<Stage>;
   where: CurrencyWhereUniqueInput;
+};
+
+
+export type MutationSchedulePublishOptionArgs = {
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+  publishBase?: InputMaybe<Scalars['Boolean']>;
+  releaseAt?: InputMaybe<Scalars['DateTime']>;
+  releaseId?: InputMaybe<Scalars['String']>;
+  to?: ReadonlyArray<Stage>;
+  where: OptionWhereUniqueInput;
+  withDefaultLocale?: InputMaybe<Scalars['Boolean']>;
 };
 
 
@@ -7071,17 +7360,6 @@ export type MutationSchedulePublishVariant2Args = {
 };
 
 
-export type MutationSchedulePublishVariant3Args = {
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  publishBase?: InputMaybe<Scalars['Boolean']>;
-  releaseAt?: InputMaybe<Scalars['DateTime']>;
-  releaseId?: InputMaybe<Scalars['String']>;
-  to?: ReadonlyArray<Stage>;
-  where: Variant3WhereUniqueInput;
-  withDefaultLocale?: InputMaybe<Scalars['Boolean']>;
-};
-
-
 export type MutationSchedulePublishVariant4Args = {
   releaseAt?: InputMaybe<Scalars['DateTime']>;
   releaseId?: InputMaybe<Scalars['String']>;
@@ -7165,6 +7443,16 @@ export type MutationScheduleUnpublishCurrencyArgs = {
   releaseAt?: InputMaybe<Scalars['DateTime']>;
   releaseId?: InputMaybe<Scalars['String']>;
   where: CurrencyWhereUniqueInput;
+};
+
+
+export type MutationScheduleUnpublishOptionArgs = {
+  from?: ReadonlyArray<Stage>;
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+  releaseAt?: InputMaybe<Scalars['DateTime']>;
+  releaseId?: InputMaybe<Scalars['String']>;
+  unpublishBase?: InputMaybe<Scalars['Boolean']>;
+  where: OptionWhereUniqueInput;
 };
 
 
@@ -7257,16 +7545,6 @@ export type MutationScheduleUnpublishVariant2Args = {
   releaseId?: InputMaybe<Scalars['String']>;
   unpublishBase?: InputMaybe<Scalars['Boolean']>;
   where: Variant2WhereUniqueInput;
-};
-
-
-export type MutationScheduleUnpublishVariant3Args = {
-  from?: ReadonlyArray<Stage>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  releaseAt?: InputMaybe<Scalars['DateTime']>;
-  releaseId?: InputMaybe<Scalars['String']>;
-  unpublishBase?: InputMaybe<Scalars['Boolean']>;
-  where: Variant3WhereUniqueInput;
 };
 
 
@@ -7512,6 +7790,28 @@ export type MutationUnpublishManyCurrenciesConnectionArgs = {
 };
 
 
+export type MutationUnpublishManyOptionsArgs = {
+  from?: ReadonlyArray<Stage>;
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+  unpublishBase?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<OptionManyWhereInput>;
+};
+
+
+export type MutationUnpublishManyOptionsConnectionArgs = {
+  after?: InputMaybe<Scalars['ID']>;
+  before?: InputMaybe<Scalars['ID']>;
+  first?: InputMaybe<Scalars['Int']>;
+  from?: ReadonlyArray<Stage>;
+  last?: InputMaybe<Scalars['Int']>;
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+  skip?: InputMaybe<Scalars['Int']>;
+  stage?: InputMaybe<Stage>;
+  unpublishBase?: InputMaybe<Scalars['Boolean']>;
+  where?: InputMaybe<OptionManyWhereInput>;
+};
+
+
 export type MutationUnpublishManyOrderItemsArgs = {
   from?: ReadonlyArray<Stage>;
   where?: InputMaybe<OrderItemManyWhereInput>;
@@ -7716,28 +8016,6 @@ export type MutationUnpublishManyVariant2SConnectionArgs = {
 };
 
 
-export type MutationUnpublishManyVariant3SArgs = {
-  from?: ReadonlyArray<Stage>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  unpublishBase?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<Variant3ManyWhereInput>;
-};
-
-
-export type MutationUnpublishManyVariant3SConnectionArgs = {
-  after?: InputMaybe<Scalars['ID']>;
-  before?: InputMaybe<Scalars['ID']>;
-  first?: InputMaybe<Scalars['Int']>;
-  from?: ReadonlyArray<Stage>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  skip?: InputMaybe<Scalars['Int']>;
-  stage?: InputMaybe<Stage>;
-  unpublishBase?: InputMaybe<Scalars['Boolean']>;
-  where?: InputMaybe<Variant3ManyWhereInput>;
-};
-
-
 export type MutationUnpublishManyVariant4SArgs = {
   from?: ReadonlyArray<Stage>;
   where?: InputMaybe<Variant4ManyWhereInput>;
@@ -7753,6 +8031,14 @@ export type MutationUnpublishManyVariant4SConnectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   stage?: InputMaybe<Stage>;
   where?: InputMaybe<Variant4ManyWhereInput>;
+};
+
+
+export type MutationUnpublishOptionArgs = {
+  from?: ReadonlyArray<Stage>;
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+  unpublishBase?: InputMaybe<Scalars['Boolean']>;
+  where: OptionWhereUniqueInput;
 };
 
 
@@ -7825,14 +8111,6 @@ export type MutationUnpublishVariant2Args = {
   locales?: InputMaybe<ReadonlyArray<Locale>>;
   unpublishBase?: InputMaybe<Scalars['Boolean']>;
   where: Variant2WhereUniqueInput;
-};
-
-
-export type MutationUnpublishVariant3Args = {
-  from?: ReadonlyArray<Stage>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  unpublishBase?: InputMaybe<Scalars['Boolean']>;
-  where: Variant3WhereUniqueInput;
 };
 
 
@@ -8049,6 +8327,23 @@ export type MutationUpdateManyCurrenciesConnectionArgs = {
 };
 
 
+export type MutationUpdateManyOptionsArgs = {
+  data: OptionUpdateManyInput;
+  where?: InputMaybe<OptionManyWhereInput>;
+};
+
+
+export type MutationUpdateManyOptionsConnectionArgs = {
+  after?: InputMaybe<Scalars['ID']>;
+  before?: InputMaybe<Scalars['ID']>;
+  data: OptionUpdateManyInput;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<OptionManyWhereInput>;
+};
+
+
 export type MutationUpdateManyOrderItemsArgs = {
   data: OrderItemUpdateManyInput;
   where?: InputMaybe<OrderItemManyWhereInput>;
@@ -8219,23 +8514,6 @@ export type MutationUpdateManyVariant2SConnectionArgs = {
 };
 
 
-export type MutationUpdateManyVariant3SArgs = {
-  data: Variant3UpdateManyInput;
-  where?: InputMaybe<Variant3ManyWhereInput>;
-};
-
-
-export type MutationUpdateManyVariant3SConnectionArgs = {
-  after?: InputMaybe<Scalars['ID']>;
-  before?: InputMaybe<Scalars['ID']>;
-  data: Variant3UpdateManyInput;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<Variant3ManyWhereInput>;
-};
-
-
 export type MutationUpdateManyVariant4SArgs = {
   data: Variant4UpdateManyInput;
   where?: InputMaybe<Variant4ManyWhereInput>;
@@ -8250,6 +8528,12 @@ export type MutationUpdateManyVariant4SConnectionArgs = {
   last?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<Variant4ManyWhereInput>;
+};
+
+
+export type MutationUpdateOptionArgs = {
+  data: OptionUpdateInput;
+  where: OptionWhereUniqueInput;
 };
 
 
@@ -8319,12 +8603,6 @@ export type MutationUpdateVariant2Args = {
 };
 
 
-export type MutationUpdateVariant3Args = {
-  data: Variant3UpdateInput;
-  where: Variant3WhereUniqueInput;
-};
-
-
 export type MutationUpdateVariant4Args = {
   data: Variant4UpdateInput;
   where: Variant4WhereUniqueInput;
@@ -8382,6 +8660,12 @@ export type MutationUpsertCollectionArgs = {
 export type MutationUpsertCurrencyArgs = {
   upsert: CurrencyUpsertInput;
   where: CurrencyWhereUniqueInput;
+};
+
+
+export type MutationUpsertOptionArgs = {
+  upsert: OptionUpsertInput;
+  where: OptionWhereUniqueInput;
 };
 
 
@@ -8445,12 +8729,6 @@ export type MutationUpsertVariant2Args = {
 };
 
 
-export type MutationUpsertVariant3Args = {
-  upsert: Variant3UpsertInput;
-  where: Variant3WhereUniqueInput;
-};
-
-
 export type MutationUpsertVariant4Args = {
   upsert: Variant4UpsertInput;
   where: Variant4WhereUniqueInput;
@@ -8462,6 +8740,556 @@ export type Node = {
   readonly id: Scalars['ID'];
   /** The Stage of an object */
   readonly stage: Stage;
+};
+
+export type Option = Node & {
+  readonly __typename?: 'Option';
+  readonly color?: Maybe<ProductColor>;
+  /** The time the document was created */
+  readonly createdAt: Scalars['DateTime'];
+  /** User that created this document */
+  readonly createdBy?: Maybe<User>;
+  /** Get the document in other stages */
+  readonly documentInStages: ReadonlyArray<Option>;
+  /** List of Option versions */
+  readonly history: ReadonlyArray<Version>;
+  /** The unique identifier */
+  readonly id: Scalars['ID'];
+  /** System Locale field */
+  readonly locale: Locale;
+  /** Get the other localizations for this document */
+  readonly localizations: ReadonlyArray<Option>;
+  readonly product?: Maybe<Product>;
+  /** The time the document was published. Null on documents in draft stage. */
+  readonly publishedAt?: Maybe<Scalars['DateTime']>;
+  /** User that last published this document */
+  readonly publishedBy?: Maybe<User>;
+  readonly quantity: Scalars['Int'];
+  readonly scheduledIn: ReadonlyArray<ScheduledOperation>;
+  readonly size?: Maybe<ProductSize>;
+  /** System stage field */
+  readonly stage: Stage;
+  /** The time the document was updated */
+  readonly updatedAt: Scalars['DateTime'];
+  /** User that last updated this document */
+  readonly updatedBy?: Maybe<User>;
+};
+
+
+export type OptionCreatedAtArgs = {
+  variation?: SystemDateTimeFieldVariation;
+};
+
+
+export type OptionCreatedByArgs = {
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+};
+
+
+export type OptionDocumentInStagesArgs = {
+  includeCurrent?: Scalars['Boolean'];
+  inheritLocale?: Scalars['Boolean'];
+  stages?: ReadonlyArray<Stage>;
+};
+
+
+export type OptionHistoryArgs = {
+  limit?: Scalars['Int'];
+  skip?: Scalars['Int'];
+  stageOverride?: InputMaybe<Stage>;
+};
+
+
+export type OptionLocalizationsArgs = {
+  includeCurrent?: Scalars['Boolean'];
+  locales?: ReadonlyArray<Locale>;
+};
+
+
+export type OptionProductArgs = {
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+};
+
+
+export type OptionPublishedAtArgs = {
+  variation?: SystemDateTimeFieldVariation;
+};
+
+
+export type OptionPublishedByArgs = {
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+};
+
+
+export type OptionScheduledInArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ScheduledOperationWhereInput>;
+};
+
+
+export type OptionUpdatedAtArgs = {
+  variation?: SystemDateTimeFieldVariation;
+};
+
+
+export type OptionUpdatedByArgs = {
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+};
+
+export type OptionConnectInput = {
+  /** Allow to specify document position in list of connected documents, will default to appending at end of list */
+  readonly position?: InputMaybe<ConnectPositionInput>;
+  /** Document to connect */
+  readonly where: OptionWhereUniqueInput;
+};
+
+/** A connection to a list of items. */
+export type OptionConnection = {
+  readonly __typename?: 'OptionConnection';
+  readonly aggregate: Aggregate;
+  /** A list of edges. */
+  readonly edges: ReadonlyArray<OptionEdge>;
+  /** Information to aid in pagination. */
+  readonly pageInfo: PageInfo;
+};
+
+export type OptionCreateInput = {
+  /** color input for default locale (en) */
+  readonly color?: InputMaybe<ProductColor>;
+  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
+  /** Inline mutations for managing document localizations excluding the default locale */
+  readonly localizations?: InputMaybe<OptionCreateLocalizationsInput>;
+  readonly product?: InputMaybe<ProductCreateOneInlineInput>;
+  readonly quantity: Scalars['Int'];
+  /** size input for default locale (en) */
+  readonly size?: InputMaybe<ProductSize>;
+  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type OptionCreateLocalizationDataInput = {
+  readonly color?: InputMaybe<ProductColor>;
+  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
+  readonly size?: InputMaybe<ProductSize>;
+  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type OptionCreateLocalizationInput = {
+  /** Localization input */
+  readonly data: OptionCreateLocalizationDataInput;
+  readonly locale: Locale;
+};
+
+export type OptionCreateLocalizationsInput = {
+  /** Create localizations for the newly-created document */
+  readonly create?: InputMaybe<ReadonlyArray<OptionCreateLocalizationInput>>;
+};
+
+export type OptionCreateManyInlineInput = {
+  /** Connect multiple existing Option documents */
+  readonly connect?: InputMaybe<ReadonlyArray<OptionWhereUniqueInput>>;
+  /** Create and connect multiple existing Option documents */
+  readonly create?: InputMaybe<ReadonlyArray<OptionCreateInput>>;
+};
+
+export type OptionCreateOneInlineInput = {
+  /** Connect one existing Option document */
+  readonly connect?: InputMaybe<OptionWhereUniqueInput>;
+  /** Create and connect one Option document */
+  readonly create?: InputMaybe<OptionCreateInput>;
+};
+
+/** An edge in a connection. */
+export type OptionEdge = {
+  readonly __typename?: 'OptionEdge';
+  /** A cursor for use in pagination. */
+  readonly cursor: Scalars['String'];
+  /** The item at the end of the edge. */
+  readonly node: Option;
+};
+
+/** Identifies documents */
+export type OptionManyWhereInput = {
+  /** Logical AND on all given filters. */
+  readonly AND?: InputMaybe<ReadonlyArray<OptionWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  readonly NOT?: InputMaybe<ReadonlyArray<OptionWhereInput>>;
+  /** Logical OR on all given filters. */
+  readonly OR?: InputMaybe<ReadonlyArray<OptionWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  readonly _search?: InputMaybe<Scalars['String']>;
+  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  readonly createdAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  readonly createdAt_gte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  readonly createdAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  /** All values less than the given value. */
+  readonly createdAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  readonly createdAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  readonly createdAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not contained in given list. */
+  readonly createdAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  readonly createdBy?: InputMaybe<UserWhereInput>;
+  readonly documentInStages_every?: InputMaybe<OptionWhereStageInput>;
+  readonly documentInStages_none?: InputMaybe<OptionWhereStageInput>;
+  readonly documentInStages_some?: InputMaybe<OptionWhereStageInput>;
+  readonly id?: InputMaybe<Scalars['ID']>;
+  /** All values containing the given string. */
+  readonly id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  readonly id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  readonly id_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
+  /** All values that are not equal to given value. */
+  readonly id_not?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  readonly id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  readonly id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are not contained in given list. */
+  readonly id_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
+  /** All values not starting with the given string. */
+  readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  readonly id_starts_with?: InputMaybe<Scalars['ID']>;
+  readonly product?: InputMaybe<ProductWhereInput>;
+  readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  readonly publishedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  readonly publishedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  /** All values less than the given value. */
+  readonly publishedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  readonly publishedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  readonly publishedAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not contained in given list. */
+  readonly publishedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  readonly publishedBy?: InputMaybe<UserWhereInput>;
+  readonly quantity?: InputMaybe<Scalars['Int']>;
+  /** All values greater than the given value. */
+  readonly quantity_gt?: InputMaybe<Scalars['Int']>;
+  /** All values greater than or equal the given value. */
+  readonly quantity_gte?: InputMaybe<Scalars['Int']>;
+  /** All values that are contained in given list. */
+  readonly quantity_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
+  /** All values less than the given value. */
+  readonly quantity_lt?: InputMaybe<Scalars['Int']>;
+  /** All values less than or equal the given value. */
+  readonly quantity_lte?: InputMaybe<Scalars['Int']>;
+  /** All values that are not equal to given value. */
+  readonly quantity_not?: InputMaybe<Scalars['Int']>;
+  /** All values that are not contained in given list. */
+  readonly quantity_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
+  readonly scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
+  readonly scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
+  readonly scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
+  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  readonly updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  readonly updatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  readonly updatedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  /** All values less than the given value. */
+  readonly updatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  readonly updatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  readonly updatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not contained in given list. */
+  readonly updatedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  readonly updatedBy?: InputMaybe<UserWhereInput>;
+};
+
+export enum OptionOrderByInput {
+  ColorAsc = 'color_ASC',
+  ColorDesc = 'color_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  PublishedAtAsc = 'publishedAt_ASC',
+  PublishedAtDesc = 'publishedAt_DESC',
+  QuantityAsc = 'quantity_ASC',
+  QuantityDesc = 'quantity_DESC',
+  SizeAsc = 'size_ASC',
+  SizeDesc = 'size_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC'
+}
+
+export type OptionUpdateInput = {
+  /** color input for default locale (en) */
+  readonly color?: InputMaybe<ProductColor>;
+  /** Manage document localizations */
+  readonly localizations?: InputMaybe<OptionUpdateLocalizationsInput>;
+  readonly product?: InputMaybe<ProductUpdateOneInlineInput>;
+  readonly quantity?: InputMaybe<Scalars['Int']>;
+  /** size input for default locale (en) */
+  readonly size?: InputMaybe<ProductSize>;
+};
+
+export type OptionUpdateLocalizationDataInput = {
+  readonly color?: InputMaybe<ProductColor>;
+  readonly size?: InputMaybe<ProductSize>;
+};
+
+export type OptionUpdateLocalizationInput = {
+  readonly data: OptionUpdateLocalizationDataInput;
+  readonly locale: Locale;
+};
+
+export type OptionUpdateLocalizationsInput = {
+  /** Localizations to create */
+  readonly create?: InputMaybe<ReadonlyArray<OptionCreateLocalizationInput>>;
+  /** Localizations to delete */
+  readonly delete?: InputMaybe<ReadonlyArray<Locale>>;
+  /** Localizations to update */
+  readonly update?: InputMaybe<ReadonlyArray<OptionUpdateLocalizationInput>>;
+  readonly upsert?: InputMaybe<ReadonlyArray<OptionUpsertLocalizationInput>>;
+};
+
+export type OptionUpdateManyInlineInput = {
+  /** Connect multiple existing Option documents */
+  readonly connect?: InputMaybe<ReadonlyArray<OptionConnectInput>>;
+  /** Create and connect multiple Option documents */
+  readonly create?: InputMaybe<ReadonlyArray<OptionCreateInput>>;
+  /** Delete multiple Option documents */
+  readonly delete?: InputMaybe<ReadonlyArray<OptionWhereUniqueInput>>;
+  /** Disconnect multiple Option documents */
+  readonly disconnect?: InputMaybe<ReadonlyArray<OptionWhereUniqueInput>>;
+  /** Override currently-connected documents with multiple existing Option documents */
+  readonly set?: InputMaybe<ReadonlyArray<OptionWhereUniqueInput>>;
+  /** Update multiple Option documents */
+  readonly update?: InputMaybe<ReadonlyArray<OptionUpdateWithNestedWhereUniqueInput>>;
+  /** Upsert multiple Option documents */
+  readonly upsert?: InputMaybe<ReadonlyArray<OptionUpsertWithNestedWhereUniqueInput>>;
+};
+
+export type OptionUpdateManyInput = {
+  /** color input for default locale (en) */
+  readonly color?: InputMaybe<ProductColor>;
+  /** Optional updates to localizations */
+  readonly localizations?: InputMaybe<OptionUpdateManyLocalizationsInput>;
+  readonly quantity?: InputMaybe<Scalars['Int']>;
+  /** size input for default locale (en) */
+  readonly size?: InputMaybe<ProductSize>;
+};
+
+export type OptionUpdateManyLocalizationDataInput = {
+  readonly color?: InputMaybe<ProductColor>;
+  readonly size?: InputMaybe<ProductSize>;
+};
+
+export type OptionUpdateManyLocalizationInput = {
+  readonly data: OptionUpdateManyLocalizationDataInput;
+  readonly locale: Locale;
+};
+
+export type OptionUpdateManyLocalizationsInput = {
+  /** Localizations to update */
+  readonly update?: InputMaybe<ReadonlyArray<OptionUpdateManyLocalizationInput>>;
+};
+
+export type OptionUpdateManyWithNestedWhereInput = {
+  /** Update many input */
+  readonly data: OptionUpdateManyInput;
+  /** Document search */
+  readonly where: OptionWhereInput;
+};
+
+export type OptionUpdateOneInlineInput = {
+  /** Connect existing Option document */
+  readonly connect?: InputMaybe<OptionWhereUniqueInput>;
+  /** Create and connect one Option document */
+  readonly create?: InputMaybe<OptionCreateInput>;
+  /** Delete currently connected Option document */
+  readonly delete?: InputMaybe<Scalars['Boolean']>;
+  /** Disconnect currently connected Option document */
+  readonly disconnect?: InputMaybe<Scalars['Boolean']>;
+  /** Update single Option document */
+  readonly update?: InputMaybe<OptionUpdateWithNestedWhereUniqueInput>;
+  /** Upsert single Option document */
+  readonly upsert?: InputMaybe<OptionUpsertWithNestedWhereUniqueInput>;
+};
+
+export type OptionUpdateWithNestedWhereUniqueInput = {
+  /** Document to update */
+  readonly data: OptionUpdateInput;
+  /** Unique document search */
+  readonly where: OptionWhereUniqueInput;
+};
+
+export type OptionUpsertInput = {
+  /** Create document if it didn't exist */
+  readonly create: OptionCreateInput;
+  /** Update document if it exists */
+  readonly update: OptionUpdateInput;
+};
+
+export type OptionUpsertLocalizationInput = {
+  readonly create: OptionCreateLocalizationDataInput;
+  readonly locale: Locale;
+  readonly update: OptionUpdateLocalizationDataInput;
+};
+
+export type OptionUpsertWithNestedWhereUniqueInput = {
+  /** Upsert data */
+  readonly data: OptionUpsertInput;
+  /** Unique document search */
+  readonly where: OptionWhereUniqueInput;
+};
+
+/** This contains a set of filters that can be used to compare values internally */
+export type OptionWhereComparatorInput = {
+  /** This field can be used to request to check if the entry is outdated by internal comparison */
+  readonly outdated_to?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** Identifies documents */
+export type OptionWhereInput = {
+  /** Logical AND on all given filters. */
+  readonly AND?: InputMaybe<ReadonlyArray<OptionWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  readonly NOT?: InputMaybe<ReadonlyArray<OptionWhereInput>>;
+  /** Logical OR on all given filters. */
+  readonly OR?: InputMaybe<ReadonlyArray<OptionWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  readonly _search?: InputMaybe<Scalars['String']>;
+  readonly color?: InputMaybe<ProductColor>;
+  /** All values that are contained in given list. */
+  readonly color_in?: InputMaybe<ReadonlyArray<InputMaybe<ProductColor>>>;
+  /** All values that are not equal to given value. */
+  readonly color_not?: InputMaybe<ProductColor>;
+  /** All values that are not contained in given list. */
+  readonly color_not_in?: InputMaybe<ReadonlyArray<InputMaybe<ProductColor>>>;
+  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  readonly createdAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  readonly createdAt_gte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  readonly createdAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  /** All values less than the given value. */
+  readonly createdAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  readonly createdAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  readonly createdAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not contained in given list. */
+  readonly createdAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  readonly createdBy?: InputMaybe<UserWhereInput>;
+  readonly documentInStages_every?: InputMaybe<OptionWhereStageInput>;
+  readonly documentInStages_none?: InputMaybe<OptionWhereStageInput>;
+  readonly documentInStages_some?: InputMaybe<OptionWhereStageInput>;
+  readonly id?: InputMaybe<Scalars['ID']>;
+  /** All values containing the given string. */
+  readonly id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  readonly id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  readonly id_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
+  /** All values that are not equal to given value. */
+  readonly id_not?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  readonly id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  readonly id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are not contained in given list. */
+  readonly id_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
+  /** All values not starting with the given string. */
+  readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  readonly id_starts_with?: InputMaybe<Scalars['ID']>;
+  readonly product?: InputMaybe<ProductWhereInput>;
+  readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  readonly publishedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  readonly publishedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  /** All values less than the given value. */
+  readonly publishedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  readonly publishedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  readonly publishedAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not contained in given list. */
+  readonly publishedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  readonly publishedBy?: InputMaybe<UserWhereInput>;
+  readonly quantity?: InputMaybe<Scalars['Int']>;
+  /** All values greater than the given value. */
+  readonly quantity_gt?: InputMaybe<Scalars['Int']>;
+  /** All values greater than or equal the given value. */
+  readonly quantity_gte?: InputMaybe<Scalars['Int']>;
+  /** All values that are contained in given list. */
+  readonly quantity_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
+  /** All values less than the given value. */
+  readonly quantity_lt?: InputMaybe<Scalars['Int']>;
+  /** All values less than or equal the given value. */
+  readonly quantity_lte?: InputMaybe<Scalars['Int']>;
+  /** All values that are not equal to given value. */
+  readonly quantity_not?: InputMaybe<Scalars['Int']>;
+  /** All values that are not contained in given list. */
+  readonly quantity_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
+  readonly scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
+  readonly scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
+  readonly scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
+  readonly size?: InputMaybe<ProductSize>;
+  /** All values that are contained in given list. */
+  readonly size_in?: InputMaybe<ReadonlyArray<InputMaybe<ProductSize>>>;
+  /** All values that are not equal to given value. */
+  readonly size_not?: InputMaybe<ProductSize>;
+  /** All values that are not contained in given list. */
+  readonly size_not_in?: InputMaybe<ReadonlyArray<InputMaybe<ProductSize>>>;
+  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  readonly updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  readonly updatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  readonly updatedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  /** All values less than the given value. */
+  readonly updatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  readonly updatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  readonly updatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not contained in given list. */
+  readonly updatedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  readonly updatedBy?: InputMaybe<UserWhereInput>;
+};
+
+/** The document in stages filter allows specifying a stage entry to cross compare the same document between different stages */
+export type OptionWhereStageInput = {
+  /** Logical AND on all given filters. */
+  readonly AND?: InputMaybe<ReadonlyArray<OptionWhereStageInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  readonly NOT?: InputMaybe<ReadonlyArray<OptionWhereStageInput>>;
+  /** Logical OR on all given filters. */
+  readonly OR?: InputMaybe<ReadonlyArray<OptionWhereStageInput>>;
+  /** This field contains fields which can be set as true or false to specify an internal comparison */
+  readonly compareWithParent?: InputMaybe<OptionWhereComparatorInput>;
+  /** Specify the stage to compare with */
+  readonly stage?: InputMaybe<Stage>;
+};
+
+/** References Option record uniquely */
+export type OptionWhereUniqueInput = {
+  readonly id?: InputMaybe<Scalars['ID']>;
 };
 
 export type Order = Node & {
@@ -9889,10 +10717,9 @@ export type Product = Node & {
   /** Get the other localizations for this document */
   readonly localizations: ReadonlyArray<Product>;
   readonly name: Scalars['String'];
+  readonly option: ReadonlyArray<Option>;
   readonly orderItems: ReadonlyArray<OrderItem>;
   readonly price: Scalars['Int'];
-  readonly product: ReadonlyArray<Product>;
-  readonly products: ReadonlyArray<Product>;
   /** The time the document was published. Null on documents in draft stage. */
   readonly publishedAt?: Maybe<Scalars['DateTime']>;
   /** User that last published this document */
@@ -9906,10 +10733,7 @@ export type Product = Node & {
   readonly updatedAt: Scalars['DateTime'];
   /** User that last updated this document */
   readonly updatedBy?: Maybe<User>;
-  readonly variant2S: ReadonlyArray<Variant2>;
-  readonly variant3S: ReadonlyArray<Variant3>;
   readonly variants: ReadonlyArray<ProductVariants>;
-  readonly variantsEnum: ReadonlyArray<Variant>;
 };
 
 
@@ -9979,6 +10803,18 @@ export type ProductLocalizationsArgs = {
 };
 
 
+export type ProductOptionArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+  orderBy?: InputMaybe<OptionOrderByInput>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<OptionWhereInput>;
+};
+
+
 export type ProductOrderItemsArgs = {
   after?: InputMaybe<Scalars['String']>;
   before?: InputMaybe<Scalars['String']>;
@@ -9988,30 +10824,6 @@ export type ProductOrderItemsArgs = {
   orderBy?: InputMaybe<OrderItemOrderByInput>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<OrderItemWhereInput>;
-};
-
-
-export type ProductProductArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  orderBy?: InputMaybe<ProductOrderByInput>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<ProductWhereInput>;
-};
-
-
-export type ProductProductsArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  orderBy?: InputMaybe<ProductOrderByInput>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<ProductWhereInput>;
 };
 
 
@@ -10058,30 +10870,6 @@ export type ProductUpdatedByArgs = {
 };
 
 
-export type ProductVariant2SArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  orderBy?: InputMaybe<Variant2OrderByInput>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<Variant2WhereInput>;
-};
-
-
-export type ProductVariant3SArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  orderBy?: InputMaybe<Variant3OrderByInput>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<Variant3WhereInput>;
-};
-
-
 export type ProductVariantsArgs = {
   after?: InputMaybe<Scalars['String']>;
   before?: InputMaybe<Scalars['String']>;
@@ -10089,18 +10877,6 @@ export type ProductVariantsArgs = {
   last?: InputMaybe<Scalars['Int']>;
   locales?: InputMaybe<ReadonlyArray<Locale>>;
   skip?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type ProductVariantsEnumArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  orderBy?: InputMaybe<VariantOrderByInput>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<VariantWhereInput>;
 };
 
 export enum ProductColor {
@@ -10111,7 +10887,6 @@ export enum ProductColor {
 
 export type ProductColorVariant = Node & {
   readonly __typename?: 'ProductColorVariant';
-  readonly cartItem?: Maybe<CartItem>;
   readonly color: ProductColor;
   /** The time the document was created */
   readonly createdAt: Scalars['DateTime'];
@@ -10140,11 +10915,6 @@ export type ProductColorVariant = Node & {
   readonly updatedAt: Scalars['DateTime'];
   /** User that last updated this document */
   readonly updatedBy?: Maybe<User>;
-};
-
-
-export type ProductColorVariantCartItemArgs = {
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
 };
 
 
@@ -10748,7 +11518,6 @@ export type ProductColorVariantCopyWhereUniqueInput = {
 };
 
 export type ProductColorVariantCreateInput = {
-  readonly cartItem?: InputMaybe<CartItemCreateOneInlineInput>;
   readonly color: ProductColor;
   readonly createdAt?: InputMaybe<Scalars['DateTime']>;
   /** Inline mutations for managing document localizations excluding the default locale */
@@ -10809,7 +11578,6 @@ export type ProductColorVariantManyWhereInput = {
   readonly OR?: InputMaybe<ReadonlyArray<ProductColorVariantWhereInput>>;
   /** Contains search across all appropriate fields. */
   readonly _search?: InputMaybe<Scalars['String']>;
-  readonly cartItem?: InputMaybe<CartItemWhereInput>;
   readonly color?: InputMaybe<ProductColor>;
   /** All values that are contained in given list. */
   readonly color_in?: InputMaybe<ReadonlyArray<InputMaybe<ProductColor>>>;
@@ -10909,7 +11677,6 @@ export enum ProductColorVariantOrderByInput {
 }
 
 export type ProductColorVariantUpdateInput = {
-  readonly cartItem?: InputMaybe<CartItemUpdateOneInlineInput>;
   readonly color?: InputMaybe<ProductColor>;
   /** Manage document localizations */
   readonly localizations?: InputMaybe<ProductColorVariantUpdateLocalizationsInput>;
@@ -11041,7 +11808,6 @@ export type ProductColorVariantWhereInput = {
   readonly OR?: InputMaybe<ReadonlyArray<ProductColorVariantWhereInput>>;
   /** Contains search across all appropriate fields. */
   readonly _search?: InputMaybe<Scalars['String']>;
-  readonly cartItem?: InputMaybe<CartItemWhereInput>;
   readonly color?: InputMaybe<ProductColor>;
   /** All values that are contained in given list. */
   readonly color_in?: InputMaybe<ReadonlyArray<InputMaybe<ProductColor>>>;
@@ -11183,7 +11949,6 @@ export type ProductConnection = {
 export type ProductCreateInput = {
   readonly categories?: InputMaybe<CategoryCreateManyInlineInput>;
   readonly cl9hd5pf40ejc01uj2qsm71eu?: InputMaybe<CartItem2CreateManyInlineInput>;
-  readonly cl9hgki9x0ina01t8avhq2e2y?: InputMaybe<Variants2CreateManyInlineInput>;
   readonly cl94296md4hlv01ur54tfc65y?: InputMaybe<CartItemCreateManyInlineInput>;
   readonly collections?: InputMaybe<CollectionCreateManyInlineInput>;
   readonly createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -11194,18 +11959,14 @@ export type ProductCreateInput = {
   readonly localizations?: InputMaybe<ProductCreateLocalizationsInput>;
   /** name input for default locale (en) */
   readonly name: Scalars['String'];
+  readonly option?: InputMaybe<OptionCreateManyInlineInput>;
   readonly orderItems?: InputMaybe<OrderItemCreateManyInlineInput>;
   /** price input for default locale (en) */
   readonly price: Scalars['Int'];
-  readonly product?: InputMaybe<ProductCreateManyInlineInput>;
-  readonly products?: InputMaybe<ProductCreateManyInlineInput>;
   readonly reviews?: InputMaybe<ReviewCreateManyInlineInput>;
   readonly slug: Scalars['String'];
   readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
-  readonly variant2S?: InputMaybe<Variant2CreateManyInlineInput>;
-  readonly variant3S?: InputMaybe<Variant3CreateManyInlineInput>;
   readonly variants?: InputMaybe<ProductVariantsCreateManyInlineInput>;
-  readonly variantsEnum?: InputMaybe<VariantCreateManyInlineInput>;
 };
 
 export type ProductCreateLocalizationDataInput = {
@@ -11307,15 +12068,12 @@ export type ProductManyWhereInput = {
   readonly images_every?: InputMaybe<AssetWhereInput>;
   readonly images_none?: InputMaybe<AssetWhereInput>;
   readonly images_some?: InputMaybe<AssetWhereInput>;
+  readonly option_every?: InputMaybe<OptionWhereInput>;
+  readonly option_none?: InputMaybe<OptionWhereInput>;
+  readonly option_some?: InputMaybe<OptionWhereInput>;
   readonly orderItems_every?: InputMaybe<OrderItemWhereInput>;
   readonly orderItems_none?: InputMaybe<OrderItemWhereInput>;
   readonly orderItems_some?: InputMaybe<OrderItemWhereInput>;
-  readonly product_every?: InputMaybe<ProductWhereInput>;
-  readonly product_none?: InputMaybe<ProductWhereInput>;
-  readonly product_some?: InputMaybe<ProductWhereInput>;
-  readonly products_every?: InputMaybe<ProductWhereInput>;
-  readonly products_none?: InputMaybe<ProductWhereInput>;
-  readonly products_some?: InputMaybe<ProductWhereInput>;
   readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -11373,15 +12131,6 @@ export type ProductManyWhereInput = {
   /** All values that are not contained in given list. */
   readonly updatedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
   readonly updatedBy?: InputMaybe<UserWhereInput>;
-  readonly variant2S_every?: InputMaybe<Variant2WhereInput>;
-  readonly variant2S_none?: InputMaybe<Variant2WhereInput>;
-  readonly variant2S_some?: InputMaybe<Variant2WhereInput>;
-  readonly variant3S_every?: InputMaybe<Variant3WhereInput>;
-  readonly variant3S_none?: InputMaybe<Variant3WhereInput>;
-  readonly variant3S_some?: InputMaybe<Variant3WhereInput>;
-  readonly variantsEnum_every?: InputMaybe<VariantWhereInput>;
-  readonly variantsEnum_none?: InputMaybe<VariantWhereInput>;
-  readonly variantsEnum_some?: InputMaybe<VariantWhereInput>;
 };
 
 export enum ProductOrderByInput {
@@ -12498,7 +13247,6 @@ export type ProductSizeVariantWhereUniqueInput = {
 export type ProductUpdateInput = {
   readonly categories?: InputMaybe<CategoryUpdateManyInlineInput>;
   readonly cl9hd5pf40ejc01uj2qsm71eu?: InputMaybe<CartItem2UpdateManyInlineInput>;
-  readonly cl9hgki9x0ina01t8avhq2e2y?: InputMaybe<Variants2UpdateManyInlineInput>;
   readonly cl94296md4hlv01ur54tfc65y?: InputMaybe<CartItemUpdateManyInlineInput>;
   readonly collections?: InputMaybe<CollectionUpdateManyInlineInput>;
   /** description input for default locale (en) */
@@ -12508,17 +13256,13 @@ export type ProductUpdateInput = {
   readonly localizations?: InputMaybe<ProductUpdateLocalizationsInput>;
   /** name input for default locale (en) */
   readonly name?: InputMaybe<Scalars['String']>;
+  readonly option?: InputMaybe<OptionUpdateManyInlineInput>;
   readonly orderItems?: InputMaybe<OrderItemUpdateManyInlineInput>;
   /** price input for default locale (en) */
   readonly price?: InputMaybe<Scalars['Int']>;
-  readonly product?: InputMaybe<ProductUpdateManyInlineInput>;
-  readonly products?: InputMaybe<ProductUpdateManyInlineInput>;
   readonly reviews?: InputMaybe<ReviewUpdateManyInlineInput>;
   readonly slug?: InputMaybe<Scalars['String']>;
-  readonly variant2S?: InputMaybe<Variant2UpdateManyInlineInput>;
-  readonly variant3S?: InputMaybe<Variant3UpdateManyInlineInput>;
   readonly variants?: InputMaybe<ProductVariantsUpdateManyInlineInput>;
-  readonly variantsEnum?: InputMaybe<VariantUpdateManyInlineInput>;
 };
 
 export type ProductUpdateLocalizationDataInput = {
@@ -12829,6 +13573,9 @@ export type ProductWhereInput = {
   readonly name_not_starts_with?: InputMaybe<Scalars['String']>;
   /** All values starting with the given string. */
   readonly name_starts_with?: InputMaybe<Scalars['String']>;
+  readonly option_every?: InputMaybe<OptionWhereInput>;
+  readonly option_none?: InputMaybe<OptionWhereInput>;
+  readonly option_some?: InputMaybe<OptionWhereInput>;
   readonly orderItems_every?: InputMaybe<OrderItemWhereInput>;
   readonly orderItems_none?: InputMaybe<OrderItemWhereInput>;
   readonly orderItems_some?: InputMaybe<OrderItemWhereInput>;
@@ -12847,12 +13594,6 @@ export type ProductWhereInput = {
   readonly price_not?: InputMaybe<Scalars['Int']>;
   /** All values that are not contained in given list. */
   readonly price_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
-  readonly product_every?: InputMaybe<ProductWhereInput>;
-  readonly product_none?: InputMaybe<ProductWhereInput>;
-  readonly product_some?: InputMaybe<ProductWhereInput>;
-  readonly products_every?: InputMaybe<ProductWhereInput>;
-  readonly products_none?: InputMaybe<ProductWhereInput>;
-  readonly products_some?: InputMaybe<ProductWhereInput>;
   readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -12910,15 +13651,6 @@ export type ProductWhereInput = {
   /** All values that are not contained in given list. */
   readonly updatedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
   readonly updatedBy?: InputMaybe<UserWhereInput>;
-  readonly variant2S_every?: InputMaybe<Variant2WhereInput>;
-  readonly variant2S_none?: InputMaybe<Variant2WhereInput>;
-  readonly variant2S_some?: InputMaybe<Variant2WhereInput>;
-  readonly variant3S_every?: InputMaybe<Variant3WhereInput>;
-  readonly variant3S_none?: InputMaybe<Variant3WhereInput>;
-  readonly variant3S_some?: InputMaybe<Variant3WhereInput>;
-  readonly variantsEnum_every?: InputMaybe<VariantWhereInput>;
-  readonly variantsEnum_none?: InputMaybe<VariantWhereInput>;
-  readonly variantsEnum_some?: InputMaybe<VariantWhereInput>;
 };
 
 /** The document in stages filter allows specifying a stage entry to cross compare the same document between different stages */
@@ -13024,6 +13756,14 @@ export type Query = {
   readonly currencyVersion?: Maybe<DocumentVersion>;
   /** Fetches an object given its ID */
   readonly node?: Maybe<Node>;
+  /** Retrieve a single option */
+  readonly option?: Maybe<Option>;
+  /** Retrieve document version */
+  readonly optionVersion?: Maybe<DocumentVersion>;
+  /** Retrieve multiple options */
+  readonly options: ReadonlyArray<Option>;
+  /** Retrieve multiple options using the Relay connection interface */
+  readonly optionsConnection: OptionConnection;
   /** Retrieve a single order */
   readonly order?: Maybe<Order>;
   /** Retrieve a single orderItem */
@@ -13122,14 +13862,6 @@ export type Query = {
   readonly variant2SConnection: Variant2Connection;
   /** Retrieve document version */
   readonly variant2Version?: Maybe<DocumentVersion>;
-  /** Retrieve a single variant3 */
-  readonly variant3?: Maybe<Variant3>;
-  /** Retrieve multiple variant3S */
-  readonly variant3S: ReadonlyArray<Variant3>;
-  /** Retrieve multiple variant3S using the Relay connection interface */
-  readonly variant3SConnection: Variant3Connection;
-  /** Retrieve document version */
-  readonly variant3Version?: Maybe<DocumentVersion>;
   /** Retrieve a single variant4 */
   readonly variant4?: Maybe<Variant4>;
   /** Retrieve multiple variant4S */
@@ -13487,6 +14219,44 @@ export type QueryNodeArgs = {
   id: Scalars['ID'];
   locales?: ReadonlyArray<Locale>;
   stage?: Stage;
+};
+
+
+export type QueryOptionArgs = {
+  locales?: ReadonlyArray<Locale>;
+  stage?: Stage;
+  where: OptionWhereUniqueInput;
+};
+
+
+export type QueryOptionVersionArgs = {
+  where: VersionWhereInput;
+};
+
+
+export type QueryOptionsArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  locales?: ReadonlyArray<Locale>;
+  orderBy?: InputMaybe<OptionOrderByInput>;
+  skip?: InputMaybe<Scalars['Int']>;
+  stage?: Stage;
+  where?: InputMaybe<OptionWhereInput>;
+};
+
+
+export type QueryOptionsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  locales?: ReadonlyArray<Locale>;
+  orderBy?: InputMaybe<OptionOrderByInput>;
+  skip?: InputMaybe<Scalars['Int']>;
+  stage?: Stage;
+  where?: InputMaybe<OptionWhereInput>;
 };
 
 
@@ -13965,44 +14735,6 @@ export type QueryVariant2SConnectionArgs = {
 
 
 export type QueryVariant2VersionArgs = {
-  where: VersionWhereInput;
-};
-
-
-export type QueryVariant3Args = {
-  locales?: ReadonlyArray<Locale>;
-  stage?: Stage;
-  where: Variant3WhereUniqueInput;
-};
-
-
-export type QueryVariant3SArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: ReadonlyArray<Locale>;
-  orderBy?: InputMaybe<Variant3OrderByInput>;
-  skip?: InputMaybe<Scalars['Int']>;
-  stage?: Stage;
-  where?: InputMaybe<Variant3WhereInput>;
-};
-
-
-export type QueryVariant3SConnectionArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: ReadonlyArray<Locale>;
-  orderBy?: InputMaybe<Variant3OrderByInput>;
-  skip?: InputMaybe<Scalars['Int']>;
-  stage?: Stage;
-  where?: InputMaybe<Variant3WhereInput>;
-};
-
-
-export type QueryVariant3VersionArgs = {
   where: VersionWhereInput;
 };
 
@@ -14755,7 +15487,7 @@ export type ScheduledOperationUpdatedByArgs = {
   locales?: InputMaybe<ReadonlyArray<Locale>>;
 };
 
-export type ScheduledOperationAffectedDocument = Account | Asset | Cart | CartItem | CartItem2 | CartItem3 | Category | Collection | Currency | Order | OrderItem | Person | Product | ProductColorVariant | ProductColorVariantCopy | ProductSizeColorVariant | ProductSizeVariant | Review | Variant2 | Variant3 | Variant4;
+export type ScheduledOperationAffectedDocument = Account | Asset | Cart | CartItem | CartItem2 | CartItem3 | Category | Collection | Currency | Option | Order | OrderItem | Person | Product | ProductColorVariant | ProductColorVariantCopy | ProductSizeColorVariant | ProductSizeVariant | Review | Variant2 | Variant4;
 
 export type ScheduledOperationConnectInput = {
   /** Allow to specify document position in list of connected documents, will default to appending at end of list */
@@ -16108,7 +16840,6 @@ export type Variant2 = Node & {
   /** Get the other localizations for this document */
   readonly localizations: ReadonlyArray<Variant2>;
   readonly name: Scalars['String'];
-  readonly products: ReadonlyArray<Product>;
   /** The time the document was published. Null on documents in draft stage. */
   readonly publishedAt?: Maybe<Scalars['DateTime']>;
   /** User that last published this document */
@@ -16163,18 +16894,6 @@ export type Variant2HistoryArgs = {
 export type Variant2LocalizationsArgs = {
   includeCurrent?: Scalars['Boolean'];
   locales?: ReadonlyArray<Locale>;
-};
-
-
-export type Variant2ProductsArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  orderBy?: InputMaybe<ProductOrderByInput>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<ProductWhereInput>;
 };
 
 
@@ -16233,7 +16952,6 @@ export type Variant2CreateInput = {
   readonly localizations?: InputMaybe<Variant2CreateLocalizationsInput>;
   /** name input for default locale (en) */
   readonly name: Scalars['String'];
-  readonly products?: InputMaybe<ProductCreateManyInlineInput>;
   readonly size?: InputMaybe<ReadonlyArray<ProductSize>>;
   readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
@@ -16336,9 +17054,6 @@ export type Variant2ManyWhereInput = {
   readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
   /** All values starting with the given string. */
   readonly id_starts_with?: InputMaybe<Scalars['ID']>;
-  readonly products_every?: InputMaybe<ProductWhereInput>;
-  readonly products_none?: InputMaybe<ProductWhereInput>;
-  readonly products_some?: InputMaybe<ProductWhereInput>;
   readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -16410,7 +17125,6 @@ export type Variant2UpdateInput = {
   readonly localizations?: InputMaybe<Variant2UpdateLocalizationsInput>;
   /** name input for default locale (en) */
   readonly name?: InputMaybe<Scalars['String']>;
-  readonly products?: InputMaybe<ProductUpdateManyInlineInput>;
   readonly size?: InputMaybe<ReadonlyArray<ProductSize>>;
 };
 
@@ -16605,9 +17319,6 @@ export type Variant2WhereInput = {
   readonly name_not_starts_with?: InputMaybe<Scalars['String']>;
   /** All values starting with the given string. */
   readonly name_starts_with?: InputMaybe<Scalars['String']>;
-  readonly products_every?: InputMaybe<ProductWhereInput>;
-  readonly products_none?: InputMaybe<ProductWhereInput>;
-  readonly products_some?: InputMaybe<ProductWhereInput>;
   readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -16671,598 +17382,6 @@ export type Variant2WhereStageInput = {
 
 /** References Variant2 record uniquely */
 export type Variant2WhereUniqueInput = {
-  readonly id?: InputMaybe<Scalars['ID']>;
-};
-
-export type Variant3 = Node & {
-  readonly __typename?: 'Variant3';
-  readonly color?: Maybe<ProductColor>;
-  /** The time the document was created */
-  readonly createdAt: Scalars['DateTime'];
-  /** User that created this document */
-  readonly createdBy?: Maybe<User>;
-  /** Get the document in other stages */
-  readonly documentInStages: ReadonlyArray<Variant3>;
-  /** List of Variant3 versions */
-  readonly history: ReadonlyArray<Version>;
-  /** The unique identifier */
-  readonly id: Scalars['ID'];
-  /** System Locale field */
-  readonly locale: Locale;
-  /** Get the other localizations for this document */
-  readonly localizations: ReadonlyArray<Variant3>;
-  readonly name: Scalars['String'];
-  readonly products: ReadonlyArray<Product>;
-  /** The time the document was published. Null on documents in draft stage. */
-  readonly publishedAt?: Maybe<Scalars['DateTime']>;
-  /** User that last published this document */
-  readonly publishedBy?: Maybe<User>;
-  readonly quantity: Scalars['Int'];
-  readonly scheduledIn: ReadonlyArray<ScheduledOperation>;
-  readonly size?: Maybe<ProductSize>;
-  /** System stage field */
-  readonly stage: Stage;
-  /** The time the document was updated */
-  readonly updatedAt: Scalars['DateTime'];
-  /** User that last updated this document */
-  readonly updatedBy?: Maybe<User>;
-};
-
-
-export type Variant3CreatedAtArgs = {
-  variation?: SystemDateTimeFieldVariation;
-};
-
-
-export type Variant3CreatedByArgs = {
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-};
-
-
-export type Variant3DocumentInStagesArgs = {
-  includeCurrent?: Scalars['Boolean'];
-  inheritLocale?: Scalars['Boolean'];
-  stages?: ReadonlyArray<Stage>;
-};
-
-
-export type Variant3HistoryArgs = {
-  limit?: Scalars['Int'];
-  skip?: Scalars['Int'];
-  stageOverride?: InputMaybe<Stage>;
-};
-
-
-export type Variant3LocalizationsArgs = {
-  includeCurrent?: Scalars['Boolean'];
-  locales?: ReadonlyArray<Locale>;
-};
-
-
-export type Variant3ProductsArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  orderBy?: InputMaybe<ProductOrderByInput>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<ProductWhereInput>;
-};
-
-
-export type Variant3PublishedAtArgs = {
-  variation?: SystemDateTimeFieldVariation;
-};
-
-
-export type Variant3PublishedByArgs = {
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-};
-
-
-export type Variant3ScheduledInArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<ScheduledOperationWhereInput>;
-};
-
-
-export type Variant3UpdatedAtArgs = {
-  variation?: SystemDateTimeFieldVariation;
-};
-
-
-export type Variant3UpdatedByArgs = {
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-};
-
-export type Variant3ConnectInput = {
-  /** Allow to specify document position in list of connected documents, will default to appending at end of list */
-  readonly position?: InputMaybe<ConnectPositionInput>;
-  /** Document to connect */
-  readonly where: Variant3WhereUniqueInput;
-};
-
-/** A connection to a list of items. */
-export type Variant3Connection = {
-  readonly __typename?: 'Variant3Connection';
-  readonly aggregate: Aggregate;
-  /** A list of edges. */
-  readonly edges: ReadonlyArray<Variant3Edge>;
-  /** Information to aid in pagination. */
-  readonly pageInfo: PageInfo;
-};
-
-export type Variant3CreateInput = {
-  /** color input for default locale (en) */
-  readonly color?: InputMaybe<ProductColor>;
-  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
-  /** Inline mutations for managing document localizations excluding the default locale */
-  readonly localizations?: InputMaybe<Variant3CreateLocalizationsInput>;
-  /** name input for default locale (en) */
-  readonly name: Scalars['String'];
-  readonly products?: InputMaybe<ProductCreateManyInlineInput>;
-  readonly quantity: Scalars['Int'];
-  /** size input for default locale (en) */
-  readonly size?: InputMaybe<ProductSize>;
-  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
-};
-
-export type Variant3CreateLocalizationDataInput = {
-  readonly color?: InputMaybe<ProductColor>;
-  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
-  readonly name: Scalars['String'];
-  readonly size?: InputMaybe<ProductSize>;
-  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
-};
-
-export type Variant3CreateLocalizationInput = {
-  /** Localization input */
-  readonly data: Variant3CreateLocalizationDataInput;
-  readonly locale: Locale;
-};
-
-export type Variant3CreateLocalizationsInput = {
-  /** Create localizations for the newly-created document */
-  readonly create?: InputMaybe<ReadonlyArray<Variant3CreateLocalizationInput>>;
-};
-
-export type Variant3CreateManyInlineInput = {
-  /** Connect multiple existing Variant3 documents */
-  readonly connect?: InputMaybe<ReadonlyArray<Variant3WhereUniqueInput>>;
-  /** Create and connect multiple existing Variant3 documents */
-  readonly create?: InputMaybe<ReadonlyArray<Variant3CreateInput>>;
-};
-
-export type Variant3CreateOneInlineInput = {
-  /** Connect one existing Variant3 document */
-  readonly connect?: InputMaybe<Variant3WhereUniqueInput>;
-  /** Create and connect one Variant3 document */
-  readonly create?: InputMaybe<Variant3CreateInput>;
-};
-
-/** An edge in a connection. */
-export type Variant3Edge = {
-  readonly __typename?: 'Variant3Edge';
-  /** A cursor for use in pagination. */
-  readonly cursor: Scalars['String'];
-  /** The item at the end of the edge. */
-  readonly node: Variant3;
-};
-
-/** Identifies documents */
-export type Variant3ManyWhereInput = {
-  /** Logical AND on all given filters. */
-  readonly AND?: InputMaybe<ReadonlyArray<Variant3WhereInput>>;
-  /** Logical NOT on all given filters combined by AND. */
-  readonly NOT?: InputMaybe<ReadonlyArray<Variant3WhereInput>>;
-  /** Logical OR on all given filters. */
-  readonly OR?: InputMaybe<ReadonlyArray<Variant3WhereInput>>;
-  /** Contains search across all appropriate fields. */
-  readonly _search?: InputMaybe<Scalars['String']>;
-  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than the given value. */
-  readonly createdAt_gt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than or equal the given value. */
-  readonly createdAt_gte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are contained in given list. */
-  readonly createdAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  /** All values less than the given value. */
-  readonly createdAt_lt?: InputMaybe<Scalars['DateTime']>;
-  /** All values less than or equal the given value. */
-  readonly createdAt_lte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not equal to given value. */
-  readonly createdAt_not?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not contained in given list. */
-  readonly createdAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  readonly createdBy?: InputMaybe<UserWhereInput>;
-  readonly documentInStages_every?: InputMaybe<Variant3WhereStageInput>;
-  readonly documentInStages_none?: InputMaybe<Variant3WhereStageInput>;
-  readonly documentInStages_some?: InputMaybe<Variant3WhereStageInput>;
-  readonly id?: InputMaybe<Scalars['ID']>;
-  /** All values containing the given string. */
-  readonly id_contains?: InputMaybe<Scalars['ID']>;
-  /** All values ending with the given string. */
-  readonly id_ends_with?: InputMaybe<Scalars['ID']>;
-  /** All values that are contained in given list. */
-  readonly id_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
-  /** All values that are not equal to given value. */
-  readonly id_not?: InputMaybe<Scalars['ID']>;
-  /** All values not containing the given string. */
-  readonly id_not_contains?: InputMaybe<Scalars['ID']>;
-  /** All values not ending with the given string */
-  readonly id_not_ends_with?: InputMaybe<Scalars['ID']>;
-  /** All values that are not contained in given list. */
-  readonly id_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
-  /** All values not starting with the given string. */
-  readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
-  /** All values starting with the given string. */
-  readonly id_starts_with?: InputMaybe<Scalars['ID']>;
-  readonly products_every?: InputMaybe<ProductWhereInput>;
-  readonly products_none?: InputMaybe<ProductWhereInput>;
-  readonly products_some?: InputMaybe<ProductWhereInput>;
-  readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than the given value. */
-  readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than or equal the given value. */
-  readonly publishedAt_gte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are contained in given list. */
-  readonly publishedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  /** All values less than the given value. */
-  readonly publishedAt_lt?: InputMaybe<Scalars['DateTime']>;
-  /** All values less than or equal the given value. */
-  readonly publishedAt_lte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not equal to given value. */
-  readonly publishedAt_not?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not contained in given list. */
-  readonly publishedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  readonly publishedBy?: InputMaybe<UserWhereInput>;
-  readonly quantity?: InputMaybe<Scalars['Int']>;
-  /** All values greater than the given value. */
-  readonly quantity_gt?: InputMaybe<Scalars['Int']>;
-  /** All values greater than or equal the given value. */
-  readonly quantity_gte?: InputMaybe<Scalars['Int']>;
-  /** All values that are contained in given list. */
-  readonly quantity_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
-  /** All values less than the given value. */
-  readonly quantity_lt?: InputMaybe<Scalars['Int']>;
-  /** All values less than or equal the given value. */
-  readonly quantity_lte?: InputMaybe<Scalars['Int']>;
-  /** All values that are not equal to given value. */
-  readonly quantity_not?: InputMaybe<Scalars['Int']>;
-  /** All values that are not contained in given list. */
-  readonly quantity_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
-  readonly scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than the given value. */
-  readonly updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than or equal the given value. */
-  readonly updatedAt_gte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are contained in given list. */
-  readonly updatedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  /** All values less than the given value. */
-  readonly updatedAt_lt?: InputMaybe<Scalars['DateTime']>;
-  /** All values less than or equal the given value. */
-  readonly updatedAt_lte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not equal to given value. */
-  readonly updatedAt_not?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not contained in given list. */
-  readonly updatedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  readonly updatedBy?: InputMaybe<UserWhereInput>;
-};
-
-export enum Variant3OrderByInput {
-  ColorAsc = 'color_ASC',
-  ColorDesc = 'color_DESC',
-  CreatedAtAsc = 'createdAt_ASC',
-  CreatedAtDesc = 'createdAt_DESC',
-  IdAsc = 'id_ASC',
-  IdDesc = 'id_DESC',
-  NameAsc = 'name_ASC',
-  NameDesc = 'name_DESC',
-  PublishedAtAsc = 'publishedAt_ASC',
-  PublishedAtDesc = 'publishedAt_DESC',
-  QuantityAsc = 'quantity_ASC',
-  QuantityDesc = 'quantity_DESC',
-  SizeAsc = 'size_ASC',
-  SizeDesc = 'size_DESC',
-  UpdatedAtAsc = 'updatedAt_ASC',
-  UpdatedAtDesc = 'updatedAt_DESC'
-}
-
-export type Variant3UpdateInput = {
-  /** color input for default locale (en) */
-  readonly color?: InputMaybe<ProductColor>;
-  /** Manage document localizations */
-  readonly localizations?: InputMaybe<Variant3UpdateLocalizationsInput>;
-  /** name input for default locale (en) */
-  readonly name?: InputMaybe<Scalars['String']>;
-  readonly products?: InputMaybe<ProductUpdateManyInlineInput>;
-  readonly quantity?: InputMaybe<Scalars['Int']>;
-  /** size input for default locale (en) */
-  readonly size?: InputMaybe<ProductSize>;
-};
-
-export type Variant3UpdateLocalizationDataInput = {
-  readonly color?: InputMaybe<ProductColor>;
-  readonly name?: InputMaybe<Scalars['String']>;
-  readonly size?: InputMaybe<ProductSize>;
-};
-
-export type Variant3UpdateLocalizationInput = {
-  readonly data: Variant3UpdateLocalizationDataInput;
-  readonly locale: Locale;
-};
-
-export type Variant3UpdateLocalizationsInput = {
-  /** Localizations to create */
-  readonly create?: InputMaybe<ReadonlyArray<Variant3CreateLocalizationInput>>;
-  /** Localizations to delete */
-  readonly delete?: InputMaybe<ReadonlyArray<Locale>>;
-  /** Localizations to update */
-  readonly update?: InputMaybe<ReadonlyArray<Variant3UpdateLocalizationInput>>;
-  readonly upsert?: InputMaybe<ReadonlyArray<Variant3UpsertLocalizationInput>>;
-};
-
-export type Variant3UpdateManyInlineInput = {
-  /** Connect multiple existing Variant3 documents */
-  readonly connect?: InputMaybe<ReadonlyArray<Variant3ConnectInput>>;
-  /** Create and connect multiple Variant3 documents */
-  readonly create?: InputMaybe<ReadonlyArray<Variant3CreateInput>>;
-  /** Delete multiple Variant3 documents */
-  readonly delete?: InputMaybe<ReadonlyArray<Variant3WhereUniqueInput>>;
-  /** Disconnect multiple Variant3 documents */
-  readonly disconnect?: InputMaybe<ReadonlyArray<Variant3WhereUniqueInput>>;
-  /** Override currently-connected documents with multiple existing Variant3 documents */
-  readonly set?: InputMaybe<ReadonlyArray<Variant3WhereUniqueInput>>;
-  /** Update multiple Variant3 documents */
-  readonly update?: InputMaybe<ReadonlyArray<Variant3UpdateWithNestedWhereUniqueInput>>;
-  /** Upsert multiple Variant3 documents */
-  readonly upsert?: InputMaybe<ReadonlyArray<Variant3UpsertWithNestedWhereUniqueInput>>;
-};
-
-export type Variant3UpdateManyInput = {
-  /** color input for default locale (en) */
-  readonly color?: InputMaybe<ProductColor>;
-  /** Optional updates to localizations */
-  readonly localizations?: InputMaybe<Variant3UpdateManyLocalizationsInput>;
-  /** name input for default locale (en) */
-  readonly name?: InputMaybe<Scalars['String']>;
-  readonly quantity?: InputMaybe<Scalars['Int']>;
-  /** size input for default locale (en) */
-  readonly size?: InputMaybe<ProductSize>;
-};
-
-export type Variant3UpdateManyLocalizationDataInput = {
-  readonly color?: InputMaybe<ProductColor>;
-  readonly name?: InputMaybe<Scalars['String']>;
-  readonly size?: InputMaybe<ProductSize>;
-};
-
-export type Variant3UpdateManyLocalizationInput = {
-  readonly data: Variant3UpdateManyLocalizationDataInput;
-  readonly locale: Locale;
-};
-
-export type Variant3UpdateManyLocalizationsInput = {
-  /** Localizations to update */
-  readonly update?: InputMaybe<ReadonlyArray<Variant3UpdateManyLocalizationInput>>;
-};
-
-export type Variant3UpdateManyWithNestedWhereInput = {
-  /** Update many input */
-  readonly data: Variant3UpdateManyInput;
-  /** Document search */
-  readonly where: Variant3WhereInput;
-};
-
-export type Variant3UpdateOneInlineInput = {
-  /** Connect existing Variant3 document */
-  readonly connect?: InputMaybe<Variant3WhereUniqueInput>;
-  /** Create and connect one Variant3 document */
-  readonly create?: InputMaybe<Variant3CreateInput>;
-  /** Delete currently connected Variant3 document */
-  readonly delete?: InputMaybe<Scalars['Boolean']>;
-  /** Disconnect currently connected Variant3 document */
-  readonly disconnect?: InputMaybe<Scalars['Boolean']>;
-  /** Update single Variant3 document */
-  readonly update?: InputMaybe<Variant3UpdateWithNestedWhereUniqueInput>;
-  /** Upsert single Variant3 document */
-  readonly upsert?: InputMaybe<Variant3UpsertWithNestedWhereUniqueInput>;
-};
-
-export type Variant3UpdateWithNestedWhereUniqueInput = {
-  /** Document to update */
-  readonly data: Variant3UpdateInput;
-  /** Unique document search */
-  readonly where: Variant3WhereUniqueInput;
-};
-
-export type Variant3UpsertInput = {
-  /** Create document if it didn't exist */
-  readonly create: Variant3CreateInput;
-  /** Update document if it exists */
-  readonly update: Variant3UpdateInput;
-};
-
-export type Variant3UpsertLocalizationInput = {
-  readonly create: Variant3CreateLocalizationDataInput;
-  readonly locale: Locale;
-  readonly update: Variant3UpdateLocalizationDataInput;
-};
-
-export type Variant3UpsertWithNestedWhereUniqueInput = {
-  /** Upsert data */
-  readonly data: Variant3UpsertInput;
-  /** Unique document search */
-  readonly where: Variant3WhereUniqueInput;
-};
-
-/** This contains a set of filters that can be used to compare values internally */
-export type Variant3WhereComparatorInput = {
-  /** This field can be used to request to check if the entry is outdated by internal comparison */
-  readonly outdated_to?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** Identifies documents */
-export type Variant3WhereInput = {
-  /** Logical AND on all given filters. */
-  readonly AND?: InputMaybe<ReadonlyArray<Variant3WhereInput>>;
-  /** Logical NOT on all given filters combined by AND. */
-  readonly NOT?: InputMaybe<ReadonlyArray<Variant3WhereInput>>;
-  /** Logical OR on all given filters. */
-  readonly OR?: InputMaybe<ReadonlyArray<Variant3WhereInput>>;
-  /** Contains search across all appropriate fields. */
-  readonly _search?: InputMaybe<Scalars['String']>;
-  readonly color?: InputMaybe<ProductColor>;
-  /** All values that are contained in given list. */
-  readonly color_in?: InputMaybe<ReadonlyArray<InputMaybe<ProductColor>>>;
-  /** All values that are not equal to given value. */
-  readonly color_not?: InputMaybe<ProductColor>;
-  /** All values that are not contained in given list. */
-  readonly color_not_in?: InputMaybe<ReadonlyArray<InputMaybe<ProductColor>>>;
-  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than the given value. */
-  readonly createdAt_gt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than or equal the given value. */
-  readonly createdAt_gte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are contained in given list. */
-  readonly createdAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  /** All values less than the given value. */
-  readonly createdAt_lt?: InputMaybe<Scalars['DateTime']>;
-  /** All values less than or equal the given value. */
-  readonly createdAt_lte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not equal to given value. */
-  readonly createdAt_not?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not contained in given list. */
-  readonly createdAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  readonly createdBy?: InputMaybe<UserWhereInput>;
-  readonly documentInStages_every?: InputMaybe<Variant3WhereStageInput>;
-  readonly documentInStages_none?: InputMaybe<Variant3WhereStageInput>;
-  readonly documentInStages_some?: InputMaybe<Variant3WhereStageInput>;
-  readonly id?: InputMaybe<Scalars['ID']>;
-  /** All values containing the given string. */
-  readonly id_contains?: InputMaybe<Scalars['ID']>;
-  /** All values ending with the given string. */
-  readonly id_ends_with?: InputMaybe<Scalars['ID']>;
-  /** All values that are contained in given list. */
-  readonly id_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
-  /** All values that are not equal to given value. */
-  readonly id_not?: InputMaybe<Scalars['ID']>;
-  /** All values not containing the given string. */
-  readonly id_not_contains?: InputMaybe<Scalars['ID']>;
-  /** All values not ending with the given string */
-  readonly id_not_ends_with?: InputMaybe<Scalars['ID']>;
-  /** All values that are not contained in given list. */
-  readonly id_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
-  /** All values not starting with the given string. */
-  readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
-  /** All values starting with the given string. */
-  readonly id_starts_with?: InputMaybe<Scalars['ID']>;
-  readonly name?: InputMaybe<Scalars['String']>;
-  /** All values containing the given string. */
-  readonly name_contains?: InputMaybe<Scalars['String']>;
-  /** All values ending with the given string. */
-  readonly name_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are contained in given list. */
-  readonly name_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
-  /** All values that are not equal to given value. */
-  readonly name_not?: InputMaybe<Scalars['String']>;
-  /** All values not containing the given string. */
-  readonly name_not_contains?: InputMaybe<Scalars['String']>;
-  /** All values not ending with the given string */
-  readonly name_not_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are not contained in given list. */
-  readonly name_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
-  /** All values not starting with the given string. */
-  readonly name_not_starts_with?: InputMaybe<Scalars['String']>;
-  /** All values starting with the given string. */
-  readonly name_starts_with?: InputMaybe<Scalars['String']>;
-  readonly products_every?: InputMaybe<ProductWhereInput>;
-  readonly products_none?: InputMaybe<ProductWhereInput>;
-  readonly products_some?: InputMaybe<ProductWhereInput>;
-  readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than the given value. */
-  readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than or equal the given value. */
-  readonly publishedAt_gte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are contained in given list. */
-  readonly publishedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  /** All values less than the given value. */
-  readonly publishedAt_lt?: InputMaybe<Scalars['DateTime']>;
-  /** All values less than or equal the given value. */
-  readonly publishedAt_lte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not equal to given value. */
-  readonly publishedAt_not?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not contained in given list. */
-  readonly publishedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  readonly publishedBy?: InputMaybe<UserWhereInput>;
-  readonly quantity?: InputMaybe<Scalars['Int']>;
-  /** All values greater than the given value. */
-  readonly quantity_gt?: InputMaybe<Scalars['Int']>;
-  /** All values greater than or equal the given value. */
-  readonly quantity_gte?: InputMaybe<Scalars['Int']>;
-  /** All values that are contained in given list. */
-  readonly quantity_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
-  /** All values less than the given value. */
-  readonly quantity_lt?: InputMaybe<Scalars['Int']>;
-  /** All values less than or equal the given value. */
-  readonly quantity_lte?: InputMaybe<Scalars['Int']>;
-  /** All values that are not equal to given value. */
-  readonly quantity_not?: InputMaybe<Scalars['Int']>;
-  /** All values that are not contained in given list. */
-  readonly quantity_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
-  readonly scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly size?: InputMaybe<ProductSize>;
-  /** All values that are contained in given list. */
-  readonly size_in?: InputMaybe<ReadonlyArray<InputMaybe<ProductSize>>>;
-  /** All values that are not equal to given value. */
-  readonly size_not?: InputMaybe<ProductSize>;
-  /** All values that are not contained in given list. */
-  readonly size_not_in?: InputMaybe<ReadonlyArray<InputMaybe<ProductSize>>>;
-  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than the given value. */
-  readonly updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than or equal the given value. */
-  readonly updatedAt_gte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are contained in given list. */
-  readonly updatedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  /** All values less than the given value. */
-  readonly updatedAt_lt?: InputMaybe<Scalars['DateTime']>;
-  /** All values less than or equal the given value. */
-  readonly updatedAt_lte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not equal to given value. */
-  readonly updatedAt_not?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not contained in given list. */
-  readonly updatedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  readonly updatedBy?: InputMaybe<UserWhereInput>;
-};
-
-/** The document in stages filter allows specifying a stage entry to cross compare the same document between different stages */
-export type Variant3WhereStageInput = {
-  /** Logical AND on all given filters. */
-  readonly AND?: InputMaybe<ReadonlyArray<Variant3WhereStageInput>>;
-  /** Logical NOT on all given filters combined by AND. */
-  readonly NOT?: InputMaybe<ReadonlyArray<Variant3WhereStageInput>>;
-  /** Logical OR on all given filters. */
-  readonly OR?: InputMaybe<ReadonlyArray<Variant3WhereStageInput>>;
-  /** This field contains fields which can be set as true or false to specify an internal comparison */
-  readonly compareWithParent?: InputMaybe<Variant3WhereComparatorInput>;
-  /** Specify the stage to compare with */
-  readonly stage?: InputMaybe<Stage>;
-};
-
-/** References Variant3 record uniquely */
-export type Variant3WhereUniqueInput = {
   readonly id?: InputMaybe<Scalars['ID']>;
 };
 
@@ -17658,14 +17777,14 @@ export type Variant4WhereUniqueInput = {
   readonly id?: InputMaybe<Scalars['ID']>;
 };
 
-export type Variant4variantsUnion = Variants2;
+export type Variant4variantsUnion = ColorVariant;
 
 export type Variant4variantsUnionConnectInput = {
-  readonly Variants2?: InputMaybe<Variants2ConnectInput>;
+  readonly ColorVariant?: InputMaybe<ColorVariantConnectInput>;
 };
 
 export type Variant4variantsUnionCreateInput = {
-  readonly Variants2?: InputMaybe<Variants2CreateInput>;
+  readonly ColorVariant?: InputMaybe<ColorVariantCreateInput>;
 };
 
 export type Variant4variantsUnionCreateManyInlineInput = {
@@ -17679,11 +17798,11 @@ export type Variant4variantsUnionCreateOneInlineInput = {
 };
 
 export type Variant4variantsUnionCreateWithPositionInput = {
-  readonly Variants2?: InputMaybe<Variants2CreateWithPositionInput>;
+  readonly ColorVariant?: InputMaybe<ColorVariantCreateWithPositionInput>;
 };
 
 export type Variant4variantsUnionUpdateInput = {
-  readonly Variants2?: InputMaybe<Variants2UpdateInput>;
+  readonly ColorVariant?: InputMaybe<ColorVariantUpdateInput>;
 };
 
 export type Variant4variantsUnionUpdateManyInlineInput = {
@@ -17698,7 +17817,7 @@ export type Variant4variantsUnionUpdateManyInlineInput = {
 };
 
 export type Variant4variantsUnionUpdateManyWithNestedWhereInput = {
-  readonly Variants2?: InputMaybe<Variants2UpdateManyWithNestedWhereInput>;
+  readonly ColorVariant?: InputMaybe<ColorVariantUpdateManyWithNestedWhereInput>;
 };
 
 export type Variant4variantsUnionUpdateOneInlineInput = {
@@ -17713,27 +17832,27 @@ export type Variant4variantsUnionUpdateOneInlineInput = {
 };
 
 export type Variant4variantsUnionUpdateWithNestedWhereUniqueAndPositionInput = {
-  readonly Variants2?: InputMaybe<Variants2UpdateWithNestedWhereUniqueAndPositionInput>;
+  readonly ColorVariant?: InputMaybe<ColorVariantUpdateWithNestedWhereUniqueAndPositionInput>;
 };
 
 export type Variant4variantsUnionUpdateWithNestedWhereUniqueInput = {
-  readonly Variants2?: InputMaybe<Variants2UpdateWithNestedWhereUniqueInput>;
+  readonly ColorVariant?: InputMaybe<ColorVariantUpdateWithNestedWhereUniqueInput>;
 };
 
 export type Variant4variantsUnionUpsertWithNestedWhereUniqueAndPositionInput = {
-  readonly Variants2?: InputMaybe<Variants2UpsertWithNestedWhereUniqueAndPositionInput>;
+  readonly ColorVariant?: InputMaybe<ColorVariantUpsertWithNestedWhereUniqueAndPositionInput>;
 };
 
 export type Variant4variantsUnionUpsertWithNestedWhereUniqueInput = {
-  readonly Variants2?: InputMaybe<Variants2UpsertWithNestedWhereUniqueInput>;
+  readonly ColorVariant?: InputMaybe<ColorVariantUpsertWithNestedWhereUniqueInput>;
 };
 
 export type Variant4variantsUnionWhereInput = {
-  readonly Variants2?: InputMaybe<Variants2WhereInput>;
+  readonly ColorVariant?: InputMaybe<ColorVariantWhereInput>;
 };
 
 export type Variant4variantsUnionWhereUniqueInput = {
-  readonly Variants2?: InputMaybe<Variants2WhereUniqueInput>;
+  readonly ColorVariant?: InputMaybe<ColorVariantWhereUniqueInput>;
 };
 
 export type VariantConnectInput = {
@@ -17856,16 +17975,14 @@ export enum VariantOrderByInput {
   SizeDesc = 'size_DESC'
 }
 
-export type VariantParent = CartItem2 | Product;
+export type VariantParent = CartItem2;
 
 export type VariantParentConnectInput = {
   readonly CartItem2?: InputMaybe<CartItem2ConnectInput>;
-  readonly Product?: InputMaybe<ProductConnectInput>;
 };
 
 export type VariantParentCreateInput = {
   readonly CartItem2?: InputMaybe<CartItem2CreateInput>;
-  readonly Product?: InputMaybe<ProductCreateInput>;
 };
 
 export type VariantParentCreateManyInlineInput = {
@@ -17884,7 +18001,6 @@ export type VariantParentCreateOneInlineInput = {
 
 export type VariantParentUpdateInput = {
   readonly CartItem2?: InputMaybe<CartItem2UpdateInput>;
-  readonly Product?: InputMaybe<ProductUpdateInput>;
 };
 
 export type VariantParentUpdateManyInlineInput = {
@@ -17906,7 +18022,6 @@ export type VariantParentUpdateManyInlineInput = {
 
 export type VariantParentUpdateManyWithNestedWhereInput = {
   readonly CartItem2?: InputMaybe<CartItem2UpdateManyWithNestedWhereInput>;
-  readonly Product?: InputMaybe<ProductUpdateManyWithNestedWhereInput>;
 };
 
 export type VariantParentUpdateOneInlineInput = {
@@ -17926,22 +18041,18 @@ export type VariantParentUpdateOneInlineInput = {
 
 export type VariantParentUpdateWithNestedWhereUniqueInput = {
   readonly CartItem2?: InputMaybe<CartItem2UpdateWithNestedWhereUniqueInput>;
-  readonly Product?: InputMaybe<ProductUpdateWithNestedWhereUniqueInput>;
 };
 
 export type VariantParentUpsertWithNestedWhereUniqueInput = {
   readonly CartItem2?: InputMaybe<CartItem2UpsertWithNestedWhereUniqueInput>;
-  readonly Product?: InputMaybe<ProductUpsertWithNestedWhereUniqueInput>;
 };
 
 export type VariantParentWhereInput = {
   readonly CartItem2?: InputMaybe<CartItem2WhereInput>;
-  readonly Product?: InputMaybe<ProductWhereInput>;
 };
 
 export type VariantParentWhereUniqueInput = {
   readonly CartItem2?: InputMaybe<CartItem2WhereUniqueInput>;
-  readonly Product?: InputMaybe<ProductWhereUniqueInput>;
 };
 
 export type VariantUpdateInput = {
@@ -18086,372 +18197,6 @@ export type VariantWhereInput = {
 
 /** References Variant record uniquely */
 export type VariantWhereUniqueInput = {
-  readonly id?: InputMaybe<Scalars['ID']>;
-};
-
-export type Variants2 = {
-  readonly __typename?: 'Variants2';
-  readonly color?: Maybe<ProductColor>;
-  /** The unique identifier */
-  readonly id: Scalars['ID'];
-  readonly product?: Maybe<Product>;
-  readonly quantity: Scalars['Int'];
-  readonly size?: Maybe<ProductSize>;
-  /** System stage field */
-  readonly stage: Stage;
-};
-
-
-export type Variants2ProductArgs = {
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-};
-
-export type Variants2ConnectInput = {
-  /** Allow to specify document position in list of connected documents, will default to appending at end of list */
-  readonly position?: InputMaybe<ConnectPositionInput>;
-  /** Document to connect */
-  readonly where: Variants2WhereUniqueInput;
-};
-
-/** A connection to a list of items. */
-export type Variants2Connection = {
-  readonly __typename?: 'Variants2Connection';
-  readonly aggregate: Aggregate;
-  /** A list of edges. */
-  readonly edges: ReadonlyArray<Variants2Edge>;
-  /** Information to aid in pagination. */
-  readonly pageInfo: PageInfo;
-};
-
-export type Variants2CreateInput = {
-  readonly color?: InputMaybe<ProductColor>;
-  readonly product?: InputMaybe<ProductCreateOneInlineInput>;
-  readonly quantity: Scalars['Int'];
-  readonly size?: InputMaybe<ProductSize>;
-};
-
-export type Variants2CreateManyInlineInput = {
-  /** Create and connect multiple existing Variants2 documents */
-  readonly create?: InputMaybe<ReadonlyArray<Variants2CreateInput>>;
-};
-
-export type Variants2CreateOneInlineInput = {
-  /** Create and connect one Variants2 document */
-  readonly create?: InputMaybe<Variants2CreateInput>;
-};
-
-export type Variants2CreateWithPositionInput = {
-  /** Document to create */
-  readonly data: Variants2CreateInput;
-  /** Position in the list of existing component instances, will default to appending at the end of list */
-  readonly position?: InputMaybe<ConnectPositionInput>;
-};
-
-/** An edge in a connection. */
-export type Variants2Edge = {
-  readonly __typename?: 'Variants2Edge';
-  /** A cursor for use in pagination. */
-  readonly cursor: Scalars['String'];
-  /** The item at the end of the edge. */
-  readonly node: Variants2;
-};
-
-/** Identifies documents */
-export type Variants2ManyWhereInput = {
-  /** Logical AND on all given filters. */
-  readonly AND?: InputMaybe<ReadonlyArray<Variants2WhereInput>>;
-  /** Logical NOT on all given filters combined by AND. */
-  readonly NOT?: InputMaybe<ReadonlyArray<Variants2WhereInput>>;
-  /** Logical OR on all given filters. */
-  readonly OR?: InputMaybe<ReadonlyArray<Variants2WhereInput>>;
-  /** Contains search across all appropriate fields. */
-  readonly _search?: InputMaybe<Scalars['String']>;
-  readonly color?: InputMaybe<ProductColor>;
-  /** All values that are contained in given list. */
-  readonly color_in?: InputMaybe<ReadonlyArray<InputMaybe<ProductColor>>>;
-  /** All values that are not equal to given value. */
-  readonly color_not?: InputMaybe<ProductColor>;
-  /** All values that are not contained in given list. */
-  readonly color_not_in?: InputMaybe<ReadonlyArray<InputMaybe<ProductColor>>>;
-  readonly id?: InputMaybe<Scalars['ID']>;
-  /** All values containing the given string. */
-  readonly id_contains?: InputMaybe<Scalars['ID']>;
-  /** All values ending with the given string. */
-  readonly id_ends_with?: InputMaybe<Scalars['ID']>;
-  /** All values that are contained in given list. */
-  readonly id_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
-  /** All values that are not equal to given value. */
-  readonly id_not?: InputMaybe<Scalars['ID']>;
-  /** All values not containing the given string. */
-  readonly id_not_contains?: InputMaybe<Scalars['ID']>;
-  /** All values not ending with the given string */
-  readonly id_not_ends_with?: InputMaybe<Scalars['ID']>;
-  /** All values that are not contained in given list. */
-  readonly id_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
-  /** All values not starting with the given string. */
-  readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
-  /** All values starting with the given string. */
-  readonly id_starts_with?: InputMaybe<Scalars['ID']>;
-  readonly product?: InputMaybe<ProductWhereInput>;
-  readonly quantity?: InputMaybe<Scalars['Int']>;
-  /** All values greater than the given value. */
-  readonly quantity_gt?: InputMaybe<Scalars['Int']>;
-  /** All values greater than or equal the given value. */
-  readonly quantity_gte?: InputMaybe<Scalars['Int']>;
-  /** All values that are contained in given list. */
-  readonly quantity_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
-  /** All values less than the given value. */
-  readonly quantity_lt?: InputMaybe<Scalars['Int']>;
-  /** All values less than or equal the given value. */
-  readonly quantity_lte?: InputMaybe<Scalars['Int']>;
-  /** All values that are not equal to given value. */
-  readonly quantity_not?: InputMaybe<Scalars['Int']>;
-  /** All values that are not contained in given list. */
-  readonly quantity_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
-  readonly size?: InputMaybe<ProductSize>;
-  /** All values that are contained in given list. */
-  readonly size_in?: InputMaybe<ReadonlyArray<InputMaybe<ProductSize>>>;
-  /** All values that are not equal to given value. */
-  readonly size_not?: InputMaybe<ProductSize>;
-  /** All values that are not contained in given list. */
-  readonly size_not_in?: InputMaybe<ReadonlyArray<InputMaybe<ProductSize>>>;
-};
-
-export enum Variants2OrderByInput {
-  ColorAsc = 'color_ASC',
-  ColorDesc = 'color_DESC',
-  IdAsc = 'id_ASC',
-  IdDesc = 'id_DESC',
-  QuantityAsc = 'quantity_ASC',
-  QuantityDesc = 'quantity_DESC',
-  SizeAsc = 'size_ASC',
-  SizeDesc = 'size_DESC'
-}
-
-export type Variants2Parent = Variant4;
-
-export type Variants2ParentConnectInput = {
-  readonly Variant4?: InputMaybe<Variant4ConnectInput>;
-};
-
-export type Variants2ParentCreateInput = {
-  readonly Variant4?: InputMaybe<Variant4CreateInput>;
-};
-
-export type Variants2ParentCreateManyInlineInput = {
-  /** Connect multiple existing Variants2Parent documents */
-  readonly connect?: InputMaybe<ReadonlyArray<Variants2ParentWhereUniqueInput>>;
-  /** Create and connect multiple existing Variants2Parent documents */
-  readonly create?: InputMaybe<ReadonlyArray<Variants2ParentCreateInput>>;
-};
-
-export type Variants2ParentCreateOneInlineInput = {
-  /** Connect one existing Variants2Parent document */
-  readonly connect?: InputMaybe<Variants2ParentWhereUniqueInput>;
-  /** Create and connect one Variants2Parent document */
-  readonly create?: InputMaybe<Variants2ParentCreateInput>;
-};
-
-export type Variants2ParentUpdateInput = {
-  readonly Variant4?: InputMaybe<Variant4UpdateInput>;
-};
-
-export type Variants2ParentUpdateManyInlineInput = {
-  /** Connect multiple existing Variants2Parent documents */
-  readonly connect?: InputMaybe<ReadonlyArray<Variants2ParentConnectInput>>;
-  /** Create and connect multiple Variants2Parent documents */
-  readonly create?: InputMaybe<ReadonlyArray<Variants2ParentCreateInput>>;
-  /** Delete multiple Variants2Parent documents */
-  readonly delete?: InputMaybe<ReadonlyArray<Variants2ParentWhereUniqueInput>>;
-  /** Disconnect multiple Variants2Parent documents */
-  readonly disconnect?: InputMaybe<ReadonlyArray<Variants2ParentWhereUniqueInput>>;
-  /** Override currently-connected documents with multiple existing Variants2Parent documents */
-  readonly set?: InputMaybe<ReadonlyArray<Variants2ParentWhereUniqueInput>>;
-  /** Update multiple Variants2Parent documents */
-  readonly update?: InputMaybe<ReadonlyArray<Variants2ParentUpdateWithNestedWhereUniqueInput>>;
-  /** Upsert multiple Variants2Parent documents */
-  readonly upsert?: InputMaybe<ReadonlyArray<Variants2ParentUpsertWithNestedWhereUniqueInput>>;
-};
-
-export type Variants2ParentUpdateManyWithNestedWhereInput = {
-  readonly Variant4?: InputMaybe<Variant4UpdateManyWithNestedWhereInput>;
-};
-
-export type Variants2ParentUpdateOneInlineInput = {
-  /** Connect existing Variants2Parent document */
-  readonly connect?: InputMaybe<Variants2ParentWhereUniqueInput>;
-  /** Create and connect one Variants2Parent document */
-  readonly create?: InputMaybe<Variants2ParentCreateInput>;
-  /** Delete currently connected Variants2Parent document */
-  readonly delete?: InputMaybe<Scalars['Boolean']>;
-  /** Disconnect currently connected Variants2Parent document */
-  readonly disconnect?: InputMaybe<Scalars['Boolean']>;
-  /** Update single Variants2Parent document */
-  readonly update?: InputMaybe<Variants2ParentUpdateWithNestedWhereUniqueInput>;
-  /** Upsert single Variants2Parent document */
-  readonly upsert?: InputMaybe<Variants2ParentUpsertWithNestedWhereUniqueInput>;
-};
-
-export type Variants2ParentUpdateWithNestedWhereUniqueInput = {
-  readonly Variant4?: InputMaybe<Variant4UpdateWithNestedWhereUniqueInput>;
-};
-
-export type Variants2ParentUpsertWithNestedWhereUniqueInput = {
-  readonly Variant4?: InputMaybe<Variant4UpsertWithNestedWhereUniqueInput>;
-};
-
-export type Variants2ParentWhereInput = {
-  readonly Variant4?: InputMaybe<Variant4WhereInput>;
-};
-
-export type Variants2ParentWhereUniqueInput = {
-  readonly Variant4?: InputMaybe<Variant4WhereUniqueInput>;
-};
-
-export type Variants2UpdateInput = {
-  readonly color?: InputMaybe<ProductColor>;
-  readonly product?: InputMaybe<ProductUpdateOneInlineInput>;
-  readonly quantity?: InputMaybe<Scalars['Int']>;
-  readonly size?: InputMaybe<ProductSize>;
-};
-
-export type Variants2UpdateManyInlineInput = {
-  /** Create and connect multiple Variants2 component instances */
-  readonly create?: InputMaybe<ReadonlyArray<Variants2CreateWithPositionInput>>;
-  /** Delete multiple Variants2 documents */
-  readonly delete?: InputMaybe<ReadonlyArray<Variants2WhereUniqueInput>>;
-  /** Update multiple Variants2 component instances */
-  readonly update?: InputMaybe<ReadonlyArray<Variants2UpdateWithNestedWhereUniqueAndPositionInput>>;
-  /** Upsert multiple Variants2 component instances */
-  readonly upsert?: InputMaybe<ReadonlyArray<Variants2UpsertWithNestedWhereUniqueAndPositionInput>>;
-};
-
-export type Variants2UpdateManyInput = {
-  readonly color?: InputMaybe<ProductColor>;
-  readonly quantity?: InputMaybe<Scalars['Int']>;
-  readonly size?: InputMaybe<ProductSize>;
-};
-
-export type Variants2UpdateManyWithNestedWhereInput = {
-  /** Update many input */
-  readonly data: Variants2UpdateManyInput;
-  /** Document search */
-  readonly where: Variants2WhereInput;
-};
-
-export type Variants2UpdateOneInlineInput = {
-  /** Create and connect one Variants2 document */
-  readonly create?: InputMaybe<Variants2CreateInput>;
-  /** Delete currently connected Variants2 document */
-  readonly delete?: InputMaybe<Scalars['Boolean']>;
-  /** Update single Variants2 document */
-  readonly update?: InputMaybe<Variants2UpdateWithNestedWhereUniqueInput>;
-  /** Upsert single Variants2 document */
-  readonly upsert?: InputMaybe<Variants2UpsertWithNestedWhereUniqueInput>;
-};
-
-export type Variants2UpdateWithNestedWhereUniqueAndPositionInput = {
-  /** Document to update */
-  readonly data?: InputMaybe<Variants2UpdateInput>;
-  /** Position in the list of existing component instances, will default to appending at the end of list */
-  readonly position?: InputMaybe<ConnectPositionInput>;
-  /** Unique component instance search */
-  readonly where: Variants2WhereUniqueInput;
-};
-
-export type Variants2UpdateWithNestedWhereUniqueInput = {
-  /** Document to update */
-  readonly data: Variants2UpdateInput;
-  /** Unique document search */
-  readonly where: Variants2WhereUniqueInput;
-};
-
-export type Variants2UpsertInput = {
-  /** Create document if it didn't exist */
-  readonly create: Variants2CreateInput;
-  /** Update document if it exists */
-  readonly update: Variants2UpdateInput;
-};
-
-export type Variants2UpsertWithNestedWhereUniqueAndPositionInput = {
-  /** Document to upsert */
-  readonly data?: InputMaybe<Variants2UpsertInput>;
-  /** Position in the list of existing component instances, will default to appending at the end of list */
-  readonly position?: InputMaybe<ConnectPositionInput>;
-  /** Unique component instance search */
-  readonly where: Variants2WhereUniqueInput;
-};
-
-export type Variants2UpsertWithNestedWhereUniqueInput = {
-  /** Upsert data */
-  readonly data: Variants2UpsertInput;
-  /** Unique document search */
-  readonly where: Variants2WhereUniqueInput;
-};
-
-/** Identifies documents */
-export type Variants2WhereInput = {
-  /** Logical AND on all given filters. */
-  readonly AND?: InputMaybe<ReadonlyArray<Variants2WhereInput>>;
-  /** Logical NOT on all given filters combined by AND. */
-  readonly NOT?: InputMaybe<ReadonlyArray<Variants2WhereInput>>;
-  /** Logical OR on all given filters. */
-  readonly OR?: InputMaybe<ReadonlyArray<Variants2WhereInput>>;
-  /** Contains search across all appropriate fields. */
-  readonly _search?: InputMaybe<Scalars['String']>;
-  readonly color?: InputMaybe<ProductColor>;
-  /** All values that are contained in given list. */
-  readonly color_in?: InputMaybe<ReadonlyArray<InputMaybe<ProductColor>>>;
-  /** All values that are not equal to given value. */
-  readonly color_not?: InputMaybe<ProductColor>;
-  /** All values that are not contained in given list. */
-  readonly color_not_in?: InputMaybe<ReadonlyArray<InputMaybe<ProductColor>>>;
-  readonly id?: InputMaybe<Scalars['ID']>;
-  /** All values containing the given string. */
-  readonly id_contains?: InputMaybe<Scalars['ID']>;
-  /** All values ending with the given string. */
-  readonly id_ends_with?: InputMaybe<Scalars['ID']>;
-  /** All values that are contained in given list. */
-  readonly id_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
-  /** All values that are not equal to given value. */
-  readonly id_not?: InputMaybe<Scalars['ID']>;
-  /** All values not containing the given string. */
-  readonly id_not_contains?: InputMaybe<Scalars['ID']>;
-  /** All values not ending with the given string */
-  readonly id_not_ends_with?: InputMaybe<Scalars['ID']>;
-  /** All values that are not contained in given list. */
-  readonly id_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
-  /** All values not starting with the given string. */
-  readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
-  /** All values starting with the given string. */
-  readonly id_starts_with?: InputMaybe<Scalars['ID']>;
-  readonly product?: InputMaybe<ProductWhereInput>;
-  readonly quantity?: InputMaybe<Scalars['Int']>;
-  /** All values greater than the given value. */
-  readonly quantity_gt?: InputMaybe<Scalars['Int']>;
-  /** All values greater than or equal the given value. */
-  readonly quantity_gte?: InputMaybe<Scalars['Int']>;
-  /** All values that are contained in given list. */
-  readonly quantity_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
-  /** All values less than the given value. */
-  readonly quantity_lt?: InputMaybe<Scalars['Int']>;
-  /** All values less than or equal the given value. */
-  readonly quantity_lte?: InputMaybe<Scalars['Int']>;
-  /** All values that are not equal to given value. */
-  readonly quantity_not?: InputMaybe<Scalars['Int']>;
-  /** All values that are not contained in given list. */
-  readonly quantity_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
-  readonly size?: InputMaybe<ProductSize>;
-  /** All values that are contained in given list. */
-  readonly size_in?: InputMaybe<ReadonlyArray<InputMaybe<ProductSize>>>;
-  /** All values that are not equal to given value. */
-  readonly size_not?: InputMaybe<ProductSize>;
-  /** All values that are not contained in given list. */
-  readonly size_not_in?: InputMaybe<ReadonlyArray<InputMaybe<ProductSize>>>;
-};
-
-/** References Variants2 record uniquely */
-export type Variants2WhereUniqueInput = {
   readonly id?: InputMaybe<Scalars['ID']>;
 };
 
@@ -18640,6 +18385,13 @@ export type GetProductDetailsBySlugQueryVariables = Exact<{
 
 
 export type GetProductDetailsBySlugQuery = { readonly __typename?: 'Query', readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly slug: string, readonly name: string, readonly price: number, readonly description: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }>, readonly variants: ReadonlyArray<{ readonly __typename?: 'ProductColorVariant', readonly id: string, readonly name: string } | { readonly __typename?: 'ProductSizeColorVariant', readonly id: string, readonly name: string } | { readonly __typename?: 'ProductSizeVariant', readonly id: string, readonly name: string }> } | null };
+
+export type GetProductBySlugQueryVariables = Exact<{
+  slug?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type GetProductBySlugQuery = { readonly __typename?: 'Query', readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly slug: string, readonly name: string, readonly price: number, readonly description: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }>, readonly option: ReadonlyArray<{ readonly __typename?: 'Option', readonly quantity: number, readonly id: string, readonly color?: ProductColor | null, readonly size?: ProductSize | null }> } | null };
 
 export const CartContentQueryFragmentDoc = gql`
     fragment cartContentQuery on Cart {
@@ -19149,3 +18901,51 @@ export function useGetProductDetailsBySlugLazyQuery(baseOptions?: Apollo.LazyQue
 export type GetProductDetailsBySlugQueryHookResult = ReturnType<typeof useGetProductDetailsBySlugQuery>;
 export type GetProductDetailsBySlugLazyQueryHookResult = ReturnType<typeof useGetProductDetailsBySlugLazyQuery>;
 export type GetProductDetailsBySlugQueryResult = Apollo.QueryResult<GetProductDetailsBySlugQuery, GetProductDetailsBySlugQueryVariables>;
+export const GetProductBySlugDocument = gql`
+    query GetProductBySlug($slug: String) {
+  product(where: {slug: $slug}) {
+    id
+    slug
+    name
+    price
+    description
+    images {
+      url
+    }
+    option {
+      quantity
+      id
+      color
+      size
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetProductBySlugQuery__
+ *
+ * To run a query within a React component, call `useGetProductBySlugQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductBySlugQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProductBySlugQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useGetProductBySlugQuery(baseOptions?: Apollo.QueryHookOptions<GetProductBySlugQuery, GetProductBySlugQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProductBySlugQuery, GetProductBySlugQueryVariables>(GetProductBySlugDocument, options);
+      }
+export function useGetProductBySlugLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProductBySlugQuery, GetProductBySlugQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProductBySlugQuery, GetProductBySlugQueryVariables>(GetProductBySlugDocument, options);
+        }
+export type GetProductBySlugQueryHookResult = ReturnType<typeof useGetProductBySlugQuery>;
+export type GetProductBySlugLazyQueryHookResult = ReturnType<typeof useGetProductBySlugLazyQuery>;
+export type GetProductBySlugQueryResult = Apollo.QueryResult<GetProductBySlugQuery, GetProductBySlugQueryVariables>;

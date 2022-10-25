@@ -2,9 +2,9 @@ import { Main } from "components/Main";
 import { ProductSingleUI } from "components/Products/product-single-ui";
 import { apolloClient } from "graphQL/apolloClient";
 import {
-    GetProductDetailsBySlugDocument,
-    GetProductDetailsBySlugQuery,
-    GetProductDetailsBySlugQueryVariables,
+    GetProductBySlugDocument,
+    GetProductBySlugQuery,
+    GetProductBySlugQueryVariables,
     GetProductsSlugsDocument,
     GetProductsSlugsQuery,
 } from "graphQL/generated/graphql";
@@ -31,7 +31,7 @@ const ProductSingleSlugPage = ({ product }: InferGetStaticPropsType<typeof getSt
                     thumbnailUrl: product.images[0].url,
                     thumbnailAlt: product.name,
                     slug: product.slug,
-                    variants: product.variants,
+                    option: product.option,
                     // rating: product.rating.rate,
                     longDescription: product.longDescription,
                     price: product.price,
@@ -73,11 +73,11 @@ export const getStaticProps = async ({ params }: InferGetStaticPathsType<typeof 
         return { props: {}, notFound: true };
     }
 
-    const { data } = await apolloClient.query<GetProductDetailsBySlugQuery, GetProductDetailsBySlugQueryVariables>({
+    const { data } = await apolloClient.query<GetProductBySlugQuery, GetProductBySlugQueryVariables>({
         variables: {
             slug: params.slug,
         },
-        query: GetProductDetailsBySlugDocument,
+        query: GetProductBySlugDocument,
     });
 
     if (!data.product) {

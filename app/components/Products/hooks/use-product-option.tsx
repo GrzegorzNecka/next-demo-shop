@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { extractVariant } from "utils/product-variant";
+import { extractVariant } from "utils/product-options";
 import { ProductVariants, VariantsTypeNamesUnion } from "../types";
 
 const typenames: VariantsTypeNamesUnion[] = ["ProductColorVariant", "ProductSizeVariant", "ProductSizeColorVariant"];
