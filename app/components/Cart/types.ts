@@ -8,6 +8,7 @@ export interface CartItem {
     readonly quantity: number;
     readonly imgUrl: string;
     readonly slug: string;
+    readonly option: string;
     // readonly variants: string[];
 }
 

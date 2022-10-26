@@ -1,0 +1,3 @@
+export const Print = (data: any) => {
+    return <pre>{JSON.stringify(data, null, 2)}</pre>;
+};

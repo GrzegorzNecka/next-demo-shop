@@ -8,6 +8,8 @@ import {
     useRemoveItemFromCartByCartIdMutation,
     useUpdateItemQuantityByCartIdMutation,
 } from "graphQL/generated/graphql";
+import { apolloClient } from "graphQL/apolloClient";
+import { add } from "services/cart";
 
 export const useCartItems = () => {
     const session = useSession();
@@ -17,13 +19,14 @@ export const useCartItems = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // APOLLO
-    const { data } = useGetCartItemsByCartIdQuery({
+    const { data, refetch } = useGetCartItemsByCartIdQuery({
         skip: !Boolean(cartId),
         variables: {
             id: cartId,
         },
         onCompleted: () => {
             setIsLoading(false);
+            // apolloClient.refetchQueries()
         },
     });
 
@@ -53,7 +56,8 @@ export const useCartItems = () => {
                 title: item?.product?.name!,
                 imgUrl: item.product?.images.at(0)?.url!,
                 slug: item.product?.slug!,
-                // variants: [],
+                // option: item.product?.option! ,
+                option: "nie istnieje w koszyku",
             };
         });
 
@@ -62,8 +66,8 @@ export const useCartItems = () => {
 
     // ---------------- handleAddItemToCart React Context
 
-    const handleAddItemToCart = (product: CartItem) => {
-        console.log("🚀 ~ file: use-cart-items.tsx ~ line 66 ~ handleAddItemToCart ~ product", product);
+    const handleAddItemToCart = async (product: CartItem) => {
+        console.log("🚀 ~  ~ product", product);
         if (!cartId || !data) {
             return;
         }
@@ -72,15 +76,29 @@ export const useCartItems = () => {
 
         const { productId } = product;
 
+        // const add = async () =>
+        //     await fetch("/api/cart/add", {
+        //         method: "POST",
+        //         headers: { "Content-Type": "application/json;" },
+        //         body: JSON.stringify({
+        //             productId,
+        //         }),
+        //     });
+
         const existProduct = data.cart?.cartItems.find((item) => item?.product?.id === productId);
 
         if (!existProduct) {
-            addItemToCartByCartIdMutation({
-                variables: {
-                    cartId,
-                    productId,
-                },
-            });
+            // addItemToCartByCartIdMutation({
+            //     variables: {
+            //         cartId,
+            //         productId,
+            //     },
+            // });
+            const result = await add(productId);
+
+            if (result.status === 200) {
+                refetch({ id: cartId });
+            }
 
             return;
         }

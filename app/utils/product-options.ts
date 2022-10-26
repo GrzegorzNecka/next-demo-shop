@@ -1,4 +1,5 @@
 import { ProductVariants, VariantsTypeNamesUnion, Option } from "components/Products/types";
+import { ProductColor, ProductSize } from "graphQL/generated/graphql";
 
 function extractVariant<V extends ProductVariants, T extends VariantsTypeNamesUnion>(variants: V, typename: T) {
     if (!variants) {
@@ -12,7 +13,7 @@ function extractVariant<V extends ProductVariants, T extends VariantsTypeNamesUn
     });
 }
 
-// type Value = ProductColor | ProductSize;
+type Value = ProductColor | ProductSize;
 
 // type ReducerObject = Record<Value, Option[]>;
 // type ReducerObject = {
@@ -23,7 +24,8 @@ function extractVariant<V extends ProductVariants, T extends VariantsTypeNamesUn
 
 type Prop = keyof Pick<Option, "color" | "size">;
 type ReducerObject = {
-    [value in string]: Option[];
+    name: Value;
+    variation: Option[];
 };
 
 const groupOptions = (options: readonly Option[] | undefined, prop: Prop) => {
@@ -39,14 +41,18 @@ const groupOptions = (options: readonly Option[] | undefined, prop: Prop) => {
         }
 
         const existObj = acc.find((obj) => {
-            const existValue = obj[value]?.[0][prop];
+            console.log("🚀 ~ file: product-options.ts ~ line 42 ~ existObj ~ obj", value);
 
-            return existValue === value;
+            const existName = obj.name;
+
+            return existName === value;
         });
 
         if (!existObj) {
             const newObj = {
-                [value]: [currentObj],
+                name: value,
+                variation: [currentObj],
+                // [value]: [currentObj],
             };
 
             acc.push(newObj);
@@ -54,7 +60,7 @@ const groupOptions = (options: readonly Option[] | undefined, prop: Prop) => {
             return acc;
         }
 
-        existObj[value] = [currentObj, { ...existObj[value][0] }];
+        existObj.variation = [currentObj, { ...existObj.variation[0] }];
 
         return acc;
     }, []);

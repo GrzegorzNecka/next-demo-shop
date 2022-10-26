@@ -2,23 +2,26 @@
 import Image from "next/image";
 import { NextSeo } from "next-seo";
 import type { ProductDetailsProps, UnionVariants } from "./types";
+import ProductOption from "components/Products/product-options";
 import { useCartState } from "components/Cart/context/cart-context";
 import Markdown from "components/markdown";
 import { ChangeEvent, useMemo, useState } from "react";
 import type { ProductVariants, Option } from "components/Products/types";
-import ProductVariant from "./product-variant";
-import useProductVariant from "./hooks/use-product-variant";
+// import ProductVariant from "./product-variant";
+// import useProductVariant from "./hooks/use-product-option";
 import { ProductColor, ProductSize } from "graphQL/generated/graphql";
 import { ValueOf } from "types/types";
 import { groupOptions } from "utils/product-options";
+import { Print } from "components/print";
 
 export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
     const cartState = useCartState();
 
-    // const optionColor = data.option?.filter((obj) => !!obj.color);
-    // const optionSize = data.option?.filter((obj) => !!obj.size);
+    const InitialOption = data?.option?.[0]?.id || "";
 
-    const groupedBySizes = groupOptions(data.option, "size");
+    const [activeOption, setActiveOption] = useState<string>(InitialOption);
+
+    // const optionsBySize = groupOptions(data.option, "size");
 
     // const [colorVariant, sizeVariant, sizeColorVariant] = useProductVariant(data.variants!);
 
@@ -30,7 +33,8 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
         <>
             <SeoProvider data={data} />
 
-            <pre>{JSON.stringify(groupedBySizes, null, 2)}</pre>
+            {/* <Print data={data?.option} /> */}
+
             <div className="font-mono ">
                 <div className="grid grid-cols-2 gap">
                     <div>
@@ -52,69 +56,13 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
                             <span className=" font-medium text-xl justify-self-end">{data.priceWithCurrency}</span>
                             {/* <ProductArithmeticRating productSlug={data.slug} /> */}
                         </div>
-                        {/* 
-                        <ProductVariant
-                            variant={colorVariant.variant}
-                            activeVariantId={colorVariant.active}
-                            updateVariant={colorVariant.update}
-                        >
-                            Kolor
-                        </ProductVariant>
+                        {/* // product option */}
 
-                        <ProductVariant
-                            variant={sizeVariant.variant}
-                            activeVariantId={sizeVariant.active}
-                            updateVariant={sizeVariant.update}
-                        >
-                            Rozmiar
-                        </ProductVariant>
+                        <ProductOption activeOption={activeOption} updateOption={setActiveOption} option={data.option}>
+                            warianty
+                        </ProductOption>
 
-                        <ProductVariant
-                            variant={sizeColorVariant.variant}
-                            activeVariantId={sizeColorVariant.active}
-                            updateVariant={sizeColorVariant.update}
-                        >
-                            Rozmiar/Kolor
-                        </ProductVariant> */}
-                        {/* 
-                        <div>{colorVariant.active}</div>
-                        <div>{sizeVariant.active}</div>
-                        <div>{sizeColorVariant.active}</div> */}
-
-                        {data.option && data.option.length >= 1 ? (
-                            <div className="md:w-3/4 px-3 mb-6">
-                                <label
-                                    className="block text-sm font-bold tracking-widest uppercase mb-2 text-slategray"
-                                    htmlFor="style"
-                                >
-                                    wariant
-                                </label>
-                                <div className="relative">
-                                    {/* <select
-                            id="style"
-                            name="style"
-                            value={activeVariantId}
-                            className="block appearance-none w-full bg-gainsboro border-2 border-gainsboro focus:border-slategray px-4 py-3 pr-8 focus:outline-none focus:bg-white text-slategray focus:text-slategray rounded-lg"
-                            onChange={onChange}
-                        >
-                            {variant.map((el) => (
-                                <option key={el.id} value={el.id}>
-                                    {el.name}
-                                </option>
-                            ))}
-                        </select> */}
-
-                                    {data.option.map((el) => (
-                                        <option key={el.id} value={el.id}>
-                                            <div>size: {el.size}</div>
-                                            <div>color: {el.color}</div>
-                                        </option>
-                                    ))}
-
-                                    <div className="pointer-events-none absolute inset-y-0 right-0 px-2 flex items-center"></div>
-                                </div>
-                            </div>
-                        ) : null}
+                        <div>wybrano: {activeOption} </div>
 
                         <button
                             onClick={() =>
@@ -125,6 +73,7 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
                                     quantity: 1,
                                     imgUrl: data.thumbnailUrl,
                                     slug: data.slug,
+                                    option: activeOption,
                                     // option: data.option,
                                     // variants: variants,
                                 })
@@ -133,7 +82,6 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
                         >
                             Dodaj do kosza
                         </button>
-
                         <article className="">
                             <Markdown>{data.longDescription}</Markdown>
                         </article>

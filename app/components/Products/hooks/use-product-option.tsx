@@ -1,3 +1,5 @@
+//! zły kształt
+
 import React, { useRef, useState } from "react";
 import { extractVariant } from "utils/product-options";
 import { ProductVariants, VariantsTypeNamesUnion } from "../types";
