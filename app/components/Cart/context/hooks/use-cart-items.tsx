@@ -1,15 +1,8 @@
 import { useState, useEffect } from "react";
 import { CartItem } from "components/Cart/types";
 import { useSession } from "next-auth/react";
-import {
-    useAddItemToCartByCartIdMutation,
-    useClearCartItemsMutation,
-    useGetCartItemsByCartIdQuery,
-    useRemoveItemFromCartByCartIdMutation,
-    useUpdateItemQuantityByCartIdMutation,
-} from "graphQL/generated/graphql";
-import { apolloClient } from "graphQL/apolloClient";
-import { add, clearCart, removeItem, update } from "services/cart";
+import { useGetCartItemsByCartIdQuery } from "graphQL/generated/graphql";
+import { addToCartItem, clearCart, removeCartItem, updateCartItem } from "services/cart";
 
 export const useCartItems = () => {
     const session = useSession();
@@ -36,15 +29,14 @@ export const useCartItems = () => {
     // albo stórz pusty cart item z wykorzystaniem cart id oraz quantity a pote
     // przypisz go do cart oraz product
 
-    const [addItemToCartByCartIdMutation] = useAddItemToCartByCartIdMutation({});
-    const [removeItemFromCartByCartIdMutation] = useRemoveItemFromCartByCartIdMutation({});
-    const [updateItemQuantityByCartIdMutation] = useUpdateItemQuantityByCartIdMutation({});
-    const [clearCartItemsMutation] = useClearCartItemsMutation({});
-
     useEffect(() => {
         if (session.status !== "authenticated" || !data || !data.cart) {
             return;
         }
+
+        // if (!cartItems) {
+        //     return; // usówa 1 render
+        // }
 
         const initialCartItems = data.cart.cartItems.map((item) => {
             console.log("ditem?.product?.id", item);
@@ -56,7 +48,7 @@ export const useCartItems = () => {
                 title: item?.product?.name!,
                 imgUrl: item.product?.images.at(0)?.url!,
                 slug: item.product?.slug!,
-                // option: item.product?.option! ,
+                // option: item.product?.option!,
                 option: "nie istnieje w koszyku",
             };
         });
@@ -76,28 +68,10 @@ export const useCartItems = () => {
 
         const { productId } = product;
 
-        // const add = async () =>
-        //     await fetch("/api/cart/add", {
-        //         method: "POST",
-        //         headers: { "Content-Type": "application/json;" },
-        //         body: JSON.stringify({
-        //             productId,
-        //         }),
-        //     });
-
         const existProduct = data.cart?.cartItems.find((item) => item?.product?.id === productId);
 
         if (!existProduct) {
-            // addItemToCartByCartIdMutation({
-            //
-            //     variables: {
-            //         cartId,
-            //         productId,
-            //     },
-            //
-            // });
-
-            const result = await add(productId);
+            const result = await addToCartItem(productId);
 
             if (result.status === 200) {
                 refetch({ id: cartId });
@@ -110,78 +84,42 @@ export const useCartItems = () => {
 
         const updatedQuantity = existProduct?.quantity! + product.quantity;
 
-        const result = await update(itemId, updatedQuantity);
+        const result = await updateCartItem(itemId, updatedQuantity);
         if (result.status === 200) {
             refetch({ id: cartId });
         }
-
-        // updateItemQuantityByCartIdMutation({
-        //     variables: {
-        //         cartId,
-        //         itemId,
-        //         quantity: existProduct?.quantity! + product.quantity,
-        //     },
-        // });
     };
 
-    const handleRemoveItemFromCart = async (itemId: CartItem["productId"]) => {
+    const handleRemoveCartItem = async (itemId: CartItem["productId"]) => {
         if (!cartId || !data) {
             return;
         }
 
         setIsLoading(true);
 
-        const item = data.cart?.cartItems.find((item) => {
-            return item.id === itemId;
-        });
-        if (!item) {
+        const existItem = data.cart?.cartItems.find((item) => item.id === itemId);
+        if (!existItem) {
             return;
         }
 
-        const result = await removeItem(itemId, item.quantity);
+        const result = await removeCartItem(itemId, existItem.quantity);
 
         if (result.status === 200) {
             refetch({ id: cartId });
         }
-
-        // if (item.quantity > 1) {
-        //     updateItemQuantityByCartIdMutation({
-        //         variables: {
-        //             cartId,
-        //             itemId,
-        //             quantity: item.quantity - 1,
-        //         },
-        //     });
-
-        //     return;
-        // }
-
-        // removeItemFromCartByCartIdMutation({
-        //     variables: {
-        //         cartId,
-        //         itemId,
-        //     },
-        // });
     };
 
-    const handleClearCartItems = async () => {
+    const handleClearCart = async () => {
         if (!cartId || !data) {
             return;
         }
 
         const result = await clearCart();
-        console.log("🚀 ~ file: use-cart-items.tsx ~ line 173 ~ handleClearCartItems ~ result", result);
 
         if (result.status === 200) {
             refetch({ id: cartId });
         }
-
-        // clearCartItemsMutation({
-        //     variables: {
-        //         cartId,
-        //     },
-        // });
     };
 
-    return [cartItems, isLoading, handleAddItemToCart, handleRemoveItemFromCart, handleClearCartItems] as const;
+    return [cartItems, isLoading, handleAddItemToCart, handleRemoveCartItem, handleClearCart] as const;
 };

@@ -70,6 +70,38 @@ fragment cartContentQuery on Cart {
     }
 }
 
+fragment cartContentQueryWithOptions on Cart {
+    id
+    cartItems {
+        id
+        quantity
+        product {
+            id
+            name
+            price
+            images {
+                url
+            }
+            slug
+        }
+        option {
+            id
+            color
+            size
+            quantity
+            product {
+                id
+                name
+                price
+                images {
+                    url
+                }
+                slug
+            }
+        }
+    }
+}
+
 query GetCartItemsByCartId($id: ID!) {
     cart(where: { id: $id }, stage: DRAFT) {
         ...cartContentQuery
