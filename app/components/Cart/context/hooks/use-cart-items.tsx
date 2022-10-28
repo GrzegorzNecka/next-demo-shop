@@ -9,7 +9,7 @@ import {
     useUpdateItemQuantityByCartIdMutation,
 } from "graphQL/generated/graphql";
 import { apolloClient } from "graphQL/apolloClient";
-import { add } from "services/cart";
+import { add, clearCart, removeItem, update } from "services/cart";
 
 export const useCartItems = () => {
     const session = useSession();
@@ -89,11 +89,14 @@ export const useCartItems = () => {
 
         if (!existProduct) {
             // addItemToCartByCartIdMutation({
+            //
             //     variables: {
             //         cartId,
             //         productId,
             //     },
+            //
             // });
+
             const result = await add(productId);
 
             if (result.status === 200) {
@@ -105,16 +108,23 @@ export const useCartItems = () => {
 
         const itemId = existProduct?.id!;
 
-        updateItemQuantityByCartIdMutation({
-            variables: {
-                cartId,
-                itemId,
-                quantity: existProduct?.quantity! + product.quantity,
-            },
-        });
+        const updatedQuantity = existProduct?.quantity! + product.quantity;
+
+        const result = await update(itemId, updatedQuantity);
+        if (result.status === 200) {
+            refetch({ id: cartId });
+        }
+
+        // updateItemQuantityByCartIdMutation({
+        //     variables: {
+        //         cartId,
+        //         itemId,
+        //         quantity: existProduct?.quantity! + product.quantity,
+        //     },
+        // });
     };
 
-    const handleRemoveItemFromCart = (itemId: CartItem["productId"]) => {
+    const handleRemoveItemFromCart = async (itemId: CartItem["productId"]) => {
         if (!cartId || !data) {
             return;
         }
@@ -128,36 +138,49 @@ export const useCartItems = () => {
             return;
         }
 
-        if (item.quantity > 1) {
-            updateItemQuantityByCartIdMutation({
-                variables: {
-                    cartId,
-                    itemId,
-                    quantity: item.quantity - 1,
-                },
-            });
+        const result = await removeItem(itemId, item.quantity);
 
-            return;
+        if (result.status === 200) {
+            refetch({ id: cartId });
         }
 
-        removeItemFromCartByCartIdMutation({
-            variables: {
-                cartId,
-                itemId,
-            },
-        });
+        // if (item.quantity > 1) {
+        //     updateItemQuantityByCartIdMutation({
+        //         variables: {
+        //             cartId,
+        //             itemId,
+        //             quantity: item.quantity - 1,
+        //         },
+        //     });
+
+        //     return;
+        // }
+
+        // removeItemFromCartByCartIdMutation({
+        //     variables: {
+        //         cartId,
+        //         itemId,
+        //     },
+        // });
     };
 
-    const handleClearCartItems = () => {
+    const handleClearCartItems = async () => {
         if (!cartId || !data) {
             return;
         }
 
-        clearCartItemsMutation({
-            variables: {
-                cartId,
-            },
-        });
+        const result = await clearCart();
+        console.log("🚀 ~ file: use-cart-items.tsx ~ line 173 ~ handleClearCartItems ~ result", result);
+
+        if (result.status === 200) {
+            refetch({ id: cartId });
+        }
+
+        // clearCartItemsMutation({
+        //     variables: {
+        //         cartId,
+        //     },
+        // });
     };
 
     return [cartItems, isLoading, handleAddItemToCart, handleRemoveItemFromCart, handleClearCartItems] as const;

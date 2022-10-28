@@ -6,9 +6,12 @@ import {
     AddItemToCartByCartIdDocument,
     AddItemToCartByCartIdMutation,
     AddItemToCartByCartIdMutationVariables,
+    UpdateItemQuantityByCartIdDocument,
+    UpdateItemQuantityByCartIdMutation,
+    UpdateItemQuantityByCartIdMutationVariables,
 } from "graphQL/generated/graphql";
 
-const addItemToCartHandler: NextApiHandler = async (req, res) => {
+const updateItemToCartHandler: NextApiHandler = async (req, res) => {
     //_
     if (req.method !== "POST") {
         res.status(400).json({ message: "bad request method" });
@@ -23,17 +26,21 @@ const addItemToCartHandler: NextApiHandler = async (req, res) => {
 
     const cartId = session.user.cartId;
 
-    const { productId } = await JSON.parse(req.body);
+    const { itemId, updatedQuantity } = await JSON.parse(req.body);
 
-    if (!productId) {
-        res.status(400).json({ message: "productId is required" });
+    if (!itemId && !updatedQuantity) {
+        res.status(400).json({ message: "itemId and updatedQuantity are required" });
     }
 
-    const add = await authApolloClient.mutate<AddItemToCartByCartIdMutation, AddItemToCartByCartIdMutationVariables>({
-        mutation: AddItemToCartByCartIdDocument,
+    const add = await authApolloClient.mutate<
+        UpdateItemQuantityByCartIdMutation,
+        UpdateItemQuantityByCartIdMutationVariables
+    >({
+        mutation: UpdateItemQuantityByCartIdDocument,
         variables: {
             cartId,
-            productId,
+            itemId,
+            quantity: updatedQuantity,
         },
     });
 
@@ -41,4 +48,4 @@ const addItemToCartHandler: NextApiHandler = async (req, res) => {
     return;
 };
 
-export default addItemToCartHandler;
+export default updateItemToCartHandler;
