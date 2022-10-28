@@ -3,9 +3,6 @@ import { unstable_getServerSession } from "next-auth/next";
 import type { NextApiHandler } from "next/types";
 import { authApolloClient } from "graphQL/apolloClient";
 import {
-    AddItemToCartByCartIdDocument,
-    AddItemToCartByCartIdMutation,
-    AddItemToCartByCartIdMutationVariables,
     RemoveItemFromCartByCartIdDocument,
     RemoveItemFromCartByCartIdMutation,
     RemoveItemFromCartByCartIdMutationVariables,
@@ -14,7 +11,7 @@ import {
     UpdateItemQuantityByCartIdMutationVariables,
 } from "graphQL/generated/graphql";
 
-const updateItemToCartHandler: NextApiHandler = async (req, res) => {
+const removeCartItemHandler: NextApiHandler = async (req, res) => {
     //_
     if (req.method !== "POST") {
         res.status(400).json({ message: "bad request method" });
@@ -52,7 +49,7 @@ const updateItemToCartHandler: NextApiHandler = async (req, res) => {
         return;
     }
 
-    const removeItem = await authApolloClient.mutate<
+    const removeCartItem = await authApolloClient.mutate<
         RemoveItemFromCartByCartIdMutation,
         RemoveItemFromCartByCartIdMutationVariables
     >({
@@ -63,8 +60,8 @@ const updateItemToCartHandler: NextApiHandler = async (req, res) => {
         },
     });
 
-    res.status(200).json({ removeItem });
+    res.status(200).json({ removeCartItem });
     return;
 };
 
-export default updateItemToCartHandler;
+export default removeCartItemHandler;

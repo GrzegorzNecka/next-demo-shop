@@ -3,16 +3,12 @@ import { unstable_getServerSession } from "next-auth/next";
 import type { NextApiHandler } from "next/types";
 import { authApolloClient } from "graphQL/apolloClient";
 import {
-    AddItemToCartByCartIdDocument,
-    AddItemToCartByCartIdMutation,
-    AddItemToCartByCartIdMutationVariables,
     UpdateItemQuantityByCartIdDocument,
     UpdateItemQuantityByCartIdMutation,
     UpdateItemQuantityByCartIdMutationVariables,
 } from "graphQL/generated/graphql";
 
-const updateItemToCartHandler: NextApiHandler = async (req, res) => {
-    //_
+const updateCartItemHandler: NextApiHandler = async (req, res) => {
     if (req.method !== "POST") {
         res.status(400).json({ message: "bad request method" });
     }
@@ -32,7 +28,7 @@ const updateItemToCartHandler: NextApiHandler = async (req, res) => {
         res.status(400).json({ message: "itemId and updatedQuantity are required" });
     }
 
-    const add = await authApolloClient.mutate<
+    const updateCartItem = await authApolloClient.mutate<
         UpdateItemQuantityByCartIdMutation,
         UpdateItemQuantityByCartIdMutationVariables
     >({
@@ -44,8 +40,8 @@ const updateItemToCartHandler: NextApiHandler = async (req, res) => {
         },
     });
 
-    res.status(200).json({ add });
+    res.status(200).json({ updateCartItem });
     return;
 };
 
-export default updateItemToCartHandler;
+export default updateCartItemHandler;

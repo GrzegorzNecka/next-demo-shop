@@ -6,14 +6,11 @@ import {
     AddItemToCartByCartIdDocument,
     AddItemToCartByCartIdMutation,
     AddItemToCartByCartIdMutationVariables,
-    ClearCartItemsDocument,
-    ClearCartItemsMutation,
-    ClearCartItemsMutationVariables,
 } from "graphQL/generated/graphql";
 
-const clearCartHandler: NextApiHandler = async (req, res) => {
+const addItemToCartHandler: NextApiHandler = async (req, res) => {
     //_
-    if (req.method !== "GET") {
+    if (req.method !== "POST") {
         res.status(400).json({ message: "bad request method" });
     }
 
@@ -26,15 +23,25 @@ const clearCartHandler: NextApiHandler = async (req, res) => {
 
     const cartId = session.user.cartId;
 
-    const add = await authApolloClient.mutate<ClearCartItemsMutation, ClearCartItemsMutationVariables>({
-        mutation: ClearCartItemsDocument,
+    const { productId } = await JSON.parse(req.body);
+
+    if (!productId) {
+        res.status(400).json({ message: "productId is required" });
+    }
+
+    const addToCartItem = await authApolloClient.mutate<
+        AddItemToCartByCartIdMutation,
+        AddItemToCartByCartIdMutationVariables
+    >({
+        mutation: AddItemToCartByCartIdDocument,
         variables: {
             cartId,
+            productId,
         },
     });
 
-    res.status(200).json({ add });
+    res.status(200).json({ addToCartItem });
     return;
 };
 
-export default clearCartHandler;
+export default addItemToCartHandler;

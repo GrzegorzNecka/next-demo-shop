@@ -1,5 +1,5 @@
-const add = async (productId: string) =>
-    await fetch("/api/cart/add", {
+const addToCartItem = async (productId: string) =>
+    await fetch("/api/cart/addToCartItem", {
         method: "POST",
         headers: { "Content-Type": "application/json;" },
         body: JSON.stringify({
@@ -7,8 +7,8 @@ const add = async (productId: string) =>
         }),
     });
 
-const update = async (itemId: string, updatedQuantity: number) =>
-    await fetch("/api/cart/update", {
+const updateCartItem = async (itemId: string, updatedQuantity: number) =>
+    await fetch("/api/cart/updateCartItem", {
         method: "POST",
         headers: { "Content-Type": "application/json;" },
         body: JSON.stringify({
@@ -17,8 +17,8 @@ const update = async (itemId: string, updatedQuantity: number) =>
         }),
     });
 
-const removeItem = async (itemId: string, quantity: number) =>
-    await fetch("/api/cart/removeItem", {
+const removeCartItem = async (itemId: string, quantity: number) =>
+    await fetch("/api/cart/removeCartItem", {
         method: "POST",
         headers: { "Content-Type": "application/json;" },
         body: JSON.stringify({
@@ -28,9 +28,9 @@ const removeItem = async (itemId: string, quantity: number) =>
     });
 
 const clearCart = async () =>
-    await fetch("/api/cart/clearCartItems", {
+    await fetch("/api/cart/clearCart", {
         method: "GET",
         headers: { "Content-Type": "application/json;" },
     });
 
-export { add, update, removeItem, clearCart };
+export { addToCartItem, updateCartItem, removeCartItem, clearCart };
