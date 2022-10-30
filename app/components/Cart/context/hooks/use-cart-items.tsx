@@ -8,7 +8,7 @@ export const useCartItems = () => {
     const session = useSession();
     const cartId = session.data?.user?.cartId!; //"cl7q56m7a1eqp0ateldaehrcs"
 
-    const [cartItems, setCartItems] = useState<CartItem[] | undefined>(undefined);
+    const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // APOLLO
@@ -42,14 +42,12 @@ export const useCartItems = () => {
             console.log("ditem?.product?.id", item);
             return {
                 itemId: item.id,
-                quantity: item.quantity!,
-                productId: item?.product?.id!,
-                price: item?.product?.price!,
-                title: item?.product?.name!,
-                imgUrl: item.product?.images.at(0)?.url!,
-                slug: item.product?.slug!,
-                // option: item.product?.option!,
-                option: "nie istnieje w koszyku",
+                quantity: item?.quantity!,
+                price: item?.option?.product?.price!,
+                title: item?.option?.product?.name!,
+                imgUrl: item?.option?.product?.images.at(0)?.url!,
+                slug: item?.option?.product?.slug!,
+                productOptionId: item?.option?.id!,
             };
         });
 
@@ -59,19 +57,18 @@ export const useCartItems = () => {
     // ---------------- handleAddItemToCart React Context
 
     const handleAddItemToCart = async (product: CartItem) => {
-        console.log("🚀 ~  ~ product", product);
         if (!cartId || !data) {
             return;
         }
 
         setIsLoading(true);
 
-        const { productId } = product;
+        const { productOptionId } = product;
 
-        const existProduct = data.cart?.cartItems.find((item) => item?.product?.id === productId);
+        const existProduct = data.cart?.cartItems.find((item) => item?.option?.id === productOptionId);
 
         if (!existProduct) {
-            const result = await addToCartItem(productId);
+            const result = await addToCartItem(productOptionId);
 
             if (result.status === 200) {
                 refetch({ id: cartId });
@@ -90,7 +87,11 @@ export const useCartItems = () => {
         }
     };
 
-    const handleRemoveCartItem = async (itemId: CartItem["productId"]) => {
+    /* 
+    #   
+    */
+
+    const handleRemoveCartItem = async (itemId: CartItem["productOptionId"]) => {
         if (!cartId || !data) {
             return;
         }
@@ -108,6 +109,10 @@ export const useCartItems = () => {
             refetch({ id: cartId });
         }
     };
+
+    /* 
+    #
+    */
 
     const handleClearCart = async () => {
         if (!cartId || !data) {

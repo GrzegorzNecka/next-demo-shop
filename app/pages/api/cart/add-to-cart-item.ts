@@ -3,9 +3,9 @@ import { unstable_getServerSession } from "next-auth/next";
 import type { NextApiHandler } from "next/types";
 import { authApolloClient } from "graphQL/apolloClient";
 import {
-    AddItemToCartByCartIdDocument,
-    AddItemToCartByCartIdMutation,
-    AddItemToCartByCartIdMutationVariables,
+    AddItemOptionToCartByCartIdDocument,
+    AddItemOptionToCartByCartIdMutation,
+    AddItemOptionToCartByCartIdMutationVariables,
 } from "graphQL/generated/graphql";
 
 const addItemToCartHandler: NextApiHandler = async (req, res) => {
@@ -23,20 +23,20 @@ const addItemToCartHandler: NextApiHandler = async (req, res) => {
 
     const cartId = session.user.cartId;
 
-    const { productId } = await JSON.parse(req.body);
+    const { productOptionId } = await JSON.parse(req.body);
 
-    if (!productId) {
-        res.status(400).json({ message: "productId is required" });
+    if (!productOptionId) {
+        res.status(400).json({ message: "productOptionId is required" });
     }
 
     const addToCartItem = await authApolloClient.mutate<
-        AddItemToCartByCartIdMutation,
-        AddItemToCartByCartIdMutationVariables
+        AddItemOptionToCartByCartIdMutation,
+        AddItemOptionToCartByCartIdMutationVariables
     >({
-        mutation: AddItemToCartByCartIdDocument,
+        mutation: AddItemOptionToCartByCartIdDocument,
         variables: {
             cartId,
-            productId,
+            productOptionId: productOptionId,
         },
     });
 

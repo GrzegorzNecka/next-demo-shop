@@ -49,9 +49,17 @@ export const getStaticProps = async ({ params }: InferGetStaticPathsType<typeof 
         query: GetProductsListDocument,
     });
 
+    // only productWithOptions
+    const productsWithOptions = products.filter((product) => {
+        if (product.option.length === 0) {
+            return;
+        }
+        return product;
+    });
+
     return {
         props: {
-            data: products,
+            data: productsWithOptions.map((product) => product),
         },
     };
 };

@@ -50,6 +50,9 @@ query GetProductsList {
             height
             id
         }
+        option {
+            id
+        }
     }
 }
 
@@ -70,25 +73,15 @@ fragment cartContentQuery on Cart {
     }
 }
 
-fragment cartContentQueryWithOptions on Cart {
+fragment cartContentQueryWithOption on Cart {
     id
     cartItems {
         id
         quantity
-        product {
-            id
-            name
-            price
-            images {
-                url
-            }
-            slug
-        }
         option {
             id
             color
             size
-            quantity
             product {
                 id
                 name
@@ -104,22 +97,22 @@ fragment cartContentQueryWithOptions on Cart {
 
 query GetCartItemsByCartId($id: ID!) {
     cart(where: { id: $id }, stage: DRAFT) {
-        ...cartContentQuery
+        ...cartContentQueryWithOption
     }
 }
 
-mutation AddItemToCartByCartId($cartId: ID!, $productId: ID!) {
+mutation AddItemOptionToCartByCartId($cartId: ID!, $productOptionId: ID!) {
     updateCart(
         where: { id: $cartId }
-        data: { cartItems: { create: { quantity: 1, product: { connect: { id: $productId } } } } }
+        data: { cartItems: { create: { quantity: 1, option: { connect: { id: $productOptionId } } } } }
     ) {
-        ...cartContentQuery
+        ...cartContentQueryWithOption
     }
 }
 
 mutation RemoveItemFromCartByCartId($cartId: ID!, $itemId: ID!) {
     updateCart(where: { id: $cartId }, data: { cartItems: { delete: { id: $itemId } } }) {
-        ...cartContentQuery
+        ...cartContentQueryWithOption
     }
 }
 
@@ -128,13 +121,13 @@ mutation UpdateItemQuantityByCartId($cartId: ID!, $itemId: ID!, $quantity: Int!)
         where: { id: $cartId }
         data: { cartItems: { update: { where: { id: $itemId }, data: { quantity: $quantity } } } }
     ) {
-        ...cartContentQuery
+        ...cartContentQueryWithOption
     }
 }
 
 mutation ClearCartItems($cartId: ID!) {
     updateCart(where: { id: $cartId }, data: { cartItems: { set: [] } }) {
-        ...cartContentQuery
+        ...cartContentQueryWithOption
     }
 }
 
@@ -153,20 +146,6 @@ query GetProductDetailsBySlug($slug: String) {
         description
         images {
             url
-        }
-        variants {
-            ... on ProductSizeColorVariant {
-                id
-                name
-            }
-            ... on ProductColorVariant {
-                id
-                name
-            }
-            ... on ProductSizeVariant {
-                id
-                name
-            }
         }
     }
 }
