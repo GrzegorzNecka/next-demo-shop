@@ -1,7 +1,6 @@
 import React, { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { ProductOption } from "./types";
-// import { useRouter } from "next/router";
-// import { ProductVariants } from "graphQL/generated/graphql";
+
 interface ProductVariantProps {
     option: readonly ProductOption[] | undefined;
     children: React.ReactNode;

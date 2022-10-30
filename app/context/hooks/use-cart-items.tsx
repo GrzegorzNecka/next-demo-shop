@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { CartItem } from "components/Cart/types";
+import { CartItem } from "context/types";
 import { useSession } from "next-auth/react";
 import { useGetCartItemsByCartIdQuery } from "graphQL/generated/graphql";
 import { addToCartItem, clearCart, removeCartItem, updateCartItem } from "services/cart";

@@ -3,7 +3,7 @@ import Image from "next/image";
 import { NextSeo } from "next-seo";
 import type { ProductDetailsProps, UnionVariants } from "./types";
 import ProductOption from "components/Products/product-options";
-import { useCartState } from "components/Cart/context/cart-context";
+import { useCartState } from "context/cart-context";
 import Markdown from "components/markdown";
 import { ChangeEvent, useMemo, useState } from "react";
 // import type { ProductVariants, Option } from "components/Products/types";
@@ -11,7 +11,7 @@ import { ChangeEvent, useMemo, useState } from "react";
 // import useProductVariant from "./hooks/use-product-option";
 import { ProductColor, ProductSize } from "graphQL/generated/graphql";
 import { ValueOf } from "types/types";
-import { groupOptions } from "utils/product-options";
+// import { groupOptions } from "utils/product-options";
 import { Print } from "components/print";
 
 export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
@@ -31,6 +31,8 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
     // const variants = [colorVariant.active, sizeVariant.active, sizeColorVariant.active].filter(
     //     (el) => el !== undefined
     // );
+
+    //! tutaj coś nie działa liczba produktów z wariantami
 
     const [quantity, setQuantity] = useState<number>(1);
 

@@ -1,4 +1,4 @@
-import { ProductOption } from "components/Products/types";
+import type { ProductOption } from "components/Products/types";
 import { useGetProductOptionsQuery } from "graphQL/generated/graphql";
 import React from "react";
 
@@ -17,7 +17,7 @@ export const CartOptions = ({ id }: { id: string }) => {
     return (
         <>
             {Object.keys(data.option).map((option) => {
-                if (option === "__typename") {
+                if (option === "__typename" || option === "id") {
                     return;
                 }
 
