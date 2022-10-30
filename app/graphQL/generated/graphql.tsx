@@ -14465,7 +14465,7 @@ export type GetProductOptionsQueryVariables = Exact<{
 }>;
 
 
-export type GetProductOptionsQuery = { readonly __typename?: 'Query', readonly option?: { readonly __typename?: 'Option', readonly color?: ProductColor | null, readonly size?: ProductSize | null } | null };
+export type GetProductOptionsQuery = { readonly __typename?: 'Query', readonly option?: { readonly __typename?: 'Option', readonly id: string, readonly color?: ProductColor | null, readonly size?: ProductSize | null } | null };
 
 export const CartContentQueryWithOptionFragmentDoc = gql`
     fragment cartContentQueryWithOption on Cart {
@@ -15020,6 +15020,7 @@ export type GetProductBySlugQueryResult = Apollo.QueryResult<GetProductBySlugQue
 export const GetProductOptionsDocument = gql`
     query GetProductOptions($id: ID) {
   option(where: {id: $id}) {
+    id
     color
     size
   }

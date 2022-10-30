@@ -154,6 +154,7 @@ query GetProductBySlug($slug: String) {
 
 query GetProductOptions($id: ID) {
     option(where: { id: $id }) {
+        id
         color
         size
     }
