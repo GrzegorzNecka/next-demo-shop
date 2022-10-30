@@ -4,7 +4,7 @@ import { changeToCurrency, moveTheComa } from "utils/currency";
 import ProductListItem from "./products-list-item";
 
 const ProductListUI = ({ data }: ProductListIdPageProps) => {
-    const [targetButton, setTargetButton] = useState<string | null>(null);
+    // const [targetButton, setTargetButton] = useState<string | null>(null);
 
     if (!data) {
         return <div>nie znaleziono strony</div>;
@@ -16,6 +16,7 @@ const ProductListUI = ({ data }: ProductListIdPageProps) => {
                 <li key={product.slug} className={`className="group relative" ${product.slug}`}>
                     <ProductListItem
                         data={{
+                            option: product.option,
                             id: product.id,
                             slug: product.slug,
                             title: product.name,
@@ -24,8 +25,8 @@ const ProductListUI = ({ data }: ProductListIdPageProps) => {
                             price: product.price,
                             priceWithCurrency: changeToCurrency(moveTheComa(product.price)),
                         }}
-                        targetButton={targetButton}
-                        setTargetButton={setTargetButton}
+                        // targetButton={targetButton}
+                        // setTargetButton={setTargetButton}
                     />
                 </li>
             ))}

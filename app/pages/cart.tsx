@@ -1,4 +1,4 @@
-import { Main } from "components/Main";
+import { Main } from "components/main";
 import Link from "next/link";
 import { changeToCurrency, moveTheComa } from "utils/currency";
 // import { loadStripe } from "@stripe/stripe-js";
@@ -7,6 +7,7 @@ import { useCartState } from "components/Cart/context/cart-context";
 import { CartItem } from "components/Cart/types";
 import { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
+import { CartOptions } from "components/Cart/cart-product-options";
 // import Stripe from "stripe";
 
 interface CartContentProps {
@@ -38,8 +39,8 @@ const CartContent = ({ targetButton, setTargetButton }: CartContentProps) => {
                                 <div>
                                     <Link href={`/product/${item.slug}`}>
                                         <a className="hover:underline">
-                                            {item.title} {`x  ${item.quantity} `} {`option: ${item.productOptionId}`}
-                                            {/* <pre>{JSON.stringify(item, null, 2)}</pre> */}
+                                            {item.title} {`x  ${item.quantity} `}{" "}
+                                            <CartOptions id={item.productOptionId} />
                                         </a>
                                     </Link>
                                 </div>

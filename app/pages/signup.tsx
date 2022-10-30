@@ -1,4 +1,4 @@
-import { Main } from "components/Main";
+import { Main } from "components/main";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import FormInput from "components/forms/form-input";

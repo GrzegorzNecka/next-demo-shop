@@ -6836,11 +6836,12 @@ export type Option = Node & {
   readonly publishedAt?: Maybe<Scalars['DateTime']>;
   /** User that last published this document */
   readonly publishedBy?: Maybe<User>;
-  readonly quantity: Scalars['Int'];
   readonly scheduledIn: ReadonlyArray<ScheduledOperation>;
   readonly size?: Maybe<ProductSize>;
   /** System stage field */
   readonly stage: Stage;
+  /** Total amount of product variant in stock */
+  readonly total: Scalars['Int'];
   /** The time the document was updated */
   readonly updatedAt: Scalars['DateTime'];
   /** User that last updated this document */
@@ -6939,9 +6940,9 @@ export type OptionCreateInput = {
   readonly localizations?: InputMaybe<OptionCreateLocalizationsInput>;
   readonly product?: InputMaybe<ProductCreateOneInlineInput>;
   readonly productTitle: Scalars['String'];
-  readonly quantity: Scalars['Int'];
   /** size input for default locale (en) */
   readonly size?: InputMaybe<ProductSize>;
+  readonly total: Scalars['Int'];
   readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
@@ -7070,24 +7071,24 @@ export type OptionManyWhereInput = {
   /** All values that are not contained in given list. */
   readonly publishedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
   readonly publishedBy?: InputMaybe<UserWhereInput>;
-  readonly quantity?: InputMaybe<Scalars['Int']>;
-  /** All values greater than the given value. */
-  readonly quantity_gt?: InputMaybe<Scalars['Int']>;
-  /** All values greater than or equal the given value. */
-  readonly quantity_gte?: InputMaybe<Scalars['Int']>;
-  /** All values that are contained in given list. */
-  readonly quantity_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
-  /** All values less than the given value. */
-  readonly quantity_lt?: InputMaybe<Scalars['Int']>;
-  /** All values less than or equal the given value. */
-  readonly quantity_lte?: InputMaybe<Scalars['Int']>;
-  /** All values that are not equal to given value. */
-  readonly quantity_not?: InputMaybe<Scalars['Int']>;
-  /** All values that are not contained in given list. */
-  readonly quantity_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
   readonly scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
   readonly scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
   readonly scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
+  readonly total?: InputMaybe<Scalars['Int']>;
+  /** All values greater than the given value. */
+  readonly total_gt?: InputMaybe<Scalars['Int']>;
+  /** All values greater than or equal the given value. */
+  readonly total_gte?: InputMaybe<Scalars['Int']>;
+  /** All values that are contained in given list. */
+  readonly total_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
+  /** All values less than the given value. */
+  readonly total_lt?: InputMaybe<Scalars['Int']>;
+  /** All values less than or equal the given value. */
+  readonly total_lte?: InputMaybe<Scalars['Int']>;
+  /** All values that are not equal to given value. */
+  readonly total_not?: InputMaybe<Scalars['Int']>;
+  /** All values that are not contained in given list. */
+  readonly total_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
   readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -7117,10 +7118,10 @@ export enum OptionOrderByInput {
   ProductTitleDesc = 'productTitle_DESC',
   PublishedAtAsc = 'publishedAt_ASC',
   PublishedAtDesc = 'publishedAt_DESC',
-  QuantityAsc = 'quantity_ASC',
-  QuantityDesc = 'quantity_DESC',
   SizeAsc = 'size_ASC',
   SizeDesc = 'size_DESC',
+  TotalAsc = 'total_ASC',
+  TotalDesc = 'total_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC'
 }
@@ -7133,9 +7134,9 @@ export type OptionUpdateInput = {
   readonly localizations?: InputMaybe<OptionUpdateLocalizationsInput>;
   readonly product?: InputMaybe<ProductUpdateOneInlineInput>;
   readonly productTitle?: InputMaybe<Scalars['String']>;
-  readonly quantity?: InputMaybe<Scalars['Int']>;
   /** size input for default locale (en) */
   readonly size?: InputMaybe<ProductSize>;
+  readonly total?: InputMaybe<Scalars['Int']>;
 };
 
 export type OptionUpdateLocalizationDataInput = {
@@ -7181,9 +7182,9 @@ export type OptionUpdateManyInput = {
   /** Optional updates to localizations */
   readonly localizations?: InputMaybe<OptionUpdateManyLocalizationsInput>;
   readonly productTitle?: InputMaybe<Scalars['String']>;
-  readonly quantity?: InputMaybe<Scalars['Int']>;
   /** size input for default locale (en) */
   readonly size?: InputMaybe<ProductSize>;
+  readonly total?: InputMaybe<Scalars['Int']>;
 };
 
 export type OptionUpdateManyLocalizationDataInput = {
@@ -7347,21 +7348,6 @@ export type OptionWhereInput = {
   /** All values that are not contained in given list. */
   readonly publishedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
   readonly publishedBy?: InputMaybe<UserWhereInput>;
-  readonly quantity?: InputMaybe<Scalars['Int']>;
-  /** All values greater than the given value. */
-  readonly quantity_gt?: InputMaybe<Scalars['Int']>;
-  /** All values greater than or equal the given value. */
-  readonly quantity_gte?: InputMaybe<Scalars['Int']>;
-  /** All values that are contained in given list. */
-  readonly quantity_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
-  /** All values less than the given value. */
-  readonly quantity_lt?: InputMaybe<Scalars['Int']>;
-  /** All values less than or equal the given value. */
-  readonly quantity_lte?: InputMaybe<Scalars['Int']>;
-  /** All values that are not equal to given value. */
-  readonly quantity_not?: InputMaybe<Scalars['Int']>;
-  /** All values that are not contained in given list. */
-  readonly quantity_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
   readonly scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
   readonly scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
   readonly scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
@@ -7372,6 +7358,21 @@ export type OptionWhereInput = {
   readonly size_not?: InputMaybe<ProductSize>;
   /** All values that are not contained in given list. */
   readonly size_not_in?: InputMaybe<ReadonlyArray<InputMaybe<ProductSize>>>;
+  readonly total?: InputMaybe<Scalars['Int']>;
+  /** All values greater than the given value. */
+  readonly total_gt?: InputMaybe<Scalars['Int']>;
+  /** All values greater than or equal the given value. */
+  readonly total_gte?: InputMaybe<Scalars['Int']>;
+  /** All values that are contained in given list. */
+  readonly total_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
+  /** All values less than the given value. */
+  readonly total_lt?: InputMaybe<Scalars['Int']>;
+  /** All values less than or equal the given value. */
+  readonly total_lte?: InputMaybe<Scalars['Int']>;
+  /** All values that are not equal to given value. */
+  readonly total_not?: InputMaybe<Scalars['Int']>;
+  /** All values that are not contained in given list. */
+  readonly total_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
   readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -14399,8 +14400,6 @@ export type GetProductsListQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetProductsListQuery = { readonly __typename?: 'Query', readonly products: ReadonlyArray<{ readonly __typename?: 'Product', readonly id: string, readonly slug: string, readonly name: string, readonly price: number, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string, readonly width?: number | null, readonly height?: number | null, readonly id: string }>, readonly option: ReadonlyArray<{ readonly __typename?: 'Option', readonly id: string }> }> };
 
-export type CartContentQueryFragment = { readonly __typename?: 'Cart', readonly id: string, readonly cartItems: ReadonlyArray<{ readonly __typename?: 'CartItem', readonly id: string, readonly quantity: number, readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly name: string, readonly price: number, readonly slug: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null }> };
-
 export type CartContentQueryWithOptionFragment = { readonly __typename?: 'Cart', readonly id: string, readonly cartItems: ReadonlyArray<{ readonly __typename?: 'CartItem', readonly id: string, readonly quantity: number, readonly option?: { readonly __typename?: 'Option', readonly id: string, readonly color?: ProductColor | null, readonly size?: ProductSize | null, readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly name: string, readonly price: number, readonly slug: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null } | null }> };
 
 export type GetCartItemsByCartIdQueryVariables = Exact<{
@@ -14459,26 +14458,15 @@ export type GetProductBySlugQueryVariables = Exact<{
 }>;
 
 
-export type GetProductBySlugQuery = { readonly __typename?: 'Query', readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly slug: string, readonly name: string, readonly price: number, readonly description: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }>, readonly option: ReadonlyArray<{ readonly __typename?: 'Option', readonly quantity: number, readonly id: string, readonly color?: ProductColor | null, readonly size?: ProductSize | null }> } | null };
+export type GetProductBySlugQuery = { readonly __typename?: 'Query', readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly slug: string, readonly name: string, readonly price: number, readonly description: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }>, readonly option: ReadonlyArray<{ readonly __typename?: 'Option', readonly total: number, readonly id: string, readonly color?: ProductColor | null, readonly size?: ProductSize | null }> } | null };
 
-export const CartContentQueryFragmentDoc = gql`
-    fragment cartContentQuery on Cart {
-  id
-  cartItems {
-    id
-    quantity
-    product {
-      id
-      name
-      price
-      images {
-        url
-      }
-      slug
-    }
-  }
-}
-    `;
+export type GetProductOptionsQueryVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type GetProductOptionsQuery = { readonly __typename?: 'Query', readonly option?: { readonly __typename?: 'Option', readonly color?: ProductColor | null, readonly size?: ProductSize | null } | null };
+
 export const CartContentQueryWithOptionFragmentDoc = gql`
     fragment cartContentQueryWithOption on Cart {
   id
@@ -14684,7 +14672,7 @@ export type GetCartIdByAccountIdLazyQueryHookResult = ReturnType<typeof useGetCa
 export type GetCartIdByAccountIdQueryResult = Apollo.QueryResult<GetCartIdByAccountIdQuery, GetCartIdByAccountIdQueryVariables>;
 export const GetProductsListDocument = gql`
     query GetProductsList {
-  products {
+  products(where: {option_some: {productTitle_not: "null"}}) {
     id
     slug
     name
@@ -14907,7 +14895,7 @@ export type ClearCartItemsMutationResult = Apollo.MutationResult<ClearCartItemsM
 export type ClearCartItemsMutationOptions = Apollo.BaseMutationOptions<ClearCartItemsMutation, ClearCartItemsMutationVariables>;
 export const GetProductsSlugsDocument = gql`
     query GetProductsSlugs {
-  products {
+  products(where: {option_some: {productTitle_not: "null"}}) {
     slug
   }
 }
@@ -14993,7 +14981,7 @@ export const GetProductBySlugDocument = gql`
       url
     }
     option {
-      quantity
+      total
       id
       color
       size
@@ -15029,3 +15017,39 @@ export function useGetProductBySlugLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type GetProductBySlugQueryHookResult = ReturnType<typeof useGetProductBySlugQuery>;
 export type GetProductBySlugLazyQueryHookResult = ReturnType<typeof useGetProductBySlugLazyQuery>;
 export type GetProductBySlugQueryResult = Apollo.QueryResult<GetProductBySlugQuery, GetProductBySlugQueryVariables>;
+export const GetProductOptionsDocument = gql`
+    query GetProductOptions($id: ID) {
+  option(where: {id: $id}) {
+    color
+    size
+  }
+}
+    `;
+
+/**
+ * __useGetProductOptionsQuery__
+ *
+ * To run a query within a React component, call `useGetProductOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProductOptionsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetProductOptionsQuery(baseOptions?: Apollo.QueryHookOptions<GetProductOptionsQuery, GetProductOptionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProductOptionsQuery, GetProductOptionsQueryVariables>(GetProductOptionsDocument, options);
+      }
+export function useGetProductOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProductOptionsQuery, GetProductOptionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProductOptionsQuery, GetProductOptionsQueryVariables>(GetProductOptionsDocument, options);
+        }
+export type GetProductOptionsQueryHookResult = ReturnType<typeof useGetProductOptionsQuery>;
+export type GetProductOptionsLazyQueryHookResult = ReturnType<typeof useGetProductOptionsLazyQuery>;
+export type GetProductOptionsQueryResult = Apollo.QueryResult<GetProductOptionsQuery, GetProductOptionsQueryVariables>;
