@@ -4,33 +4,33 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
-import { ProductListItems } from "../types";
+import { ProductListItems } from "./types";
 
 interface ProductListItemProps {
     data: ProductListItems;
-    targetButton: string | null;
-    setTargetButton: Dispatch<SetStateAction<string | null>>;
+    // targetButton: string | null;
+    // setTargetButton: Dispatch<SetStateAction<string | null>>;
 }
 
-const ProductListItem = ({ data, targetButton, setTargetButton }: ProductListItemProps) => {
+const ProductListItem = ({ data /*targetButton, setTargetButton*/ }: ProductListItemProps) => {
     const cartState = useCartState();
 
-    const [quantity, setQuantity] = useState<number>(1);
+    // const [quantity, setQuantity] = useState<number>(1);
     // todo - quantity to powinine być stan , lktóry spływa z serwera, tak aby nie przekroczyć limitu
-    const handleOnClick = () => {
-        setTargetButton(data.title);
+    // const handleOnClick = () => {
+    //     setTargetButton(data.title);
 
-        const newCartItem = {
-            productId: data.id,
-            price: data.price,
-            title: data.title,
-            quantity: quantity,
-            imgUrl: data.thumbnailUrl,
-            slug: data.slug,
-        };
+    //     const newCartItem = {
+    //         productOptionId: data.id,
+    //         price: data.price,
+    //         title: data.title,
+    //         quantity: quantity,
+    //         imgUrl: data.thumbnailUrl,
+    //         slug: data.slug,
+    //     };
 
-        cartState.addItemToCart(newCartItem);
-    };
+    //     cartState.addItemToCart(newCartItem);
+    // };
 
     return (
         <div className="p-8">
@@ -62,7 +62,7 @@ const ProductListItem = ({ data, targetButton, setTargetButton }: ProductListIte
                 </div>
                 <p className="text-sm font-medium text-gray-900">{data.priceWithCurrency}</p>
             </div>
-            <div className="pt-4">
+            {/* <div className="pt-4">
                 {cartState.isLoading && targetButton === data.title ? (
                     <div className="flex mb-8">
                         <input
@@ -91,7 +91,7 @@ const ProductListItem = ({ data, targetButton, setTargetButton }: ProductListIte
                         </button>
                     </div>
                 )}
-            </div>
+            </div> */}
         </div>
     );
 };

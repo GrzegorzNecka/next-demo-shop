@@ -32,6 +32,23 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
     //     (el) => el !== undefined
     // );
 
+    const [quantity, setQuantity] = useState<number>(1);
+
+    const handleOnClick = () => {
+        // setTargetButton(data.title);
+
+        const newCartItem = {
+            productOptionId: activeProductOption,
+            price: data.price,
+            title: data.title,
+            quantity,
+            imgUrl: data.thumbnailUrl,
+            slug: data.slug,
+        };
+
+        cartState.addItemToCart(newCartItem);
+    };
+
     return (
         <>
             <SeoProvider data={data} />
@@ -73,25 +90,35 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
 
                         <div>wybrano: {activeProductOption} </div>
 
-                        <button
-                            onClick={() =>
-                                cartState.addItemToCart({
-                                    // productId: data.id,
-                                    productOptionId: activeProductOption,
-                                    price: data.price,
-                                    title: data.title,
-                                    quantity: 1,
-                                    imgUrl: data.thumbnailUrl,
-                                    slug: data.slug,
+                        {cartState.isLoading ? (
+                            <div className="flex mb-8">
+                                <input
+                                    disabled
+                                    value={quantity}
+                                    type="number"
+                                    className="mb-0 w-1/4 mr-4 bg-transparent py-2 px-4 border-2 border-black rounded"
+                                />
+                                <button disabled className={`mb-0 w-3/4 text-blackfont-semibold btn-custom-primary`}>
+                                    dodawanie
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="flex mb-8">
+                                <input
+                                    value={quantity}
+                                    onChange={(e) => setQuantity(Number(e.target.value))}
+                                    type="number"
+                                    className="mb-0 w-1/4 mr-4 bg-transparent py-2 px-4 border-2 border-black rounded"
+                                />
+                                <button
+                                    className={` mb-0 w-3/4 text-blackfont-semibold btn-custom-primary`}
+                                    onClick={handleOnClick}
+                                >
+                                    dodaj do koszyka
+                                </button>
+                            </div>
+                        )}
 
-                                    // option: data.option,
-                                    // variants: variants,
-                                })
-                            }
-                            className="btn-custom-primary"
-                        >
-                            Dodaj do kosza
-                        </button>
                         <article className="">
                             <Markdown>{data.longDescription}</Markdown>
                         </article>

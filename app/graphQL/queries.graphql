@@ -39,7 +39,7 @@ query GetCartIdByAccountId($id: ID!) {
 }
 
 query GetProductsList {
-    products {
+    products(where: { option_some: { productTitle_not: "null" } }) {
         id
         slug
         name
@@ -52,23 +52,6 @@ query GetProductsList {
         }
         option {
             id
-        }
-    }
-}
-
-fragment cartContentQuery on Cart {
-    id
-    cartItems {
-        id
-        quantity
-        product {
-            id
-            name
-            price
-            images {
-                url
-            }
-            slug
         }
     }
 }
@@ -132,7 +115,7 @@ mutation ClearCartItems($cartId: ID!) {
 }
 
 query GetProductsSlugs {
-    products {
+    products(where: { option_some: { productTitle_not: "null" } }) {
         slug
     }
 }
@@ -161,10 +144,17 @@ query GetProductBySlug($slug: String) {
             url
         }
         option {
-            quantity
+            total
             id
             color
             size
         }
+    }
+}
+
+query GetProductOptions($id: ID) {
+    option(where: { id: $id }) {
+        color
+        size
     }
 }
