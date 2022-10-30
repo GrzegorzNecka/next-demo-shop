@@ -4,6 +4,7 @@ import {
     ProductSizeVariant,
     ProductColor,
     ProductSize,
+    Option,
 } from "graphQL/generated/graphql";
 import { MarkdownResult, ValueOf } from "types/types";
 
@@ -17,13 +18,7 @@ export type UnionVariants = ProductColorVariant | ProductSizeColorVariant | Prod
 export type VariantsTypeNamesUnion = ValueOf<Pick<UnionVariants, "__typename">>;
 export type ProductVariants = readonly UnionVariants[] | null;
 
-export type Option = {
-    readonly __typename?: "Option";
-    readonly quantity: number;
-    readonly id: string;
-    readonly color?: ProductColor | null;
-    readonly size?: ProductSize | null;
-};
+export type ProductOption = Pick<Option, "quantity" | "id" | "color" | "size" | "__typename">;
 
 export interface ProductDetails {
     readonly id: string;
@@ -34,7 +29,7 @@ export interface ProductDetails {
     readonly slug: string;
     readonly price: number;
     readonly priceWithCurrency: string;
-    readonly option?: ReadonlyArray<Option>;
+    readonly option: readonly ProductOption[];
     // rating: number;
     readonly longDescription: MarkdownResult;
 }

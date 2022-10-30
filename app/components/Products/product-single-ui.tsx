@@ -6,7 +6,7 @@ import ProductOption from "components/Products/product-options";
 import { useCartState } from "components/Cart/context/cart-context";
 import Markdown from "components/markdown";
 import { ChangeEvent, useMemo, useState } from "react";
-import type { ProductVariants, Option } from "components/Products/types";
+// import type { ProductVariants, Option } from "components/Products/types";
 // import ProductVariant from "./product-variant";
 // import useProductVariant from "./hooks/use-product-option";
 import { ProductColor, ProductSize } from "graphQL/generated/graphql";
@@ -15,11 +15,14 @@ import { groupOptions } from "utils/product-options";
 import { Print } from "components/print";
 
 export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
+    // console.log("🚀 ~ file: product-single-ui.tsx ~ line 18 ~ ProductSingleUI ~ data", data);
     const cartState = useCartState();
 
-    const InitialOption = data?.option?.[0]?.id || "";
+    const InitialId = data?.option?.[0]?.id;
 
-    const [activeOption, setActiveOption] = useState<string>(InitialOption);
+    const isOpiotns = data?.option.length > 1 ? true : false;
+
+    const [activeProductOption, setActiveProductOption] = useState<string>(InitialId);
 
     // const optionsBySize = groupOptions(data.option, "size");
 
@@ -58,22 +61,29 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
                         </div>
                         {/* // product option */}
 
-                        <ProductOption activeOption={activeOption} updateOption={setActiveOption} option={data.option}>
-                            warianty
-                        </ProductOption>
+                        {isOpiotns && (
+                            <ProductOption
+                                activeOption={activeProductOption}
+                                updateOption={setActiveProductOption}
+                                option={data.option}
+                            >
+                                warianty
+                            </ProductOption>
+                        )}
 
-                        <div>wybrano: {activeOption} </div>
+                        <div>wybrano: {activeProductOption} </div>
 
                         <button
                             onClick={() =>
                                 cartState.addItemToCart({
-                                    productId: data.id,
+                                    // productId: data.id,
+                                    productOptionId: activeProductOption,
                                     price: data.price,
                                     title: data.title,
                                     quantity: 1,
                                     imgUrl: data.thumbnailUrl,
                                     slug: data.slug,
-                                    option: activeOption,
+
                                     // option: data.option,
                                     // variants: variants,
                                 })

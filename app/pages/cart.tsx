@@ -38,8 +38,8 @@ const CartContent = ({ targetButton, setTargetButton }: CartContentProps) => {
                                 <div>
                                     <Link href={`/product/${item.slug}`}>
                                         <a className="hover:underline">
-                                            {item.title} {`x  ${item.quantity}`}
-                                            <pre>{JSON.stringify(item, null, 2)}</pre>
+                                            {item.title} {`x  ${item.quantity} `} {`option: ${item.productOptionId}`}
+                                            {/* <pre>{JSON.stringify(item, null, 2)}</pre> */}
                                         </a>
                                     </Link>
                                 </div>

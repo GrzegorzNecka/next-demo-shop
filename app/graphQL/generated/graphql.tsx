@@ -6831,6 +6831,7 @@ export type Option = Node & {
   /** Get the other localizations for this document */
   readonly localizations: ReadonlyArray<Option>;
   readonly product?: Maybe<Product>;
+  readonly productTitle: Scalars['String'];
   /** The time the document was published. Null on documents in draft stage. */
   readonly publishedAt?: Maybe<Scalars['DateTime']>;
   /** User that last published this document */
@@ -6937,6 +6938,7 @@ export type OptionCreateInput = {
   /** Inline mutations for managing document localizations excluding the default locale */
   readonly localizations?: InputMaybe<OptionCreateLocalizationsInput>;
   readonly product?: InputMaybe<ProductCreateOneInlineInput>;
+  readonly productTitle: Scalars['String'];
   readonly quantity: Scalars['Int'];
   /** size input for default locale (en) */
   readonly size?: InputMaybe<ProductSize>;
@@ -7033,6 +7035,25 @@ export type OptionManyWhereInput = {
   /** All values starting with the given string. */
   readonly id_starts_with?: InputMaybe<Scalars['ID']>;
   readonly product?: InputMaybe<ProductWhereInput>;
+  readonly productTitle?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  readonly productTitle_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  readonly productTitle_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  readonly productTitle_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  readonly productTitle_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  readonly productTitle_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  readonly productTitle_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  readonly productTitle_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  readonly productTitle_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  readonly productTitle_starts_with?: InputMaybe<Scalars['String']>;
   readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -7092,6 +7113,8 @@ export enum OptionOrderByInput {
   CreatedAtDesc = 'createdAt_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
+  ProductTitleAsc = 'productTitle_ASC',
+  ProductTitleDesc = 'productTitle_DESC',
   PublishedAtAsc = 'publishedAt_ASC',
   PublishedAtDesc = 'publishedAt_DESC',
   QuantityAsc = 'quantity_ASC',
@@ -7109,6 +7132,7 @@ export type OptionUpdateInput = {
   /** Manage document localizations */
   readonly localizations?: InputMaybe<OptionUpdateLocalizationsInput>;
   readonly product?: InputMaybe<ProductUpdateOneInlineInput>;
+  readonly productTitle?: InputMaybe<Scalars['String']>;
   readonly quantity?: InputMaybe<Scalars['Int']>;
   /** size input for default locale (en) */
   readonly size?: InputMaybe<ProductSize>;
@@ -7156,6 +7180,7 @@ export type OptionUpdateManyInput = {
   readonly color?: InputMaybe<ProductColor>;
   /** Optional updates to localizations */
   readonly localizations?: InputMaybe<OptionUpdateManyLocalizationsInput>;
+  readonly productTitle?: InputMaybe<Scalars['String']>;
   readonly quantity?: InputMaybe<Scalars['Int']>;
   /** size input for default locale (en) */
   readonly size?: InputMaybe<ProductSize>;
@@ -7287,6 +7312,25 @@ export type OptionWhereInput = {
   /** All values starting with the given string. */
   readonly id_starts_with?: InputMaybe<Scalars['ID']>;
   readonly product?: InputMaybe<ProductWhereInput>;
+  readonly productTitle?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  readonly productTitle_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  readonly productTitle_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  readonly productTitle_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  readonly productTitle_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  readonly productTitle_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  readonly productTitle_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  readonly productTitle_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  readonly productTitle_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  readonly productTitle_starts_with?: InputMaybe<Scalars['String']>;
   readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -8806,7 +8850,6 @@ export type Product = Node & {
   readonly updatedAt: Scalars['DateTime'];
   /** User that last updated this document */
   readonly updatedBy?: Maybe<User>;
-  readonly variants: ReadonlyArray<ProductVariants>;
 };
 
 
@@ -8942,16 +8985,6 @@ export type ProductUpdatedByArgs = {
   locales?: InputMaybe<ReadonlyArray<Locale>>;
 };
 
-
-export type ProductVariantsArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  skip?: InputMaybe<Scalars['Int']>;
-};
-
 export enum ProductColor {
   Black = 'BLACK',
   Pink = 'PINK',
@@ -8976,7 +9009,6 @@ export type ProductColorVariant = Node & {
   /** Get the other localizations for this document */
   readonly localizations: ReadonlyArray<ProductColorVariant>;
   readonly name: Scalars['String'];
-  readonly product?: Maybe<Product>;
   /** The time the document was published. Null on documents in draft stage. */
   readonly publishedAt?: Maybe<Scalars['DateTime']>;
   /** User that last published this document */
@@ -9018,11 +9050,6 @@ export type ProductColorVariantHistoryArgs = {
 export type ProductColorVariantLocalizationsArgs = {
   includeCurrent?: Scalars['Boolean'];
   locales?: ReadonlyArray<Locale>;
-};
-
-
-export type ProductColorVariantProductArgs = {
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
 };
 
 
@@ -9080,7 +9107,6 @@ export type ProductColorVariantCreateInput = {
   readonly localizations?: InputMaybe<ProductColorVariantCreateLocalizationsInput>;
   /** name input for default locale (en) */
   readonly name: Scalars['String'];
-  readonly product?: InputMaybe<ProductCreateOneInlineInput>;
   readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
@@ -9179,7 +9205,6 @@ export type ProductColorVariantManyWhereInput = {
   readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
   /** All values starting with the given string. */
   readonly id_starts_with?: InputMaybe<Scalars['ID']>;
-  readonly product?: InputMaybe<ProductWhereInput>;
   readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -9238,7 +9263,6 @@ export type ProductColorVariantUpdateInput = {
   readonly localizations?: InputMaybe<ProductColorVariantUpdateLocalizationsInput>;
   /** name input for default locale (en) */
   readonly name?: InputMaybe<Scalars['String']>;
-  readonly product?: InputMaybe<ProductUpdateOneInlineInput>;
 };
 
 export type ProductColorVariantUpdateLocalizationDataInput = {
@@ -9428,7 +9452,6 @@ export type ProductColorVariantWhereInput = {
   readonly name_not_starts_with?: InputMaybe<Scalars['String']>;
   /** All values starting with the given string. */
   readonly name_starts_with?: InputMaybe<Scalars['String']>;
-  readonly product?: InputMaybe<ProductWhereInput>;
   readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -9504,7 +9527,7 @@ export type ProductConnection = {
 
 export type ProductCreateInput = {
   readonly categories?: InputMaybe<CategoryCreateManyInlineInput>;
-  readonly cl94296md4hlv01ur54tfc65y?: InputMaybe<CartItemCreateManyInlineInput>;
+  readonly cl9ubrrk23f6q01uf0acwcem3?: InputMaybe<CartItemCreateManyInlineInput>;
   readonly collections?: InputMaybe<CollectionCreateManyInlineInput>;
   readonly createdAt?: InputMaybe<Scalars['DateTime']>;
   /** description input for default locale (en) */
@@ -9521,7 +9544,6 @@ export type ProductCreateInput = {
   readonly reviews?: InputMaybe<ReviewCreateManyInlineInput>;
   readonly slug: Scalars['String'];
   readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
-  readonly variants?: InputMaybe<ProductVariantsCreateManyInlineInput>;
 };
 
 export type ProductCreateLocalizationDataInput = {
@@ -9733,7 +9755,6 @@ export type ProductSizeColorVariant = Node & {
   /** Get the other localizations for this document */
   readonly localizations: ReadonlyArray<ProductSizeColorVariant>;
   readonly name: Scalars['String'];
-  readonly product?: Maybe<Product>;
   /** The time the document was published. Null on documents in draft stage. */
   readonly publishedAt?: Maybe<Scalars['DateTime']>;
   /** User that last published this document */
@@ -9776,11 +9797,6 @@ export type ProductSizeColorVariantHistoryArgs = {
 export type ProductSizeColorVariantLocalizationsArgs = {
   includeCurrent?: Scalars['Boolean'];
   locales?: ReadonlyArray<Locale>;
-};
-
-
-export type ProductSizeColorVariantProductArgs = {
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
 };
 
 
@@ -9838,7 +9854,6 @@ export type ProductSizeColorVariantCreateInput = {
   readonly localizations?: InputMaybe<ProductSizeColorVariantCreateLocalizationsInput>;
   /** name input for default locale (en) */
   readonly name: Scalars['String'];
-  readonly product?: InputMaybe<ProductCreateOneInlineInput>;
   readonly size: ProductSize;
   readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
@@ -9938,7 +9953,6 @@ export type ProductSizeColorVariantManyWhereInput = {
   readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
   /** All values starting with the given string. */
   readonly id_starts_with?: InputMaybe<Scalars['ID']>;
-  readonly product?: InputMaybe<ProductWhereInput>;
   readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -10006,7 +10020,6 @@ export type ProductSizeColorVariantUpdateInput = {
   readonly localizations?: InputMaybe<ProductSizeColorVariantUpdateLocalizationsInput>;
   /** name input for default locale (en) */
   readonly name?: InputMaybe<Scalars['String']>;
-  readonly product?: InputMaybe<ProductUpdateOneInlineInput>;
   readonly size?: InputMaybe<ProductSize>;
 };
 
@@ -10198,7 +10211,6 @@ export type ProductSizeColorVariantWhereInput = {
   readonly name_not_starts_with?: InputMaybe<Scalars['String']>;
   /** All values starting with the given string. */
   readonly name_starts_with?: InputMaybe<Scalars['String']>;
-  readonly product?: InputMaybe<ProductWhereInput>;
   readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -10279,7 +10291,6 @@ export type ProductSizeVariant = Node & {
   /** Get the other localizations for this document */
   readonly localizations: ReadonlyArray<ProductSizeVariant>;
   readonly name: Scalars['String'];
-  readonly product?: Maybe<Product>;
   /** The time the document was published. Null on documents in draft stage. */
   readonly publishedAt?: Maybe<Scalars['DateTime']>;
   /** User that last published this document */
@@ -10322,11 +10333,6 @@ export type ProductSizeVariantHistoryArgs = {
 export type ProductSizeVariantLocalizationsArgs = {
   includeCurrent?: Scalars['Boolean'];
   locales?: ReadonlyArray<Locale>;
-};
-
-
-export type ProductSizeVariantProductArgs = {
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
 };
 
 
@@ -10383,7 +10389,6 @@ export type ProductSizeVariantCreateInput = {
   readonly localizations?: InputMaybe<ProductSizeVariantCreateLocalizationsInput>;
   /** name input for default locale (en) */
   readonly name: Scalars['String'];
-  readonly product?: InputMaybe<ProductCreateOneInlineInput>;
   readonly size: ProductSize;
   readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
@@ -10476,7 +10481,6 @@ export type ProductSizeVariantManyWhereInput = {
   readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
   /** All values starting with the given string. */
   readonly id_starts_with?: InputMaybe<Scalars['ID']>;
-  readonly product?: InputMaybe<ProductWhereInput>;
   readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -10541,7 +10545,6 @@ export type ProductSizeVariantUpdateInput = {
   readonly localizations?: InputMaybe<ProductSizeVariantUpdateLocalizationsInput>;
   /** name input for default locale (en) */
   readonly name?: InputMaybe<Scalars['String']>;
-  readonly product?: InputMaybe<ProductUpdateOneInlineInput>;
   readonly size?: InputMaybe<ProductSize>;
 };
 
@@ -10725,7 +10728,6 @@ export type ProductSizeVariantWhereInput = {
   readonly name_not_starts_with?: InputMaybe<Scalars['String']>;
   /** All values starting with the given string. */
   readonly name_starts_with?: InputMaybe<Scalars['String']>;
-  readonly product?: InputMaybe<ProductWhereInput>;
   readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -10791,7 +10793,7 @@ export type ProductSizeVariantWhereUniqueInput = {
 
 export type ProductUpdateInput = {
   readonly categories?: InputMaybe<CategoryUpdateManyInlineInput>;
-  readonly cl94296md4hlv01ur54tfc65y?: InputMaybe<CartItemUpdateManyInlineInput>;
+  readonly cl9ubrrk23f6q01uf0acwcem3?: InputMaybe<CartItemUpdateManyInlineInput>;
   readonly collections?: InputMaybe<CollectionUpdateManyInlineInput>;
   /** description input for default locale (en) */
   readonly description?: InputMaybe<Scalars['String']>;
@@ -10806,7 +10808,6 @@ export type ProductUpdateInput = {
   readonly price?: InputMaybe<Scalars['Int']>;
   readonly reviews?: InputMaybe<ReviewUpdateManyInlineInput>;
   readonly slug?: InputMaybe<Scalars['String']>;
-  readonly variants?: InputMaybe<ProductVariantsUpdateManyInlineInput>;
 };
 
 export type ProductUpdateLocalizationDataInput = {
@@ -10918,102 +10919,6 @@ export type ProductUpsertWithNestedWhereUniqueInput = {
   readonly data: ProductUpsertInput;
   /** Unique document search */
   readonly where: ProductWhereUniqueInput;
-};
-
-export type ProductVariants = ProductColorVariant | ProductSizeColorVariant | ProductSizeVariant;
-
-export type ProductVariantsConnectInput = {
-  readonly ProductColorVariant?: InputMaybe<ProductColorVariantConnectInput>;
-  readonly ProductSizeColorVariant?: InputMaybe<ProductSizeColorVariantConnectInput>;
-  readonly ProductSizeVariant?: InputMaybe<ProductSizeVariantConnectInput>;
-};
-
-export type ProductVariantsCreateInput = {
-  readonly ProductColorVariant?: InputMaybe<ProductColorVariantCreateInput>;
-  readonly ProductSizeColorVariant?: InputMaybe<ProductSizeColorVariantCreateInput>;
-  readonly ProductSizeVariant?: InputMaybe<ProductSizeVariantCreateInput>;
-};
-
-export type ProductVariantsCreateManyInlineInput = {
-  /** Connect multiple existing ProductVariants documents */
-  readonly connect?: InputMaybe<ReadonlyArray<ProductVariantsWhereUniqueInput>>;
-  /** Create and connect multiple existing ProductVariants documents */
-  readonly create?: InputMaybe<ReadonlyArray<ProductVariantsCreateInput>>;
-};
-
-export type ProductVariantsCreateOneInlineInput = {
-  /** Connect one existing ProductVariants document */
-  readonly connect?: InputMaybe<ProductVariantsWhereUniqueInput>;
-  /** Create and connect one ProductVariants document */
-  readonly create?: InputMaybe<ProductVariantsCreateInput>;
-};
-
-export type ProductVariantsUpdateInput = {
-  readonly ProductColorVariant?: InputMaybe<ProductColorVariantUpdateInput>;
-  readonly ProductSizeColorVariant?: InputMaybe<ProductSizeColorVariantUpdateInput>;
-  readonly ProductSizeVariant?: InputMaybe<ProductSizeVariantUpdateInput>;
-};
-
-export type ProductVariantsUpdateManyInlineInput = {
-  /** Connect multiple existing ProductVariants documents */
-  readonly connect?: InputMaybe<ReadonlyArray<ProductVariantsConnectInput>>;
-  /** Create and connect multiple ProductVariants documents */
-  readonly create?: InputMaybe<ReadonlyArray<ProductVariantsCreateInput>>;
-  /** Delete multiple ProductVariants documents */
-  readonly delete?: InputMaybe<ReadonlyArray<ProductVariantsWhereUniqueInput>>;
-  /** Disconnect multiple ProductVariants documents */
-  readonly disconnect?: InputMaybe<ReadonlyArray<ProductVariantsWhereUniqueInput>>;
-  /** Override currently-connected documents with multiple existing ProductVariants documents */
-  readonly set?: InputMaybe<ReadonlyArray<ProductVariantsWhereUniqueInput>>;
-  /** Update multiple ProductVariants documents */
-  readonly update?: InputMaybe<ReadonlyArray<ProductVariantsUpdateWithNestedWhereUniqueInput>>;
-  /** Upsert multiple ProductVariants documents */
-  readonly upsert?: InputMaybe<ReadonlyArray<ProductVariantsUpsertWithNestedWhereUniqueInput>>;
-};
-
-export type ProductVariantsUpdateManyWithNestedWhereInput = {
-  readonly ProductColorVariant?: InputMaybe<ProductColorVariantUpdateManyWithNestedWhereInput>;
-  readonly ProductSizeColorVariant?: InputMaybe<ProductSizeColorVariantUpdateManyWithNestedWhereInput>;
-  readonly ProductSizeVariant?: InputMaybe<ProductSizeVariantUpdateManyWithNestedWhereInput>;
-};
-
-export type ProductVariantsUpdateOneInlineInput = {
-  /** Connect existing ProductVariants document */
-  readonly connect?: InputMaybe<ProductVariantsWhereUniqueInput>;
-  /** Create and connect one ProductVariants document */
-  readonly create?: InputMaybe<ProductVariantsCreateInput>;
-  /** Delete currently connected ProductVariants document */
-  readonly delete?: InputMaybe<Scalars['Boolean']>;
-  /** Disconnect currently connected ProductVariants document */
-  readonly disconnect?: InputMaybe<Scalars['Boolean']>;
-  /** Update single ProductVariants document */
-  readonly update?: InputMaybe<ProductVariantsUpdateWithNestedWhereUniqueInput>;
-  /** Upsert single ProductVariants document */
-  readonly upsert?: InputMaybe<ProductVariantsUpsertWithNestedWhereUniqueInput>;
-};
-
-export type ProductVariantsUpdateWithNestedWhereUniqueInput = {
-  readonly ProductColorVariant?: InputMaybe<ProductColorVariantUpdateWithNestedWhereUniqueInput>;
-  readonly ProductSizeColorVariant?: InputMaybe<ProductSizeColorVariantUpdateWithNestedWhereUniqueInput>;
-  readonly ProductSizeVariant?: InputMaybe<ProductSizeVariantUpdateWithNestedWhereUniqueInput>;
-};
-
-export type ProductVariantsUpsertWithNestedWhereUniqueInput = {
-  readonly ProductColorVariant?: InputMaybe<ProductColorVariantUpsertWithNestedWhereUniqueInput>;
-  readonly ProductSizeColorVariant?: InputMaybe<ProductSizeColorVariantUpsertWithNestedWhereUniqueInput>;
-  readonly ProductSizeVariant?: InputMaybe<ProductSizeVariantUpsertWithNestedWhereUniqueInput>;
-};
-
-export type ProductVariantsWhereInput = {
-  readonly ProductColorVariant?: InputMaybe<ProductColorVariantWhereInput>;
-  readonly ProductSizeColorVariant?: InputMaybe<ProductSizeColorVariantWhereInput>;
-  readonly ProductSizeVariant?: InputMaybe<ProductSizeVariantWhereInput>;
-};
-
-export type ProductVariantsWhereUniqueInput = {
-  readonly ProductColorVariant?: InputMaybe<ProductColorVariantWhereUniqueInput>;
-  readonly ProductSizeColorVariant?: InputMaybe<ProductSizeColorVariantWhereUniqueInput>;
-  readonly ProductSizeVariant?: InputMaybe<ProductSizeVariantWhereUniqueInput>;
 };
 
 /** This contains a set of filters that can be used to compare values internally */
@@ -14492,26 +14397,26 @@ export type GetCartIdByAccountIdQuery = { readonly __typename?: 'Query', readonl
 export type GetProductsListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetProductsListQuery = { readonly __typename?: 'Query', readonly products: ReadonlyArray<{ readonly __typename?: 'Product', readonly id: string, readonly slug: string, readonly name: string, readonly price: number, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string, readonly width?: number | null, readonly height?: number | null, readonly id: string }> }> };
+export type GetProductsListQuery = { readonly __typename?: 'Query', readonly products: ReadonlyArray<{ readonly __typename?: 'Product', readonly id: string, readonly slug: string, readonly name: string, readonly price: number, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string, readonly width?: number | null, readonly height?: number | null, readonly id: string }>, readonly option: ReadonlyArray<{ readonly __typename?: 'Option', readonly id: string }> }> };
 
 export type CartContentQueryFragment = { readonly __typename?: 'Cart', readonly id: string, readonly cartItems: ReadonlyArray<{ readonly __typename?: 'CartItem', readonly id: string, readonly quantity: number, readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly name: string, readonly price: number, readonly slug: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null }> };
 
-export type CartContentQueryWithOptionsFragment = { readonly __typename?: 'Cart', readonly id: string, readonly cartItems: ReadonlyArray<{ readonly __typename?: 'CartItem', readonly id: string, readonly quantity: number, readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly name: string, readonly price: number, readonly slug: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null, readonly option?: { readonly __typename?: 'Option', readonly id: string, readonly color?: ProductColor | null, readonly size?: ProductSize | null, readonly quantity: number, readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly name: string, readonly price: number, readonly slug: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null } | null }> };
+export type CartContentQueryWithOptionFragment = { readonly __typename?: 'Cart', readonly id: string, readonly cartItems: ReadonlyArray<{ readonly __typename?: 'CartItem', readonly id: string, readonly quantity: number, readonly option?: { readonly __typename?: 'Option', readonly id: string, readonly color?: ProductColor | null, readonly size?: ProductSize | null, readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly name: string, readonly price: number, readonly slug: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null } | null }> };
 
 export type GetCartItemsByCartIdQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type GetCartItemsByCartIdQuery = { readonly __typename?: 'Query', readonly cart?: { readonly __typename?: 'Cart', readonly id: string, readonly cartItems: ReadonlyArray<{ readonly __typename?: 'CartItem', readonly id: string, readonly quantity: number, readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly name: string, readonly price: number, readonly slug: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null }> } | null };
+export type GetCartItemsByCartIdQuery = { readonly __typename?: 'Query', readonly cart?: { readonly __typename?: 'Cart', readonly id: string, readonly cartItems: ReadonlyArray<{ readonly __typename?: 'CartItem', readonly id: string, readonly quantity: number, readonly option?: { readonly __typename?: 'Option', readonly id: string, readonly color?: ProductColor | null, readonly size?: ProductSize | null, readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly name: string, readonly price: number, readonly slug: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null } | null }> } | null };
 
-export type AddItemToCartByCartIdMutationVariables = Exact<{
+export type AddItemOptionToCartByCartIdMutationVariables = Exact<{
   cartId: Scalars['ID'];
-  productId: Scalars['ID'];
+  productOptionId: Scalars['ID'];
 }>;
 
 
-export type AddItemToCartByCartIdMutation = { readonly __typename?: 'Mutation', readonly updateCart?: { readonly __typename?: 'Cart', readonly id: string, readonly cartItems: ReadonlyArray<{ readonly __typename?: 'CartItem', readonly id: string, readonly quantity: number, readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly name: string, readonly price: number, readonly slug: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null }> } | null };
+export type AddItemOptionToCartByCartIdMutation = { readonly __typename?: 'Mutation', readonly updateCart?: { readonly __typename?: 'Cart', readonly id: string, readonly cartItems: ReadonlyArray<{ readonly __typename?: 'CartItem', readonly id: string, readonly quantity: number, readonly option?: { readonly __typename?: 'Option', readonly id: string, readonly color?: ProductColor | null, readonly size?: ProductSize | null, readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly name: string, readonly price: number, readonly slug: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null } | null }> } | null };
 
 export type RemoveItemFromCartByCartIdMutationVariables = Exact<{
   cartId: Scalars['ID'];
@@ -14519,7 +14424,7 @@ export type RemoveItemFromCartByCartIdMutationVariables = Exact<{
 }>;
 
 
-export type RemoveItemFromCartByCartIdMutation = { readonly __typename?: 'Mutation', readonly updateCart?: { readonly __typename?: 'Cart', readonly id: string, readonly cartItems: ReadonlyArray<{ readonly __typename?: 'CartItem', readonly id: string, readonly quantity: number, readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly name: string, readonly price: number, readonly slug: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null }> } | null };
+export type RemoveItemFromCartByCartIdMutation = { readonly __typename?: 'Mutation', readonly updateCart?: { readonly __typename?: 'Cart', readonly id: string, readonly cartItems: ReadonlyArray<{ readonly __typename?: 'CartItem', readonly id: string, readonly quantity: number, readonly option?: { readonly __typename?: 'Option', readonly id: string, readonly color?: ProductColor | null, readonly size?: ProductSize | null, readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly name: string, readonly price: number, readonly slug: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null } | null }> } | null };
 
 export type UpdateItemQuantityByCartIdMutationVariables = Exact<{
   cartId: Scalars['ID'];
@@ -14528,14 +14433,14 @@ export type UpdateItemQuantityByCartIdMutationVariables = Exact<{
 }>;
 
 
-export type UpdateItemQuantityByCartIdMutation = { readonly __typename?: 'Mutation', readonly updateCart?: { readonly __typename?: 'Cart', readonly id: string, readonly cartItems: ReadonlyArray<{ readonly __typename?: 'CartItem', readonly id: string, readonly quantity: number, readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly name: string, readonly price: number, readonly slug: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null }> } | null };
+export type UpdateItemQuantityByCartIdMutation = { readonly __typename?: 'Mutation', readonly updateCart?: { readonly __typename?: 'Cart', readonly id: string, readonly cartItems: ReadonlyArray<{ readonly __typename?: 'CartItem', readonly id: string, readonly quantity: number, readonly option?: { readonly __typename?: 'Option', readonly id: string, readonly color?: ProductColor | null, readonly size?: ProductSize | null, readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly name: string, readonly price: number, readonly slug: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null } | null }> } | null };
 
 export type ClearCartItemsMutationVariables = Exact<{
   cartId: Scalars['ID'];
 }>;
 
 
-export type ClearCartItemsMutation = { readonly __typename?: 'Mutation', readonly updateCart?: { readonly __typename?: 'Cart', readonly id: string, readonly cartItems: ReadonlyArray<{ readonly __typename?: 'CartItem', readonly id: string, readonly quantity: number, readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly name: string, readonly price: number, readonly slug: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null }> } | null };
+export type ClearCartItemsMutation = { readonly __typename?: 'Mutation', readonly updateCart?: { readonly __typename?: 'Cart', readonly id: string, readonly cartItems: ReadonlyArray<{ readonly __typename?: 'CartItem', readonly id: string, readonly quantity: number, readonly option?: { readonly __typename?: 'Option', readonly id: string, readonly color?: ProductColor | null, readonly size?: ProductSize | null, readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly name: string, readonly price: number, readonly slug: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null } | null }> } | null };
 
 export type GetProductsSlugsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -14547,7 +14452,7 @@ export type GetProductDetailsBySlugQueryVariables = Exact<{
 }>;
 
 
-export type GetProductDetailsBySlugQuery = { readonly __typename?: 'Query', readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly slug: string, readonly name: string, readonly price: number, readonly description: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }>, readonly variants: ReadonlyArray<{ readonly __typename?: 'ProductColorVariant', readonly id: string, readonly name: string } | { readonly __typename?: 'ProductSizeColorVariant', readonly id: string, readonly name: string } | { readonly __typename?: 'ProductSizeVariant', readonly id: string, readonly name: string }> } | null };
+export type GetProductDetailsBySlugQuery = { readonly __typename?: 'Query', readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly slug: string, readonly name: string, readonly price: number, readonly description: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null };
 
 export type GetProductBySlugQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['String']>;
@@ -14574,26 +14479,16 @@ export const CartContentQueryFragmentDoc = gql`
   }
 }
     `;
-export const CartContentQueryWithOptionsFragmentDoc = gql`
-    fragment cartContentQueryWithOptions on Cart {
+export const CartContentQueryWithOptionFragmentDoc = gql`
+    fragment cartContentQueryWithOption on Cart {
   id
   cartItems {
     id
     quantity
-    product {
-      id
-      name
-      price
-      images {
-        url
-      }
-      slug
-    }
     option {
       id
       color
       size
-      quantity
       product {
         id
         name
@@ -14800,6 +14695,9 @@ export const GetProductsListDocument = gql`
       height
       id
     }
+    option {
+      id
+    }
   }
 }
     `;
@@ -14833,10 +14731,10 @@ export type GetProductsListQueryResult = Apollo.QueryResult<GetProductsListQuery
 export const GetCartItemsByCartIdDocument = gql`
     query GetCartItemsByCartId($id: ID!) {
   cart(where: {id: $id}, stage: DRAFT) {
-    ...cartContentQuery
+    ...cartContentQueryWithOption
   }
 }
-    ${CartContentQueryFragmentDoc}`;
+    ${CartContentQueryWithOptionFragmentDoc}`;
 
 /**
  * __useGetCartItemsByCartIdQuery__
@@ -14865,50 +14763,50 @@ export function useGetCartItemsByCartIdLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetCartItemsByCartIdQueryHookResult = ReturnType<typeof useGetCartItemsByCartIdQuery>;
 export type GetCartItemsByCartIdLazyQueryHookResult = ReturnType<typeof useGetCartItemsByCartIdLazyQuery>;
 export type GetCartItemsByCartIdQueryResult = Apollo.QueryResult<GetCartItemsByCartIdQuery, GetCartItemsByCartIdQueryVariables>;
-export const AddItemToCartByCartIdDocument = gql`
-    mutation AddItemToCartByCartId($cartId: ID!, $productId: ID!) {
+export const AddItemOptionToCartByCartIdDocument = gql`
+    mutation AddItemOptionToCartByCartId($cartId: ID!, $productOptionId: ID!) {
   updateCart(
     where: {id: $cartId}
-    data: {cartItems: {create: {quantity: 1, product: {connect: {id: $productId}}}}}
+    data: {cartItems: {create: {quantity: 1, option: {connect: {id: $productOptionId}}}}}
   ) {
-    ...cartContentQuery
+    ...cartContentQueryWithOption
   }
 }
-    ${CartContentQueryFragmentDoc}`;
-export type AddItemToCartByCartIdMutationFn = Apollo.MutationFunction<AddItemToCartByCartIdMutation, AddItemToCartByCartIdMutationVariables>;
+    ${CartContentQueryWithOptionFragmentDoc}`;
+export type AddItemOptionToCartByCartIdMutationFn = Apollo.MutationFunction<AddItemOptionToCartByCartIdMutation, AddItemOptionToCartByCartIdMutationVariables>;
 
 /**
- * __useAddItemToCartByCartIdMutation__
+ * __useAddItemOptionToCartByCartIdMutation__
  *
- * To run a mutation, you first call `useAddItemToCartByCartIdMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddItemToCartByCartIdMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useAddItemOptionToCartByCartIdMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddItemOptionToCartByCartIdMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [addItemToCartByCartIdMutation, { data, loading, error }] = useAddItemToCartByCartIdMutation({
+ * const [addItemOptionToCartByCartIdMutation, { data, loading, error }] = useAddItemOptionToCartByCartIdMutation({
  *   variables: {
  *      cartId: // value for 'cartId'
- *      productId: // value for 'productId'
+ *      productOptionId: // value for 'productOptionId'
  *   },
  * });
  */
-export function useAddItemToCartByCartIdMutation(baseOptions?: Apollo.MutationHookOptions<AddItemToCartByCartIdMutation, AddItemToCartByCartIdMutationVariables>) {
+export function useAddItemOptionToCartByCartIdMutation(baseOptions?: Apollo.MutationHookOptions<AddItemOptionToCartByCartIdMutation, AddItemOptionToCartByCartIdMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AddItemToCartByCartIdMutation, AddItemToCartByCartIdMutationVariables>(AddItemToCartByCartIdDocument, options);
+        return Apollo.useMutation<AddItemOptionToCartByCartIdMutation, AddItemOptionToCartByCartIdMutationVariables>(AddItemOptionToCartByCartIdDocument, options);
       }
-export type AddItemToCartByCartIdMutationHookResult = ReturnType<typeof useAddItemToCartByCartIdMutation>;
-export type AddItemToCartByCartIdMutationResult = Apollo.MutationResult<AddItemToCartByCartIdMutation>;
-export type AddItemToCartByCartIdMutationOptions = Apollo.BaseMutationOptions<AddItemToCartByCartIdMutation, AddItemToCartByCartIdMutationVariables>;
+export type AddItemOptionToCartByCartIdMutationHookResult = ReturnType<typeof useAddItemOptionToCartByCartIdMutation>;
+export type AddItemOptionToCartByCartIdMutationResult = Apollo.MutationResult<AddItemOptionToCartByCartIdMutation>;
+export type AddItemOptionToCartByCartIdMutationOptions = Apollo.BaseMutationOptions<AddItemOptionToCartByCartIdMutation, AddItemOptionToCartByCartIdMutationVariables>;
 export const RemoveItemFromCartByCartIdDocument = gql`
     mutation RemoveItemFromCartByCartId($cartId: ID!, $itemId: ID!) {
   updateCart(where: {id: $cartId}, data: {cartItems: {delete: {id: $itemId}}}) {
-    ...cartContentQuery
+    ...cartContentQueryWithOption
   }
 }
-    ${CartContentQueryFragmentDoc}`;
+    ${CartContentQueryWithOptionFragmentDoc}`;
 export type RemoveItemFromCartByCartIdMutationFn = Apollo.MutationFunction<RemoveItemFromCartByCartIdMutation, RemoveItemFromCartByCartIdMutationVariables>;
 
 /**
@@ -14942,10 +14840,10 @@ export const UpdateItemQuantityByCartIdDocument = gql`
     where: {id: $cartId}
     data: {cartItems: {update: {where: {id: $itemId}, data: {quantity: $quantity}}}}
   ) {
-    ...cartContentQuery
+    ...cartContentQueryWithOption
   }
 }
-    ${CartContentQueryFragmentDoc}`;
+    ${CartContentQueryWithOptionFragmentDoc}`;
 export type UpdateItemQuantityByCartIdMutationFn = Apollo.MutationFunction<UpdateItemQuantityByCartIdMutation, UpdateItemQuantityByCartIdMutationVariables>;
 
 /**
@@ -14977,10 +14875,10 @@ export type UpdateItemQuantityByCartIdMutationOptions = Apollo.BaseMutationOptio
 export const ClearCartItemsDocument = gql`
     mutation ClearCartItems($cartId: ID!) {
   updateCart(where: {id: $cartId}, data: {cartItems: {set: []}}) {
-    ...cartContentQuery
+    ...cartContentQueryWithOption
   }
 }
-    ${CartContentQueryFragmentDoc}`;
+    ${CartContentQueryWithOptionFragmentDoc}`;
 export type ClearCartItemsMutationFn = Apollo.MutationFunction<ClearCartItemsMutation, ClearCartItemsMutationVariables>;
 
 /**
@@ -15051,20 +14949,6 @@ export const GetProductDetailsBySlugDocument = gql`
     description
     images {
       url
-    }
-    variants {
-      ... on ProductSizeColorVariant {
-        id
-        name
-      }
-      ... on ProductColorVariant {
-        id
-        name
-      }
-      ... on ProductSizeVariant {
-        id
-        name
-      }
     }
   }
 }

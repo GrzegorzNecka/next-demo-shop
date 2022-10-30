@@ -87,6 +87,14 @@ export const getStaticProps = async ({ params }: InferGetStaticPathsType<typeof 
         };
     }
 
+    // only productWithOptions
+    if (data.product.option.length === 0) {
+        return {
+            props: {},
+            notFound: true,
+        };
+    }
+
     const markdown: string = data.product.description;
 
     return {

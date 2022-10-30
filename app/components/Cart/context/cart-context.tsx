@@ -34,7 +34,10 @@ export const CartStateContextProvider = ({ children }: { children: React.ReactNo
 export const useCartState = () => {
     const cartState = useContext(CartStateContext);
 
-    const itemsLength = cartState?.items.map((obj) => obj.quantity);
+    const itemsLength = cartState?.items.map((obj) => {
+        return obj.quantity;
+    });
+
     const total = itemsLength?.reduce((prev, current) => prev + current, 0);
 
     if (!cartState) {
