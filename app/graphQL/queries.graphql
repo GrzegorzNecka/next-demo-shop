@@ -39,7 +39,7 @@ query GetCartIdByAccountId($id: ID!) {
 }
 
 query GetProductsList {
-    products {
+    products(where: { option_some: { productTitle_not: "null" } }) {
         id
         slug
         name
@@ -50,44 +50,52 @@ query GetProductsList {
             height
             id
         }
+        option {
+            id
+        }
     }
 }
 
-fragment cartContentQuery on Cart {
+fragment cartContentQueryWithOption on Cart {
     id
     cartItems {
         id
         quantity
-        product {
+        option {
             id
-            name
-            price
-            images {
-                url
+            color
+            size
+            product {
+                id
+                name
+                price
+                images {
+                    url
+                }
+                slug
             }
-            slug
         }
     }
 }
 
 query GetCartItemsByCartId($id: ID!) {
     cart(where: { id: $id }, stage: DRAFT) {
-        ...cartContentQuery
+        ...cartContentQueryWithOption
     }
 }
 
-mutation AddItemToCartByCartId($cartId: ID!, $productId: ID!) {
+mutation AddItemOptionToCartByCartId($cartId: ID!, $productOptionId: ID!) {
     updateCart(
         where: { id: $cartId }
-        data: { cartItems: { create: { quantity: 1, product: { connect: { id: $productId } } } } }
+        data: { cartItems: { create: { quantity: 1, option: { connect: { id: $productOptionId } } } } }
     ) {
-        ...cartContentQuery
+        ...cartContentQueryWithOption
     }
 }
 
 mutation RemoveItemFromCartByCartId($cartId: ID!, $itemId: ID!) {
     updateCart(where: { id: $cartId }, data: { cartItems: { delete: { id: $itemId } } }) {
-        ...cartContentQuery
+        ...cartContentQueryWithOption
     }
 }
 
@@ -96,18 +104,18 @@ mutation UpdateItemQuantityByCartId($cartId: ID!, $itemId: ID!, $quantity: Int!)
         where: { id: $cartId }
         data: { cartItems: { update: { where: { id: $itemId }, data: { quantity: $quantity } } } }
     ) {
-        ...cartContentQuery
+        ...cartContentQueryWithOption
     }
 }
 
 mutation ClearCartItems($cartId: ID!) {
     updateCart(where: { id: $cartId }, data: { cartItems: { set: [] } }) {
-        ...cartContentQuery
+        ...cartContentQueryWithOption
     }
 }
 
 query GetProductsSlugs {
-    products {
+    products(where: { option_some: { productTitle_not: "null" } }) {
         slug
     }
 }
@@ -121,20 +129,6 @@ query GetProductDetailsBySlug($slug: String) {
         description
         images {
             url
-        }
-        variants {
-            ... on ProductSizeColorVariant {
-                id
-                name
-            }
-            ... on ProductColorVariant {
-                id
-                name
-            }
-            ... on ProductSizeVariant {
-                id
-                name
-            }
         }
     }
 }
@@ -150,10 +144,18 @@ query GetProductBySlug($slug: String) {
             url
         }
         option {
-            quantity
+            total
             id
             color
             size
         }
+    }
+}
+
+query GetProductOptions($id: ID) {
+    option(where: { id: $id }) {
+        id
+        color
+        size
     }
 }

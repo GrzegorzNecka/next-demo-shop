@@ -1,8 +1,8 @@
-import { ActiveLink } from "components/ActiveLink";
+import { ActiveLink } from "components/active-link";
 import CartBar from "components/Cart/cart-bar";
 import React from "react";
-import { navigationList } from "utils/navigationList";
-import LoginButton from "./LoginButton";
+import { navigationList } from "utils/navigation-list";
+import LoginButton from "./login-button";
 
 const Navigation = () => {
     if (!navigationList) {

@@ -1,4 +1,4 @@
-import { Main } from "components/Main";
+import { Main } from "components/main";
 import { ProductSingleUI } from "components/Products/product-single-ui";
 import { apolloClient } from "graphQL/apolloClient";
 import {
@@ -86,6 +86,14 @@ export const getStaticProps = async ({ params }: InferGetStaticPathsType<typeof 
             notFound: true,
         };
     }
+
+    // only productWithOptions
+    // if (data.product.option.length === 0) {
+    //     return {
+    //         props: {},
+    //         notFound: true,
+    //     };
+    // }
 
     const markdown: string = data.product.description;
 
