@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { CartState } from "./types";
 import { useCartItems } from "context/hooks/use-cart-items";
 
@@ -7,7 +7,11 @@ export const CartStateContext = createContext<CartState | null>(null);
 
 // ----------------- Provider
 export const CartStateContextProvider = ({ children }: { children: React.ReactNode }) => {
-    console.log("-----render context-----------");
+    //----------render counter
+    const renderCounter = useRef(0);
+    renderCounter.current = renderCounter.current + 1;
+    console.log(`Renders cartContext: ${renderCounter.current}`);
+    //----------
 
     const [cartItems, isLoading, handleAddItemToCart, handleRemoveCartItem, handleClearCart] = useCartItems();
 

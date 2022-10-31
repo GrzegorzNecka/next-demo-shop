@@ -1,9 +1,10 @@
-const addToCartItem = async (productOptionId: string) =>
+const addToCartItem = async (productOptionId: string, quantity: number) =>
     await fetch("/api/cart/add-to-cart-item", {
         method: "POST",
         headers: { "Content-Type": "application/json;" },
         body: JSON.stringify({
             productOptionId,
+            quantity,
         }),
     });
 

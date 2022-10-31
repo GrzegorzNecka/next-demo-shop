@@ -18,7 +18,7 @@ export type UnionVariants = ProductColorVariant | ProductSizeColorVariant | Prod
 export type VariantsTypeNamesUnion = ValueOf<Pick<UnionVariants, "__typename">>;
 export type ProductVariants = readonly UnionVariants[] | null;
 
-export type ProductOption = Pick<Option, "color" | "size" | "__typename" | "id">;
+export type ProductOption = Pick<Option, "color" | "size" | "__typename" | "id" | "total">;
 
 export interface ProductDetails {
     readonly id: string;
