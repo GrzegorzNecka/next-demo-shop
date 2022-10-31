@@ -65,6 +65,7 @@ fragment cartContentQueryWithOption on Cart {
             id
             color
             size
+            total
             product {
                 id
                 name
@@ -84,10 +85,10 @@ query GetCartItemsByCartId($id: ID!) {
     }
 }
 
-mutation AddItemOptionToCartByCartId($cartId: ID!, $productOptionId: ID!) {
+mutation AddItemOptionToCartByCartId($cartId: ID!, $quantity: Int!, $productOptionId: ID!) {
     updateCart(
         where: { id: $cartId }
-        data: { cartItems: { create: { quantity: 1, option: { connect: { id: $productOptionId } } } } }
+        data: { cartItems: { create: { quantity: $quantity, option: { connect: { id: $productOptionId } } } } }
     ) {
         ...cartContentQueryWithOption
     }

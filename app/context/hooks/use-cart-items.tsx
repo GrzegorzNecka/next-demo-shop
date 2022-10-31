@@ -63,12 +63,12 @@ export const useCartItems = () => {
 
         setIsLoading(true);
 
-        const { productOptionId } = product;
+        const { productOptionId, quantity } = product;
 
         const existProduct = data.cart?.cartItems.find((item) => item?.option?.id === productOptionId);
 
         if (!existProduct) {
-            const result = await addToCartItem(productOptionId);
+            const result = await addToCartItem(productOptionId, quantity);
 
             if (result.status === 200) {
                 refetch({ id: cartId });
@@ -79,7 +79,7 @@ export const useCartItems = () => {
 
         const itemId = existProduct?.id!;
 
-        const updatedQuantity = existProduct?.quantity! + product.quantity;
+        const updatedQuantity = existProduct?.quantity! + quantity;
 
         const result = await updateCartItem(itemId, updatedQuantity);
         if (result.status === 200) {

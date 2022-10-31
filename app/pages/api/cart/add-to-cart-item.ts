@@ -22,10 +22,10 @@ const addItemToCartHandler: NextApiHandler = async (req, res) => {
     }
 
     const cartId = session.user.cartId;
+    // todo nie ma typów dla productOptionId, quantity
+    const { productOptionId, quantity } = await JSON.parse(req.body);
 
-    const { productOptionId } = await JSON.parse(req.body);
-
-    if (!productOptionId) {
+    if (!productOptionId && !quantity) {
         res.status(400).json({ message: "productOptionId is required" });
     }
 
@@ -36,6 +36,7 @@ const addItemToCartHandler: NextApiHandler = async (req, res) => {
         mutation: AddItemOptionToCartByCartIdDocument,
         variables: {
             cartId,
+            quantity,
             productOptionId: productOptionId,
         },
     });
