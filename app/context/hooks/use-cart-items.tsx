@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { CartItem } from "context/types";
 import { useSession } from "next-auth/react";
 import { useGetCartItemsByCartIdQuery } from "graphQL/generated/graphql";
@@ -11,8 +11,7 @@ export const useCartItems = () => {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    // APOLLO
-    const { data, refetch } = useGetCartItemsByCartIdQuery({
+    const { data, loading, refetch } = useGetCartItemsByCartIdQuery({
         skip: !Boolean(cartId),
         variables: {
             id: cartId,
@@ -28,6 +27,8 @@ export const useCartItems = () => {
     // todo - (useMemo)[https://kattya.dev/articles/2021-04-17-fixing-re-renders-when-using-context-in-react/]
     // albo stórz pusty cart item z wykorzystaniem cart id oraz quantity a pote
     // przypisz go do cart oraz product
+
+    // const findExistProduct = (productOptionId) => useMemo((productOptionId)=> data.cart?.cartItems.find((item) => item?.option?.id === productOptionId),[data])
 
     useEffect(() => {
         if (session.status !== "authenticated" || !data || !data.cart) {
@@ -65,6 +66,7 @@ export const useCartItems = () => {
 
         const { productOptionId, quantity } = product;
 
+        // todo sprubój z use memo
         const existProduct = data.cart?.cartItems.find((item) => item?.option?.id === productOptionId);
 
         if (!existProduct) {

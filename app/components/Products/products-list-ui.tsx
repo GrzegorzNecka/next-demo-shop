@@ -10,6 +10,8 @@ const ProductListUI = ({ data }: ProductListIdPageProps) => {
         return <div>nie znaleziono strony</div>;
     }
 
+    //todo productListItem -> memo na wzór https://beta.reactjs.org/apis/react/useMemo#examples-rerendering
+
     return (
         <ul className="relative  bg-white w-full mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8 ">
             {data.map((product) => (

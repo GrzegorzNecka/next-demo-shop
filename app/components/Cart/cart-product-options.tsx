@@ -1,6 +1,8 @@
-import type { ProductOption } from "components/Products/types";
+import { Option } from "graphQL/generated/graphql";
 import { useGetProductOptionsQuery } from "graphQL/generated/graphql";
 import React from "react";
+
+type ProductOption = Pick<Option, "color" | "size" | "__typename" | "id">;
 
 export const CartOptions = ({ id }: { id: string }) => {
     const { data } = useGetProductOptionsQuery({

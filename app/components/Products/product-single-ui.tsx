@@ -1,35 +1,56 @@
 /* eslint-disable @next/next/no-img-element */
 import Image from "next/image";
 import { NextSeo } from "next-seo";
-import type { ProductDetailsProps, UnionVariants } from "./types";
+import type { ProductDetailsProps } from "./types";
 import ProductOption from "components/Products/product-options";
 import { useCartState } from "context/cart-context";
 import Markdown from "components/markdown";
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
-// import type { ProductVariants, Option } from "components/Products/types";
-// import ProductVariant from "./product-variant";
-// import useProductVariant from "./hooks/use-product-option";
-import { ProductColor, ProductSize } from "graphQL/generated/graphql";
-import { ValueOf } from "types/types";
-// import { groupOptions } from "utils/product-options";
-import { Print } from "components/developer/print";
 
 export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
     const cartState = useCartState();
 
-    const InitialId = data?.option?.[0]?.id;
+    const isProductOpiotns = data?.option.length > 1 ? true : false;
 
-    const isOpiotns = data?.option.length > 1 ? true : false;
-
-    const [activeProductOption, setActiveProductOption] = useState<string>(InitialId);
-    const [total, setTotal] = useState<number>(0);
+    const [activeProductOptionId, setActiveProductOptionId] = useState<string>(data.option?.[0].id);
+    const [numberOfAvailableProductOptions, setNumberOfAvailableProductOptions] = useState<number>(0);
     const [quantity, setQuantity] = useState<number>(1);
+    const resetQuantity = () => setQuantity(1);
+
+    const findActiveProductOption = () => {
+        return data.option.filter((option) => {
+            if (option.id !== activeProductOptionId) {
+                return null;
+            }
+
+            return option;
+        });
+    };
+
+    //todo  zamiast tego effectu możę lepiej zrobić z tego osobny komponent i dodać do niego useMomo na propsa
+    useEffect(() => {
+        //
+        const [activeProductOption] = findActiveProductOption();
+
+        if (!activeProductOption.total) {
+            return;
+        }
+
+        const cartItemOption = cartState.items.find((item) => {
+            return item.productOptionId === activeProductOptionId;
+        });
+
+        if (cartItemOption) {
+            setNumberOfAvailableProductOptions(activeProductOption.total - cartItemOption.quantity);
+            return;
+        }
+
+        setNumberOfAvailableProductOptions(activeProductOption.total);
+    }, [activeProductOptionId, cartState]);
 
     const handleOnClick = () => {
-        // setTargetButton(data.title);
-
         const newCartItem = {
-            productOptionId: activeProductOption,
+            productOptionId: activeProductOptionId,
             price: data.price,
             title: data.title,
             quantity,
@@ -38,42 +59,15 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
         };
 
         cartState.addItemToCart(newCartItem);
+
+        //todo po pomyślnym dodaniu do koszyka zresetuj input
+        resetQuantity();
     };
-
-    useEffect(() => {
-        //
-        const option = data.option.filter((option) => {
-            if (option.id !== activeProductOption) {
-                return null;
-            }
-
-            return option;
-        });
-
-        const [activeOption] = option;
-
-        if (!activeOption.total) {
-            return;
-        }
-
-        const cartTotal = cartState.items.find((item) => {
-            return item.productOptionId === activeProductOption;
-        });
-        console.log("🚀 ~ file: product-single-ui.tsx ~ line 92 ~ cartTotal ~ cartTotal", cartTotal);
-
-        if (cartTotal) {
-            setTotal(activeOption.total - cartTotal.quantity);
-            return;
-        }
-
-        setTotal(activeOption.total);
-    }, [activeProductOption, cartState]);
 
     return (
         <>
+            {/* // todo na tym elemencie też memoizacja ale z rozbiciem data przez Object.value() lub objec stringify i porównój wartości watrybutów */}
             <SeoProvider data={data} />
-
-            {/* <Print data={data?.option} /> */}
 
             <div className="font-mono ">
                 <div className="grid grid-cols-2 gap">
@@ -98,23 +92,27 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
                         </div>
                         {/* // product option */}
 
-                        {isOpiotns && (
+                        {isProductOpiotns && (
                             <ProductOption
-                                activeOption={activeProductOption}
-                                updateOption={setActiveProductOption}
+                                activeOption={activeProductOptionId}
+                                updateOption={setActiveProductOptionId}
                                 option={data.option}
                             >
                                 warianty
                             </ProductOption>
                         )}
 
-                        <div>{total ? `total: ${total}` : "brak w magazynie"}</div>
+                        <div>
+                            {numberOfAvailableProductOptions
+                                ? `total: ${numberOfAvailableProductOptions}`
+                                : "brak w magazynie"}
+                        </div>
 
                         {/* <div>wybrano: {activeProductOption} </div> */}
 
                         {cartState.isLoading ? (
                             <div className="flex mb-8">
-                                {total ? (
+                                {numberOfAvailableProductOptions ? (
                                     <input
                                         disabled
                                         value={quantity}
@@ -129,18 +127,18 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
                             </div>
                         ) : (
                             <div className="flex mb-8">
-                                {total ? (
+                                {numberOfAvailableProductOptions ? (
                                     <input
                                         value={quantity}
                                         onChange={(e) => setQuantity(Number(e.target.value))}
                                         type="number"
                                         className="mb-0 w-1/4 mr-4 bg-transparent py-2 px-4 border-2 border-black rounded"
-                                        max={total}
+                                        max={numberOfAvailableProductOptions}
                                         min={1}
                                     />
                                 ) : null}
 
-                                {total ? (
+                                {numberOfAvailableProductOptions ? (
                                     <button
                                         className={` mb-0 w-3/4 text-blackfont-semibold btn-custom-primary`}
                                         onClick={handleOnClick}

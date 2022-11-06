@@ -1,5 +1,16 @@
-import { ProductVariants, VariantsTypeNamesUnion } from "components/Products/types";
-import { ProductColor, ProductSize, Option } from "graphQL/generated/graphql";
+import {
+    ProductColor,
+    ProductSize,
+    Option,
+    ProductColorVariant,
+    ProductSizeColorVariant,
+    ProductSizeVariant,
+} from "graphQL/generated/graphql";
+import { ValueOf } from "types/types";
+
+export type UnionVariants = ProductColorVariant | ProductSizeColorVariant | ProductSizeVariant;
+export type VariantsTypeNamesUnion = ValueOf<Pick<UnionVariants, "__typename">>;
+export type ProductVariants = readonly UnionVariants[] | null;
 
 function extractVariant<V extends ProductVariants, T extends VariantsTypeNamesUnion>(variants: V, typename: T) {
     if (!variants) {
