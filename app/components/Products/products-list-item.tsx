@@ -4,13 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
-import { ProductListItems } from "./types";
-
-interface ProductListItemProps {
-    data: ProductListItems;
-    // targetButton: string | null;
-    // setTargetButton: Dispatch<SetStateAction<string | null>>;
-}
+import { ProductListItemProps } from "./types";
 
 const ProductListItem = ({ data /*targetButton, setTargetButton*/ }: ProductListItemProps) => {
     const cartState = useCartState();
@@ -96,6 +90,6 @@ const ProductListItem = ({ data /*targetButton, setTargetButton*/ }: ProductList
     );
 };
 
-const MemoizedProductListItem = React.memo(ProductListItem);
+// const MemoizedProductListItem = React.memo(ProductListItem);
 
-export default MemoizedProductListItem;
+export default ProductListItem;
