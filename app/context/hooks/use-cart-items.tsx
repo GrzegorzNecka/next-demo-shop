@@ -1,21 +1,17 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, Dispatch, SetStateAction } from "react";
 import { CartItem } from "context/types";
 import { useSession } from "next-auth/react";
-import {
-    GetCartItemsByCartIdDocument,
-    GetCartItemsByCartIdQuery,
-    GetCartItemsByCartIdQueryVariables,
-    useGetCartItemsByCartIdQuery,
-} from "graphQL/generated/graphql";
+import { useGetCartItemsByCartIdQuery } from "graphQL/generated/graphql";
 import { handleAddItemToCart, handleClearCartItems, handleRemoveItemFromCart, updateCartItem } from "services/cart";
-import { apolloClient } from "graphQL/apolloClient";
 
-export const useCartItems = () => {
+type useCartItemsProps = {
+    setCartItems: Dispatch<SetStateAction<CartItem[]>>;
+    setIsLoading: Dispatch<SetStateAction<boolean>>;
+};
+
+export const useCartItemsFromAuthSession = ({ setCartItems, setIsLoading }: useCartItemsProps) => {
     const session = useSession();
     const cartId = session.data?.user?.cartId!; //"cl7q56m7a1eqp0ateldaehrcs"
-
-    const [cartItems, setCartItems] = useState<CartItem[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // -------------   -------------   -------------   -------------   -------------   -------------
 
@@ -35,14 +31,15 @@ export const useCartItems = () => {
     // -------------   -------------   -------------   -------------   -------------   -------------
 
     useEffect(() => {
-        console.log("data", data);
-        //! ------ ------ ------ ------ ------ jeśli sesji nie ma
-        if (!data || !data.cart || session.status !== "authenticated") {
-            // console.log("brak sesji użyj local storage");
+        if (session.status === "loading") {
+            console.log("loading");
             return;
         }
 
-        //! ------ ------ ------ ------ ------ jeśli sesja jest
+        if (session.status === "unauthenticated" || !data || !data.cart) {
+            console.log("brak sesji użyj local storage");
+            return;
+        }
 
         const cartItems = data.cart.cartItems.map((item) => {
             return {
@@ -127,5 +124,5 @@ export const useCartItems = () => {
         }
     };
 
-    return [cartItems, isLoading, addItemToCart, removeItemFromCart, clearCartItems] as const;
+    return [addItemToCart, removeItemFromCart, clearCartItems] as const;
 };
