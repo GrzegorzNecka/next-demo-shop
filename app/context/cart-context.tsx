@@ -1,6 +1,6 @@
-import { createContext, useCallback, useContext, useRef } from "react";
-import type { CartState } from "./types";
-import { useCartItems } from "context/hooks/use-cart-items";
+import { createContext, useCallback, useContext, useRef, useState } from "react";
+import type { CartItem, CartState } from "./types";
+import { useCartItemsFromAuthSession } from "context/hooks/use-cart-items";
 
 export const CartStateContext = createContext<CartState | null>(null);
 
@@ -13,8 +13,13 @@ export const CartStateContextProvider = ({ children }: { children: React.ReactNo
     console.log(`Renders cartContext: ${renderCounter.current}`);
     //----------
 
-    // zwracając każdą metodęużyj useCallback tylko czy to ma sens
-    const [cartItems, isLoading, addItemToCart, removeItemFromCart, clearCartItems] = useCartItems();
+    const [cartItems, setCartItems] = useState<CartItem[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const [addItemToCart, removeItemFromCart, clearCartItems] = useCartItemsFromAuthSession({
+        setCartItems,
+        setIsLoading,
+    });
 
     const initialCartState: CartState = {
         // jeśli sesja to cartItems
