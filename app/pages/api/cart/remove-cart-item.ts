@@ -11,7 +11,7 @@ import {
     UpdateItemQuantityByCartIdMutationVariables,
 } from "graphQL/generated/graphql";
 
-const removeCartItemHandler: NextApiHandler = async (req, res) => {
+const handleRemoveItemFromCartHandler: NextApiHandler = async (req, res) => {
     //_
     if (req.method !== "POST") {
         res.status(400).json({ message: "bad request method" });
@@ -49,7 +49,7 @@ const removeCartItemHandler: NextApiHandler = async (req, res) => {
         return;
     }
 
-    const removeCartItem = await authApolloClient.mutate<
+    const handleRemoveItemFromCart = await authApolloClient.mutate<
         RemoveItemFromCartByCartIdMutation,
         RemoveItemFromCartByCartIdMutationVariables
     >({
@@ -60,8 +60,8 @@ const removeCartItemHandler: NextApiHandler = async (req, res) => {
         },
     });
 
-    res.status(200).json({ removeCartItem });
+    res.status(200).json({ handleRemoveItemFromCart });
     return;
 };
 
-export default removeCartItemHandler;
+export default handleRemoveItemFromCartHandler;

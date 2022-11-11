@@ -1,5 +1,12 @@
 # next-demo-shop
 
+## tasks
+
+-   obsługa koszyka dla niezlogowanych
+-   eroror network
+-   use memo use callback
+-   [useMemo w context](https://kattya.dev/articles/2021-04-17-fixing-re-renders-when-using-context-in-react/)
+
 ## envirolment
 
 -   System:

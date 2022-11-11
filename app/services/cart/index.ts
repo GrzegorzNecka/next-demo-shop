@@ -1,4 +1,4 @@
-const addToCartItem = async (productOptionId: string, quantity: number) =>
+const handleAddItemToCart = async (productOptionId: string, quantity: number) =>
     await fetch("/api/cart/add-to-cart-item", {
         method: "POST",
         headers: { "Content-Type": "application/json;" },
@@ -18,7 +18,7 @@ const updateCartItem = async (itemId: string, updatedQuantity: number) =>
         }),
     });
 
-const removeCartItem = async (itemId: string, quantity: number) =>
+const handleRemoveItemFromCart = async (itemId: string, quantity: number) =>
     await fetch("/api/cart/remove-cart-item", {
         method: "POST",
         headers: { "Content-Type": "application/json;" },
@@ -28,10 +28,10 @@ const removeCartItem = async (itemId: string, quantity: number) =>
         }),
     });
 
-const clearCart = async () =>
+const handleClearCartItems = async () =>
     await fetch("/api/cart/clear-cart", {
         method: "GET",
         headers: { "Content-Type": "application/json;" },
     });
 
-export { addToCartItem, updateCartItem, removeCartItem, clearCart };
+export { handleAddItemToCart, updateCartItem, handleRemoveItemFromCart, handleClearCartItems };

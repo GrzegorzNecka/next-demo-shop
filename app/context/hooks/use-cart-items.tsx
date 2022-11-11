@@ -1,8 +1,14 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { CartItem } from "context/types";
 import { useSession } from "next-auth/react";
-import { useGetCartItemsByCartIdQuery } from "graphQL/generated/graphql";
-import { addToCartItem, clearCart, removeCartItem, updateCartItem } from "services/cart";
+import {
+    GetCartItemsByCartIdDocument,
+    GetCartItemsByCartIdQuery,
+    GetCartItemsByCartIdQueryVariables,
+    useGetCartItemsByCartIdQuery,
+} from "graphQL/generated/graphql";
+import { handleAddItemToCart, handleClearCartItems, handleRemoveItemFromCart, updateCartItem } from "services/cart";
+import { apolloClient } from "graphQL/apolloClient";
 
 export const useCartItems = () => {
     const session = useSession();
@@ -11,36 +17,34 @@ export const useCartItems = () => {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const { data, loading, refetch } = useGetCartItemsByCartIdQuery({
-        skip: !Boolean(cartId),
+    // -------------   -------------   -------------   -------------   -------------   -------------
+
+    const { data, refetch } = useGetCartItemsByCartIdQuery({
+        skip: !Boolean(cartId), // jeśli nie ma sesji przerywa
         variables: {
             id: cartId,
         },
         onCompleted: () => {
             setIsLoading(false);
-            // apolloClient.refetchQueries()
+        },
+        onError(error) {
+            console.log("error", error);
         },
     });
 
-    // todo - po tej mutacji aktualizuje się model "Product" - tak nie powinno być
-    // todo - stwórz najpierw pusty cart itme i za pomocą connect połacz się
-    // todo - (useMemo)[https://kattya.dev/articles/2021-04-17-fixing-re-renders-when-using-context-in-react/]
-    // albo stórz pusty cart item z wykorzystaniem cart id oraz quantity a pote
-    // przypisz go do cart oraz product
-
-    // const findExistProduct = (productOptionId) => useMemo((productOptionId)=> data.cart?.cartItems.find((item) => item?.option?.id === productOptionId),[data])
+    // -------------   -------------   -------------   -------------   -------------   -------------
 
     useEffect(() => {
-        if (session.status !== "authenticated" || !data || !data.cart) {
+        console.log("data", data);
+        //! ------ ------ ------ ------ ------ jeśli sesji nie ma
+        if (!data || !data.cart || session.status !== "authenticated") {
+            // console.log("brak sesji użyj local storage");
             return;
         }
 
-        // if (!cartItems) {
-        //     return; // usówa 1 render
-        // }
+        //! ------ ------ ------ ------ ------ jeśli sesja jest
 
-        const initialCartItems = data.cart.cartItems.map((item) => {
-            console.log("ditem?.product?.id", item);
+        const cartItems = data.cart.cartItems.map((item) => {
             return {
                 itemId: item.id,
                 quantity: item?.quantity!,
@@ -52,12 +56,12 @@ export const useCartItems = () => {
             };
         });
 
-        setCartItems(initialCartItems);
+        setCartItems(cartItems);
     }, [session.status, data]);
 
-    // ---------------- handleAddItemToCart React Context
+    // -------------   -------------   -------------   -------------   -------------   -------------
 
-    const handleAddItemToCart = async (product: CartItem) => {
+    const addItemToCart = async (product: CartItem) => {
         if (!cartId || !data) {
             return;
         }
@@ -66,11 +70,10 @@ export const useCartItems = () => {
 
         const { productOptionId, quantity } = product;
 
-        // todo sprubój z use memo
         const existProduct = data.cart?.cartItems.find((item) => item?.option?.id === productOptionId);
 
         if (!existProduct) {
-            const result = await addToCartItem(productOptionId, quantity);
+            const result = await handleAddItemToCart(productOptionId, quantity);
 
             if (result.status === 200) {
                 refetch({ id: cartId });
@@ -89,11 +92,9 @@ export const useCartItems = () => {
         }
     };
 
-    /* 
-    #   
-    */
+    // -------------   -------------   -------------   -------------   -------------   -------------
 
-    const handleRemoveCartItem = async (itemId: CartItem["productOptionId"]) => {
+    const removeItemFromCart = async (itemId: CartItem["productOptionId"]) => {
         if (!cartId || !data) {
             return;
         }
@@ -105,28 +106,26 @@ export const useCartItems = () => {
             return;
         }
 
-        const result = await removeCartItem(itemId, existItem.quantity);
+        const result = await handleRemoveItemFromCart(itemId, existItem.quantity);
 
         if (result.status === 200) {
             refetch({ id: cartId });
         }
     };
 
-    /* 
-    #
-    */
+    // -------------   -------------   -------------   -------------   -------------   -------------
 
-    const handleClearCart = async () => {
+    const clearCartItems = async () => {
         if (!cartId || !data) {
             return;
         }
 
-        const result = await clearCart();
+        const result = await handleClearCartItems();
 
         if (result.status === 200) {
             refetch({ id: cartId });
         }
     };
 
-    return [cartItems, isLoading, handleAddItemToCart, handleRemoveCartItem, handleClearCart] as const;
+    return [cartItems, isLoading, addItemToCart, removeItemFromCart, clearCartItems] as const;
 };

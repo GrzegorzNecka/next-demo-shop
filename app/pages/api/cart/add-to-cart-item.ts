@@ -29,7 +29,7 @@ const addItemToCartHandler: NextApiHandler = async (req, res) => {
         res.status(400).json({ message: "productOptionId is required" });
     }
 
-    const addToCartItem = await authApolloClient.mutate<
+    const handleAddItemToCart = await authApolloClient.mutate<
         AddItemOptionToCartByCartIdMutation,
         AddItemOptionToCartByCartIdMutationVariables
     >({
@@ -41,7 +41,7 @@ const addItemToCartHandler: NextApiHandler = async (req, res) => {
         },
     });
 
-    res.status(200).json({ addToCartItem });
+    res.status(200).json({ handleAddItemToCart });
     return;
 };
 

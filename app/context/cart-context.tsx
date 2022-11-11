@@ -1,11 +1,11 @@
-import { createContext } from "react";
-import { useContext, useRef } from "react";
-import { CartState } from "./types";
+import { createContext, useCallback, useContext, useRef } from "react";
+import type { CartState } from "./types";
 import { useCartItems } from "context/hooks/use-cart-items";
 
 export const CartStateContext = createContext<CartState | null>(null);
 
-// ----------------- Provider
+// -------------   -------------   -------------   -------------   -------------   ------------- Provider
+
 export const CartStateContextProvider = ({ children }: { children: React.ReactNode }) => {
     //----------render counter
     const renderCounter = useRef(0);
@@ -13,27 +13,23 @@ export const CartStateContextProvider = ({ children }: { children: React.ReactNo
     console.log(`Renders cartContext: ${renderCounter.current}`);
     //----------
 
-    const [cartItems, isLoading, handleAddItemToCart, handleRemoveCartItem, handleClearCart] = useCartItems();
+    // zwracając każdą metodęużyj useCallback tylko czy to ma sens
+    const [cartItems, isLoading, addItemToCart, removeItemFromCart, clearCartItems] = useCartItems();
 
     const initialCartState: CartState = {
+        // jeśli sesja to cartItems
         items: cartItems || [],
         total: 0,
         isLoading,
-        addItemToCart: (item) => {
-            handleAddItemToCart(item);
-        },
-        removeItemFromCart: (itemId) => {
-            handleRemoveCartItem(itemId);
-        },
-        clearCartItems: () => {
-            handleClearCart();
-        },
+        addItemToCart,
+        removeItemFromCart,
+        clearCartItems,
     };
 
     return <CartStateContext.Provider value={initialCartState}>{children}</CartStateContext.Provider>;
 };
 
-// ----------------- Client
+// -------------   -------------   -------------   -------------   -------------   ------------- Client
 
 export const useCartState = () => {
     const cartState = useContext(CartStateContext);
