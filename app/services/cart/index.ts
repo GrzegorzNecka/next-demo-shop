@@ -8,7 +8,7 @@ const handleAddItemToCart = async (productOptionId: string, quantity: number) =>
         }),
     });
 
-const updateCartItem = async (itemId: string, updatedQuantity: number) =>
+const handleUpdateCartItem = async (itemId: string, updatedQuantity: number) =>
     await fetch("/api/cart/update-cart-item", {
         method: "POST",
         headers: { "Content-Type": "application/json;" },
@@ -34,4 +34,4 @@ const handleClearCartItems = async () =>
         headers: { "Content-Type": "application/json;" },
     });
 
-export { handleAddItemToCart, updateCartItem, handleRemoveItemFromCart, handleClearCartItems };
+export { handleAddItemToCart, handleUpdateCartItem as updateCartItem, handleRemoveItemFromCart, handleClearCartItems };

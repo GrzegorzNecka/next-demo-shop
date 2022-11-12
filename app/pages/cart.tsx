@@ -7,7 +7,7 @@ import { useCartState } from "context/cart-context";
 import { CartItem } from "context/types";
 import { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
-import { CartOptions } from "components/Cart/cart-product-options";
+import { CartOptions } from "components/cart/cart-product-options";
 // import Stripe from "stripe";
 
 interface CartContentProps {

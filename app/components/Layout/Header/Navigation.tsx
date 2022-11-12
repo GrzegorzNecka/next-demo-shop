@@ -1,5 +1,5 @@
 import { ActiveLink } from "components/active-link";
-import CartBar from "components/Cart/cart-bar";
+import CartBar from "components/cart/cart-bar";
 import React from "react";
 import { navigationList } from "utils/navigation-list";
 import LoginButton from "./login-button";

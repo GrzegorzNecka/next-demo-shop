@@ -1,28 +1,21 @@
-import { createContext, useCallback, useContext, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type { CartItem, CartState } from "./types";
-import { useCartItemsFromAuthSession } from "context/hooks/use-cart-items";
+import { useCartItemsWithGraphQl } from "context/hooks/use-cart-items-logged-in";
+import { useCartItemsWithLocalStorage } from "context/hooks/use-cart-items-logged-out";
+import { useSession } from "next-auth/react";
+import { useCartItems } from "./hooks/use-cart-items";
 
 export const CartStateContext = createContext<CartState | null>(null);
 
-// -------------   -------------   -------------   -------------   -------------   ------------- Provider
+// -------------   -------------   -------------   -------------   -------------   ------------- //* Provider
 
 export const CartStateContextProvider = ({ children }: { children: React.ReactNode }) => {
-    //----------render counter
-    const renderCounter = useRef(0);
-    renderCounter.current = renderCounter.current + 1;
-    console.log(`Renders cartContext: ${renderCounter.current}`);
-    //----------
+    // const [cartItems, setCartItems] = useState<CartItem[]>([]);
+    // const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const [cartItems, setCartItems] = useState<CartItem[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    const [addItemToCart, removeItemFromCart, clearCartItems] = useCartItemsFromAuthSession({
-        setCartItems,
-        setIsLoading,
-    });
+    const { cartItems, isLoading, addItemToCart, removeItemFromCart, clearCartItems } = useCartItems();
 
     const initialCartState: CartState = {
-        // jeśli sesja to cartItems
         items: cartItems || [],
         total: 0,
         isLoading,
@@ -34,7 +27,7 @@ export const CartStateContextProvider = ({ children }: { children: React.ReactNo
     return <CartStateContext.Provider value={initialCartState}>{children}</CartStateContext.Provider>;
 };
 
-// -------------   -------------   -------------   -------------   -------------   ------------- Client
+// -------------   -------------   -------------   -------------   -------------   ------------- //* Client
 
 export const useCartState = () => {
     const cartState = useContext(CartStateContext);
