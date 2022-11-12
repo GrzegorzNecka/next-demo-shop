@@ -3,7 +3,7 @@ import { InferGetStaticPathsType } from "types/types";
 import { apolloClient } from "graphQL/apolloClient";
 import { GetProductsListDocument, GetProductsListQuery } from "graphQL/generated/graphql";
 import { Main } from "components/main";
-import ProductListUI from "components/Products/products-list-ui";
+import ProductListUI from "components/products/products-list-ui";
 
 export type ProductListIdPageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
