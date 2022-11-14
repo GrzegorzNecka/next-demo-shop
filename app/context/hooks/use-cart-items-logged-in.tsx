@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo, useCallback, Dispatch, SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { useEffect } from "react";
 import { CartItem } from "context/types";
 import { useSession } from "next-auth/react";
 import { GetCartItemsByCartIdQuery, useGetCartItemsByCartIdQuery } from "graphQL/generated/graphql";

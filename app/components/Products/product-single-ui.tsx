@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { NextSeo } from "next-seo";
 import type { ProductDetailsProps } from "./types";
-import ProductOption from "components/Products/product-options";
+import ProductOption from "components/products/product-options";
 import { useCartState } from "context/cart-context";
 import Markdown from "components/markdown";
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
