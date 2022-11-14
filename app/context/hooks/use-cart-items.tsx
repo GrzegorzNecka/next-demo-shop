@@ -7,6 +7,7 @@ import { useCartItemsWithLocalStorage } from "./use-cart-items-logged-out";
 export const useCartItems = () => {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { status } = useSession();
 
     const loggedInState = useCartItemsWithGraphQl({
         setCartItems,
@@ -14,11 +15,10 @@ export const useCartItems = () => {
     });
 
     const loggedOutState = useCartItemsWithLocalStorage({
+        status,
         setCartItems,
         setIsLoading,
     });
-
-    const { status } = useSession();
 
     const methods = status === "authenticated" ? loggedInState : loggedOutState;
 
