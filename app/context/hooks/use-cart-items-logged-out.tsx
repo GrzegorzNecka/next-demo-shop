@@ -1,5 +1,5 @@
 import type { CartItem } from "context/types";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { useEffect, useId } from "react";
 
 // -------------   -------------   -------------   -------------   -------------   -------------
@@ -35,7 +35,7 @@ type useCartItemsProps = {
 export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoading }: useCartItemsProps) => {
     //-
 
-    const [token, setToken] = useState<string | null>(null);
+    const token = useRef<string | null>(null);
 
     useEffect(() => {
         if (status !== "unauthenticated") {
@@ -49,25 +49,23 @@ export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoadin
             setTokenInStorage(tokenFromStorage);
         }
 
-        setToken(tokenFromStorage);
+        token.current = tokenFromStorage;
     }, [status]);
 
     // -------------   -------------   -------------   -------------   -------------   -------------
 
     useEffect(() => {
-        if (status !== "unauthenticated" || !token) {
+        if (status !== "unauthenticated" || !token.current) {
             return;
         }
 
-        //pobierz cartItem
-
         const getCartItmes = async () => {
-            const cartItems = await getCartItems(token);
-            // setCartItems(cartItems);
+            const { cartItems } = await getCartItems(token.current);
+            setCartItems(cartItems);
         };
 
         getCartItmes();
-    }, [token, status]);
+    }, [token.current, status]);
 
     // -------------   -------------   -------------   -------------   -------------   -------------
 
@@ -88,15 +86,23 @@ export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoadin
 
 // -------------   -------------   -------------   -------------   -------------   -------------
 
-const getCartItems = async (token: string) => {
+const getCartItems = async (token: string | null) => {
+    if (!token) {
+        return;
+    }
+
     const data = await fetch("/api/cart/logged-out/cart-items", {
+        method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Cart-Session-Token": JSON.stringify({ token: token }),
         },
+        body: JSON.stringify({
+            token,
+        }),
     });
 
     const res = await data.json();
+    console.log("🚀 ~ file: use-cart-items-logged-out.tsx ~ line 105 ~ getCartItems ~  res", res);
     return res;
 };
 
