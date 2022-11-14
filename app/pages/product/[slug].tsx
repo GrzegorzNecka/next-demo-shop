@@ -1,5 +1,5 @@
 import { Main } from "components/main";
-import { ProductSingleUI } from "components/Products/product-single-ui";
+import { ProductSingleUI } from "components/products/product-single-ui";
 import { apolloClient } from "graphQL/apolloClient";
 import {
     GetProductBySlugDocument,

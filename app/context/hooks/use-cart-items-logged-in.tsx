@@ -1,4 +1,5 @@
-import { useState, useEffect, useMemo, useCallback, Dispatch, SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { useEffect } from "react";
 import { CartItem } from "context/types";
 import { useSession } from "next-auth/react";
 import { GetCartItemsByCartIdQuery, useGetCartItemsByCartIdQuery } from "graphQL/generated/graphql";
@@ -34,7 +35,7 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
         if (session.status !== "authenticated" || !data || !data.cart) {
             return;
         }
-
+        console.log("🚀 ~ file: use-cart-items-logged-in.tsx ~ line 31 ~ useCartItemsWithGraphQl ~ data", data);
         const cartItems = data.cart.cartItems.map((item) => {
             return {
                 itemId: item.id,
@@ -46,6 +47,7 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
                 productOptionId: item?.option?.id!,
             };
         });
+        console.log("🚀 ~ file: use-cart-items-logged-in.tsx ~ line 50 ~ cartItems ~ cartItems", cartItems);
 
         setCartItems(cartItems);
 
@@ -58,6 +60,8 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
         if (session.status === "unauthenticated" || !cartId || !data) {
             return;
         }
+
+        console.log("🚀 ~ file: use-cart-items-logged-in.tsx ~ line 60 ~ addItemToCart ~ product", product);
 
         setIsLoading(true);
 
