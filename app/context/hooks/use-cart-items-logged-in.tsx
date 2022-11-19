@@ -35,7 +35,7 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
         if (session.status !== "authenticated" || !data || !data.cart) {
             return;
         }
-
+        console.log("🚀 ~ file: use-cart-items-logged-in.tsx ~ line 31 ~ useCartItemsWithGraphQl ~ data", data);
         const cartItems = data.cart.cartItems.map((item) => {
             return {
                 itemId: item.id,
@@ -47,6 +47,7 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
                 productOptionId: item?.option?.id!,
             };
         });
+        console.log("🚀 ~ file: use-cart-items-logged-in.tsx ~ line 50 ~ cartItems ~ cartItems", cartItems);
 
         setCartItems(cartItems);
 
@@ -59,6 +60,8 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
         if (session.status === "unauthenticated" || !cartId || !data) {
             return;
         }
+
+        console.log("🚀 ~ file: use-cart-items-logged-in.tsx ~ line 60 ~ addItemToCart ~ product", product);
 
         setIsLoading(true);
 
