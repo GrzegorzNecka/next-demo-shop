@@ -36,7 +36,6 @@ export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoadin
     //-
 
     const userId = useRef<string | null>(null);
-    const cartItems = useRef<[] | null>([]);
 
     useEffect(() => {
         if (status !== "unauthenticated") {
@@ -65,11 +64,7 @@ export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoadin
                 return;
             }
 
-            const { cartItems } = await getCartItems();
-
-            cartItems.current = cartItems;
-
-            setCartItems(cartItems.current);
+            await getCartItems();
         };
 
         initialCartItems();
@@ -92,18 +87,23 @@ export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoadin
         if (res.status !== 200) {
             return;
         }
-        return res.json();
+
+        const { cartItems } = await res.json();
+
+        setCartItems(cartItems);
     };
 
     // -------------   -------------   -------------   -------------   -------------   -------------
 
     const addItemToCart = async (product: CartItem) => {
+        setIsLoading(true);
+
         const res = await fetch("/api/cart/logged-out/handle-cart-items", {
             method: "POST",
             headers: { "Content-Type": "application/json;" },
             body: JSON.stringify({
                 product,
-                userId,
+                userId: userId.current,
                 action: "add",
             }),
         });
@@ -111,50 +111,39 @@ export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoadin
         if (res.status !== 200) {
             return;
         }
-        console.log(res.json());
+
+        const { cartItems } = await res.json();
+
+        setCartItems(cartItems);
+        setIsLoading(false);
     };
+
+    // -------------   -------------   -------------   -------------   -------------   -------------
 
     const removeItemFromCart = async (itemId: CartItem["productOptionId"]) => {
         console.log("add item kiedy nie ma sesji");
     };
 
+    // -------------   -------------   -------------   -------------   -------------   -------------
+
     const clearCartItems = async () => {
-        console.log("add item kiedy nie ma sesji");
+        const res = await fetch("/api/cart/logged-out/handle-cart-items", {
+            method: "POST",
+            headers: { "Content-Type": "application/json;" },
+            body: JSON.stringify({
+                userId: userId.current,
+                action: "clear",
+            }),
+        });
+
+        if (res.status !== 200) {
+            return;
+        }
+
+        const { cartItems } = await res.json();
+
+        setCartItems(cartItems);
     };
 
     return { addItemToCart, removeItemFromCart, clearCartItems } as const;
 };
-
-// -------------   -------------   -------------   -------------   -------------   -------------
-
-const getCartItems = async (token: string | null) => {
-    if (!token) {
-        return;
-    }
-
-    const data = await fetch("/api/cart/logged-out/cart-items", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            token,
-        }),
-    });
-
-    const res = await data.json();
-    console.log("🚀 ~ file: use-cart-items-logged-out.tsx ~ line 105 ~ getCartItems ~  res", res);
-    return res;
-};
-
-// const updateCartItems = async (token: string, cartItems: CartItem[]) => {
-//     const data = await fetch("/api/cartSessionState", {
-//         headers: {
-//             "Content-Type": "application/json",
-//             "Cart-Session-Payload": JSON.stringify({ token, cartItems }),
-//         },
-//     });
-
-//     const res = await data.json();
-//     return res;
-// };
