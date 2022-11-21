@@ -50,7 +50,6 @@ const handler: NextApiHandler = async (req, res) => {
             res.status(200).json({ cartItems: addToCartItems(userId, product) });
             return;
         case "remove":
-            // removeCartItems(userId, itemId);
             res.status(200).json({ cartItems: removeCartItems(userId, itemId) });
             return;
         case "clear":
