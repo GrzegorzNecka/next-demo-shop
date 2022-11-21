@@ -75,7 +75,7 @@ export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoadin
     // -------------   -------------   -------------   -------------   -------------   -------------
 
     const getCartItems = async () => {
-        const res = await fetch("/api/cart/logged-out/handle-cart-items", {
+        const res = await fetch("/api/cart/logged-out/crud-cart-items", {
             method: "POST",
             headers: { "Content-Type": "application/json;" },
             body: JSON.stringify({
@@ -98,7 +98,7 @@ export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoadin
     const addItemToCart = async (product: CartItem) => {
         setIsLoading(true);
 
-        const res = await fetch("/api/cart/logged-out/handle-cart-items", {
+        const res = await fetch("/api/cart/logged-out/crud-cart-items", {
             method: "POST",
             headers: { "Content-Type": "application/json;" },
             body: JSON.stringify({
@@ -121,13 +121,28 @@ export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoadin
     // -------------   -------------   -------------   -------------   -------------   -------------
 
     const removeItemFromCart = async (itemId: CartItem["productOptionId"]) => {
-        console.log("add item kiedy nie ma sesji");
+        // setIsLoading(true);
+        const res = await fetch("/api/cart/logged-out/crud-cart-items", {
+            method: "POST",
+            headers: { "Content-Type": "application/json;" },
+            body: JSON.stringify({
+                itemId,
+                userId: userId.current,
+                action: "remove",
+            }),
+        });
+        if (res.status !== 200) {
+            return;
+        }
+        const { cartItems } = await res.json();
+        setCartItems(cartItems);
+        setIsLoading(false);
     };
 
     // -------------   -------------   -------------   -------------   -------------   -------------
 
     const clearCartItems = async () => {
-        const res = await fetch("/api/cart/logged-out/handle-cart-items", {
+        const res = await fetch("/api/cart/logged-out/crud-cart-items", {
             method: "POST",
             headers: { "Content-Type": "application/json;" },
             body: JSON.stringify({
