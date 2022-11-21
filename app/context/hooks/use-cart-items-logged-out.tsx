@@ -1,27 +1,27 @@
 import type { CartItem } from "context/types";
-import { Dispatch, SetStateAction, useState } from "react";
-import { useEffect, useId } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { useEffect } from "react";
 
 // -------------   -------------   -------------   -------------   -------------   -------------
 
-function getTokenFromStorage() {
-    let token = localStorage.getItem("CART_ITEMS_TOKEN");
+function getUserIdFromStorage() {
+    let userId = localStorage.getItem("LOGGEDOUT_USER_ID");
 
-    if (!token) {
+    if (!userId) {
         return;
     }
 
     try {
-        token = JSON.parse(token);
-        return token;
+        userId = JSON.parse(userId);
+        return userId;
     } catch (error) {
         console.error(error);
         return;
     }
 }
 
-function setTokenInStorage(token: string) {
-    localStorage.setItem("CART_ITEMS_TOKEN", JSON.stringify(token));
+function setUserIdInStorage(userId: string) {
+    localStorage.setItem("LOGGEDOUT_USER_ID", JSON.stringify(userId));
 }
 
 // -------------   -------------   -------------   -------------   -------------   -------------
@@ -35,44 +35,83 @@ type useCartItemsProps = {
 export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoading }: useCartItemsProps) => {
     //-
 
-    const [token, setToken] = useState<string | null>(null);
+    const userId = useRef<string | null>(null);
+    const cartItems = useRef<[] | null>([]);
 
     useEffect(() => {
         if (status !== "unauthenticated") {
             return;
         }
 
-        let tokenFromStorage = getTokenFromStorage();
+        let userIdFromStorage = getUserIdFromStorage();
 
-        if (!tokenFromStorage) {
-            tokenFromStorage = `${new Date().getTime()}${Math.random().toString(16).slice(2)}`;
-            setTokenInStorage(tokenFromStorage);
+        if (!userIdFromStorage) {
+            userIdFromStorage = `-${new Date().getTime()}${Math.random().toString(16).slice(2)}`;
+            setUserIdInStorage(userIdFromStorage);
         }
 
-        setToken(tokenFromStorage);
+        userId.current = userIdFromStorage;
     }, [status]);
 
     // -------------   -------------   -------------   -------------   -------------   -------------
 
     useEffect(() => {
-        if (status !== "unauthenticated" || !token) {
+        if (status !== "unauthenticated" || !userId.current) {
             return;
         }
 
-        //pobierz cartItem
+        const initialCartItems = async () => {
+            if (!userId.current) {
+                return;
+            }
 
-        const getCartItmes = async () => {
-            const cartItems = await getCartItems(token);
-            // setCartItems(cartItems);
+            const { cartItems } = await getCartItems();
+
+            cartItems.current = cartItems;
+
+            setCartItems(cartItems.current);
         };
 
-        getCartItmes();
-    }, [token, status]);
+        initialCartItems();
+
+        //
+    }, [userId.current, status]);
+
+    // -------------   -------------   -------------   -------------   -------------   -------------
+
+    const getCartItems = async () => {
+        const res = await fetch("/api/cart/logged-out/handle-cart-items", {
+            method: "POST",
+            headers: { "Content-Type": "application/json;" },
+            body: JSON.stringify({
+                userId: userId.current,
+                action: "get",
+            }),
+        });
+
+        if (res.status !== 200) {
+            return;
+        }
+        return res.json();
+    };
 
     // -------------   -------------   -------------   -------------   -------------   -------------
 
     const addItemToCart = async (product: CartItem) => {
-        console.log("add item kiedy nie ma sesji", product);
+        const res = await fetch("/api/cart/logged-out/handle-cart-items", {
+            method: "POST",
+            headers: { "Content-Type": "application/json;" },
+            body: JSON.stringify({
+                product,
+                userId,
+                action: "add",
+            }),
+        });
+
+        if (res.status !== 200) {
+            return;
+        }
+        console.log(res.json());
     };
 
     const removeItemFromCart = async (itemId: CartItem["productOptionId"]) => {
@@ -88,15 +127,23 @@ export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoadin
 
 // -------------   -------------   -------------   -------------   -------------   -------------
 
-const getCartItems = async (token: string) => {
+const getCartItems = async (token: string | null) => {
+    if (!token) {
+        return;
+    }
+
     const data = await fetch("/api/cart/logged-out/cart-items", {
+        method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Cart-Session-Token": JSON.stringify({ token: token }),
         },
+        body: JSON.stringify({
+            token,
+        }),
     });
 
     const res = await data.json();
+    console.log("🚀 ~ file: use-cart-items-logged-out.tsx ~ line 105 ~ getCartItems ~  res", res);
     return res;
 };
 
