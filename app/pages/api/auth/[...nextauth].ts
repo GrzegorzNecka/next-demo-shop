@@ -47,6 +47,30 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
+        async signIn({ user, account, profile, email, credentials }) {
+            console.log("🚀signIn ", user, account, profile, email, credentials);
+
+            const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/cart/logged-out/crud-cart-items`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json;" },
+                body: JSON.stringify({
+                    userId: "-166876594586485471ee0eeffd",
+                    action: "get",
+                }),
+            });
+
+            if (res.status !== 200) {
+                return true;
+            }
+
+            const { cartItems } = await res.json();
+
+            if (cartItems.length === 0) {
+                return true;
+            }
+
+            return true;
+        },
         async session({ session, user, token }) {
             if (typeof token.sub == "string") {
                 const cart = await authApolloClient.query<

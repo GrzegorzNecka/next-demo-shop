@@ -1,27 +1,45 @@
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { unstable_getServerSession } from "next-auth/next";
-import type { NextApiHandler, NextApiResponse } from "next/types";
-import { CartItem } from "context/types";
+import type { NextApiHandler } from "next/types";
+import type { CartItem } from "context/types";
 
 type Cart = [
     {
-        userId: string;
-        cartItems: CartItem[];
-    }
+        readonly userId: string;
+        readonly cartItems: CartItem[];
+    }?
 ];
 
 const CART: Cart = [
     {
-        userId: "AAclal3y48wqvub0bt20vq1ojdh",
+        userId: "-166876594586485471ee0eeffd",
         cartItems: [
             {
-                itemId: "cl9wt0fc9229u0ct7znu8zani",
-                quantity: 1,
+                itemId: "-cff1aaecb3798",
+                productOptionId: "cl9lewa6nggtc09ueqfsjarb9",
                 price: 1999,
                 title: "Unisex Long Sleeve Tee",
+                quantity: 2,
                 imgUrl: "https://media.graphassets.com/TSPnQGujTFC8nwtYMXmz",
                 slug: "unisex-long-sleeve-tee",
-                productOptionId: "cl9lewa6nggtc09ueqfsjarb9",
+            },
+            {
+                itemId: "-b2eeca36b3764",
+                productOptionId: "cl9lex90xg1s00auss1yhx1lz",
+                price: 1999,
+                title: "Unisex Long Sleeve Tee",
+                quantity: 2,
+                imgUrl: "https://media.graphassets.com/TSPnQGujTFC8nwtYMXmz",
+                slug: "unisex-long-sleeve-tee",
+            },
+            {
+                itemId: "-30ec1e9be681c",
+                productOptionId: "cl9ley8g2g26f0ausiuilrshf",
+                price: 1999,
+                title: "Unisex Long Sleeve Tee",
+                quantity: 2,
+                imgUrl: "https://media.graphassets.com/TSPnQGujTFC8nwtYMXmz",
+                slug: "unisex-long-sleeve-tee",
             },
         ],
     },
@@ -29,27 +47,49 @@ const CART: Cart = [
 
 // -------------   -------------   -------------   -------------   -------------   -------------
 
-const handler: NextApiHandler = async (req, res) => {
-    const session = await unstable_getServerSession(req, res, authOptions);
+interface RequestApi {
+    readonly action: "get" | "add" | "remove" | "clear";
+    readonly product?: CartItem;
+    readonly userId: string;
+    readonly itemId?: string;
+}
 
-    if (session) {
-        return;
-    }
+interface Response {
+    readonly message?: string;
+    readonly cartItems?: CartItem[];
+}
+
+const handler: NextApiHandler<Response> = async (req, res) => {
+    // const session = await unstable_getServerSession(req, res, authOptions);
+
+    // if (session) {
+    //     return;
+    // }
 
     if (req.method !== "POST") {
         res.status(400).json({ message: "bad request method" });
     }
 
-    const { action, product, userId, itemId } = JSON.parse(req.body);
+    const { action, product, userId, itemId }: RequestApi = JSON.parse(req.body);
 
     switch (action) {
         case "get":
             res.status(200).json({ cartItems: getCartItems(userId) });
             return;
         case "add":
+            if (!product) {
+                res.status(400).json({ message: "no product in reqeust body" });
+                return;
+            }
+
             res.status(200).json({ cartItems: addToCartItems(userId, product) });
             return;
         case "remove":
+            if (!itemId) {
+                res.status(400).json({ message: "no itemId in reqeust body" });
+                return;
+            }
+
             res.status(200).json({ cartItems: removeCartItems(userId, itemId) });
             return;
         case "clear":
@@ -63,7 +103,7 @@ const handler: NextApiHandler = async (req, res) => {
 
 // -------------   -------------   -------------   -------------   -------------   -------------
 
-const findCartItems = (userId: string) => CART.find((user) => user.userId === userId);
+const findCartItems = (userId: string) => CART.find((user) => user?.userId === userId);
 
 // -------------   -------------   -------------   -------------   -------------   -------------
 
@@ -90,12 +130,14 @@ const addToCartItems = (userId: string, product: CartItem | null) => {
     }
 
     const isUserExist = findCartItems(userId);
+    // console.log("🚀 ~ file: crud-cart-items.ts ~ line 100 ~ addToCartItems ~ isUserExist", isUserExist);
 
     if (!isUserExist) {
         return [];
     }
 
     const { cartItems } = isUserExist;
+    // console.log("🚀 ~ file: crud-cart-items.ts ~ line 107 ~ addToCartItems ~ cartItems", cartItems);
 
     let existItem = cartItems.find((existItem) => {
         if (existItem.productOptionId === product.productOptionId) {
@@ -133,7 +175,6 @@ const removeCartItems = (userId: string, itemId: string) => {
     }
 
     const { cartItems } = isUserExist;
-    console.log("🚀 ~  cartItems ", cartItems);
 
     let index;
     let existItem = cartItems.find((existItem, i) => {
@@ -161,13 +202,13 @@ const removeCartItems = (userId: string, itemId: string) => {
 // -------------   -------------   -------------   -------------   -------------   -------------
 
 const clearCartItems = (userId: string) => {
-    const isUserExist = CART.find((user) => user.userId === userId);
+    const isUserExist = CART.find((user) => user?.userId === userId);
 
     if (!isUserExist) {
         return [];
     }
 
-    isUserExist.cartItems = [];
+    isUserExist.cartItems.splice(0, isUserExist.cartItems.length);
 
     const cart = findCartItems(userId);
 

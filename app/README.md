@@ -28,7 +28,7 @@
 -   better graphQl package -> [urql](https://formidable.com/open-source/urql/)
 -   graphql-code-generator -> [link](https://www.the-guild.dev/graphql/codegen)
 
-## git
+## git - prefixy
 
 feat(feature): ...
 fix(bug fix): ...
@@ -38,9 +38,23 @@ refactor: ...
 test(when adding missing tests): ...
 
 [prefixy](https://piecioshka.pl/blog/2019/03/23/husky-commitlint-git-changelog.html)
+
+## git flow
+
+main – produkcyjna wersja aplikacji. Do tego brancha będziemy mergować tylko te zmiany, które już zostały wydane na produkcję oraz krytyczne hotfixy.
+hotfix – jedyna gałąź bazująca ma masterze. To właśnie ona służy do szybkiego naprawiania krytycznych błędów występujących na produkcji.
+release – na tym branchu przygotowywany jest release kolejnej wersji aplikacji. To właśnie wersja aplikacji z tego brancha trafia na produkcję.
+develop – gałąź ta jest „nieoficjalnym” masterem podczas pracy nad releasem. Z tego brancha programiści tworzą swoje gałęzie robocze i do niego mergują (rebase-ują) swoją pracę. Gdy praca nad wszystkimi funkcjonalnościami w danym releasie jest gotowa, branch ten jest mergowany do gałęzi „release”.
+gałęzie robocze (features) – na tych gałęziach pracujemy na co dzień i tworzymy nowe funkcjonalności.
+
 [git-folw](https://frontstack.pl/praca-z-git-git-flow/)
+[git-tag](https://stormit.pl/git-tag/#git-tag-tagowanie-w-git-add-push-checkout-wprowadzenie)
 
 ## pomysł na implementacje koszyka
+
+### token w cookies
+
+[jak ogarnąć cookies](https://ohmydev.pl/post/zapewne-robisz-to-zle-czyli-token-jwt-na-frontendzie-50e7)
 
 pytanie czy da sięto zapisywać w local storage czy może należ yto zrobić w cookies
 
