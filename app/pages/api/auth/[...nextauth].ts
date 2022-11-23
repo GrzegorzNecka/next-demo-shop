@@ -48,13 +48,17 @@ export const authOptions: NextAuthOptions = {
     ],
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
-            console.log("🚀signIn ", user, account, profile, email, credentials);
+            // console.log("🚀 ~ file: [...nextauth].ts ~ line 51 ~ signIn ~ credentials", credentials);
+            // console.log("🚀 ~ file: [...nextauth].ts ~ line 51 ~ signIn ~ email", email);
+            // console.log("🚀 ~ file: [...nextauth].ts ~ line 51 ~ signIn ~ profile", profile);
+            // console.log("🚀 ~ file: [...nextauth].ts ~ line 51 ~ signIn ~ account", account);
+            // console.log("🚀 ~ file: [...nextauth].ts ~ line 51 ~ signIn ~  user", user);
 
             const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/cart/logged-out/crud-cart-items`, {
                 method: "POST",
+                credentials: "same-origin",
                 headers: { "Content-Type": "application/json;" },
                 body: JSON.stringify({
-                    userId: "-166876594586485471ee0eeffd",
                     action: "get",
                 }),
             });
@@ -63,11 +67,12 @@ export const authOptions: NextAuthOptions = {
                 return true;
             }
 
-            const { cartItems } = await res.json();
+            const cart = await res.json();
+            console.log("🚀 ~ file: [...nextauth].ts ~ line 66 ~ signIn ~ cartItems", cart);
 
-            if (cartItems.length === 0) {
-                return true;
-            }
+            // if (cartItems.length === 0) {
+            //     return true;
+            // }
 
             return true;
         },

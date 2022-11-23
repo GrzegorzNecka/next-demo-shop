@@ -52,10 +52,13 @@ gałęzie robocze (features) – na tych gałęziach pracujemy na co dzień i tw
 
 ## pomysł na implementacje koszyka
 
+da się pobrać ciasteczko podczas logowania przez next auth ? przy wylogowanym użytkowniku obsługuję koszyk przez api route .. token z id użytkownika tworzę i zapisuję w cookies .... kiedy użytkownik jest zalogowany to pobieram dane z serwera , jak w kursie ..
+chciałem obsłużyć przeniesienie koszyka z niezalogowanego stanu na zalogowany w taki sposób, że przy logowaniu, w pliku [...nextauth], w callbacku signIn() pobieram koszyk, wysyłam na serwer i usówma w api route
+
 ### token w cookies
 
 [jak ogarnąć cookies](https://ohmydev.pl/post/zapewne-robisz-to-zle-czyli-token-jwt-na-frontendzie-50e7)
-
+[next - cookies](https://maxschmitt.me/posts/next-js-cookies/)
 pytanie czy da sięto zapisywać w local storage czy może należ yto zrobić w cookies
 
 ### klient nr 1 - użytkownik niezalogowany

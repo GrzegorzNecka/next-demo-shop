@@ -3,16 +3,24 @@ import { unstable_getServerSession } from "next-auth/next";
 import type { NextApiHandler } from "next/types";
 import type { CartItem } from "context/types";
 
+import { CookieValueTypes, getCookie, hasCookie, setCookie } from "cookies-next";
+
 type Cart = [
     {
-        readonly userId: string;
+        readonly userId: CookieValueTypes;
         readonly cartItems: CartItem[];
     }?
 ];
 
+//-16692083138492bfb8c5fbf9f5
+
+//-1669213217236b1fd7c5b267d1
+//-166921336388305f8dac1a1435
+//-1669213566667eedceade9c4f4
+
 const CART: Cart = [
     {
-        userId: "-166876594586485471ee0eeffd",
+        userId: "-16692083138492bfb8c5fbf9f5",
         cartItems: [
             {
                 itemId: "-cff1aaecb3798",
@@ -50,7 +58,6 @@ const CART: Cart = [
 interface RequestApi {
     readonly action: "get" | "add" | "remove" | "clear";
     readonly product?: CartItem;
-    readonly userId: string;
     readonly itemId?: string;
 }
 
@@ -60,17 +67,30 @@ interface Response {
 }
 
 const handler: NextApiHandler<Response> = async (req, res) => {
-    // const session = await unstable_getServerSession(req, res, authOptions);
-
-    // if (session) {
-    //     return;
-    // }
-
     if (req.method !== "POST") {
         res.status(400).json({ message: "bad request method" });
     }
 
-    const { action, product, userId, itemId }: RequestApi = JSON.parse(req.body);
+    const isCookie = hasCookie("local-cart-item-user", { req, res });
+
+    if (!isCookie) {
+        setCookie("local-cart-item-user", `-${new Date().getTime()}${Math.random().toString(16).slice(2)}`, {
+            httpOnly: true,
+            // secure: true,
+            sameSite: "lax",
+            req,
+            res,
+            maxAge: 60 * 60 * 24,
+        });
+    }
+
+    const userId = getCookie("local-cart-item-user", { req, res });
+
+    if (!userId) {
+        res.status(400).json({ message: "no cookies: local-cart-item-user" });
+    }
+
+    const { action, product, itemId }: RequestApi = JSON.parse(req.body);
 
     switch (action) {
         case "get":
@@ -103,12 +123,16 @@ const handler: NextApiHandler<Response> = async (req, res) => {
 
 // -------------   -------------   -------------   -------------   -------------   -------------
 
-const findCartItems = (userId: string) => CART.find((user) => user?.userId === userId);
+const findCartItems = (userId: CookieValueTypes) => CART.find((user) => user?.userId === userId);
 
 // -------------   -------------   -------------   -------------   -------------   -------------
 
-const getCartItems = (userId: string) => {
+const getCartItems = (userId: CookieValueTypes) => {
     const isUserExist = findCartItems(userId);
+
+    console.log("🚀 ~ isUserExist", isUserExist);
+
+    console.log("userId", userId);
 
     if (!isUserExist) {
         CART.push({
@@ -119,12 +143,14 @@ const getCartItems = (userId: string) => {
 
     const cart = findCartItems(userId);
 
+    console.log("🚀 getCartItems ~ cart", cart?.cartItems);
+
     return cart?.cartItems;
 };
 
 // -------------   -------------   -------------   -------------   -------------   -------------
 
-const addToCartItems = (userId: string, product: CartItem | null) => {
+const addToCartItems = (userId: CookieValueTypes, product: CartItem | null) => {
     if (!product) {
         return [];
     }
@@ -163,7 +189,7 @@ const addToCartItems = (userId: string, product: CartItem | null) => {
 
 // -------------   -------------   -------------   -------------   -------------   -------------
 
-const removeCartItems = (userId: string, itemId: string) => {
+const removeCartItems = (userId: CookieValueTypes, itemId: string) => {
     if (!itemId) {
         return [];
     }
@@ -201,7 +227,7 @@ const removeCartItems = (userId: string, itemId: string) => {
 
 // -------------   -------------   -------------   -------------   -------------   -------------
 
-const clearCartItems = (userId: string) => {
+const clearCartItems = (userId: CookieValueTypes) => {
     const isUserExist = CART.find((user) => user?.userId === userId);
 
     if (!isUserExist) {

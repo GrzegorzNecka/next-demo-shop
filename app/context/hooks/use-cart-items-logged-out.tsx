@@ -4,28 +4,6 @@ import { useEffect } from "react";
 
 // -------------   -------------   -------------   -------------   -------------   -------------
 
-function getUserIdFromStorage() {
-    let userId = localStorage.getItem("LOGGEDOUT_USER_ID");
-
-    if (!userId) {
-        return;
-    }
-
-    try {
-        userId = JSON.parse(userId);
-        return userId;
-    } catch (error) {
-        console.error(error);
-        return;
-    }
-}
-
-function setUserIdInStorage(userId: string) {
-    localStorage.setItem("LOGGEDOUT_USER_ID", JSON.stringify(userId));
-}
-
-// -------------   -------------   -------------   -------------   -------------   -------------
-
 type useCartItemsProps = {
     setCartItems: Dispatch<SetStateAction<CartItem[]>>;
     setIsLoading: Dispatch<SetStateAction<boolean>>;
@@ -33,53 +11,28 @@ type useCartItemsProps = {
 };
 
 export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoading }: useCartItemsProps) => {
-    //-
-
-    const userId = useRef<string | null>(null);
+    // -------------   -------------   -------------   -------------   -------------   -------------
 
     useEffect(() => {
         if (status !== "unauthenticated") {
             return;
         }
 
-        let userIdFromStorage = getUserIdFromStorage();
-
-        if (!userIdFromStorage) {
-            userIdFromStorage = `-${new Date().getTime()}${Math.random().toString(16).slice(2)}`;
-            setUserIdInStorage(userIdFromStorage);
-        }
-
-        userId.current = userIdFromStorage;
-    }, [status]);
-
-    // -------------   -------------   -------------   -------------   -------------   -------------
-
-    useEffect(() => {
-        if (status !== "unauthenticated" || !userId.current) {
-            return;
-        }
-
         const initialCartItems = async () => {
-            if (!userId.current) {
-                return;
-            }
-
             await getCartItems();
         };
 
         initialCartItems();
-
-        //
-    }, [userId.current, status]);
+    }, [status]);
 
     // -------------   -------------   -------------   -------------   -------------   -------------
 
     const getCartItems = async () => {
         const res = await fetch("/api/cart/logged-out/crud-cart-items", {
             method: "POST",
+            credentials: "same-origin",
             headers: { "Content-Type": "application/json;" },
             body: JSON.stringify({
-                userId: userId.current,
                 action: "get",
             }),
         });
@@ -100,10 +53,10 @@ export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoadin
 
         const res = await fetch("/api/cart/logged-out/crud-cart-items", {
             method: "POST",
+            credentials: "same-origin",
             headers: { "Content-Type": "application/json;" },
             body: JSON.stringify({
                 product,
-                userId: userId.current,
                 action: "add",
             }),
         });
@@ -124,10 +77,11 @@ export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoadin
         // setIsLoading(true);
         const res = await fetch("/api/cart/logged-out/crud-cart-items", {
             method: "POST",
+            credentials: "same-origin",
             headers: { "Content-Type": "application/json;" },
             body: JSON.stringify({
                 itemId,
-                userId: userId.current,
+
                 action: "remove",
             }),
         });
@@ -144,9 +98,9 @@ export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoadin
     const clearCartItems = async () => {
         const res = await fetch("/api/cart/logged-out/crud-cart-items", {
             method: "POST",
+            credentials: "same-origin",
             headers: { "Content-Type": "application/json;" },
             body: JSON.stringify({
-                userId: userId.current,
                 action: "clear",
             }),
         });
