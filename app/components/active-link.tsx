@@ -30,7 +30,7 @@ const ActiveLink = ({ children, href, customClassName, activeClassName, ...props
     const className = `${isActiveLink(href)} ${customClassName}`;
 
     return (
-        <Link href={href} {...props}>
+        <Link legacyBehavior href={href} {...props}>
             {React.cloneElement(child, {
                 className: className || null,
             })}

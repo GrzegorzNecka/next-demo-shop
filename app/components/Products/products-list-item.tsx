@@ -36,8 +36,8 @@ const ProductListItem = ({ data /*targetButton, setTargetButton*/ }: ProductList
                     layout="responsive"
                     width={4}
                     height={3}
-                    objectFit="contain"
-                    objectPosition="center"
+                    // objectFit="contain"
+                    // objectPosition="center"
                     priority
                 />
             </div>
@@ -45,7 +45,7 @@ const ProductListItem = ({ data /*targetButton, setTargetButton*/ }: ProductList
             <div className="mt-4 flex justify-between">
                 <div>
                     <h3 className="text-sm text-gray-700">
-                        <Link href={`/product/${data.slug}`}>
+                        <Link legacyBehavior href={`/product/${data.slug}`}>
                             <a className="hover:underline">
                                 <span aria-hidden="true" className="">
                                     {data.title}

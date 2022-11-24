@@ -7,7 +7,7 @@ export default function CartBar() {
 
     return (
         <div>
-            <Link href="/cart">
+            <Link legacyBehavior href="/cart">
                 <a>
                     <div className=" flex">
                         <span> {cartState.total}</span>

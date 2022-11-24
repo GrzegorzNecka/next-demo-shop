@@ -37,7 +37,7 @@ const CartContent = ({ targetButton, setTargetButton }: CartContentProps) => {
                         <li className="py-3" key={index}>
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <Link href={`/product/${item.slug}`}>
+                                    <Link legacyBehavior href={`/product/${item.slug}`}>
                                         <a className="hover:underline">
                                             {item.title} {`x  ${item.quantity} `}{" "}
                                             <CartOptions id={item.productOptionId} />

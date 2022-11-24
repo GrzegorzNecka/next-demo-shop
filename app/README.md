@@ -28,10 +28,6 @@
 -   better graphQl package -> [urql](https://formidable.com/open-source/urql/)
 -   graphql-code-generator -> [link](https://www.the-guild.dev/graphql/codegen)
 
-<<<<<<< HEAD
-## pomysł na implementacje koszyka
-
-=======
 ## git - prefixy
 
 feat(feature): ...
@@ -63,7 +59,6 @@ chciałem obsłużyć przeniesienie koszyka z niezalogowanego stanu na zalogowan
 
 [jak ogarnąć cookies](https://ohmydev.pl/post/zapewne-robisz-to-zle-czyli-token-jwt-na-frontendzie-50e7)
 [next - cookies](https://maxschmitt.me/posts/next-js-cookies/)
->>>>>>> fd4ff3747d18061700f83e8922bcf448351631ea
 pytanie czy da sięto zapisywać w local storage czy może należ yto zrobić w cookies
 
 ### klient nr 1 - użytkownik niezalogowany

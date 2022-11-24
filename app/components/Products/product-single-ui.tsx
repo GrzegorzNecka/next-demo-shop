@@ -79,8 +79,8 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
                             layout="responsive"
                             width={16}
                             height={9}
-                            objectFit="contain"
-                            objectPosition="center"
+                            // objectFit="contain"
+                            // objectPosition="center"
                         />
                     </div>
 

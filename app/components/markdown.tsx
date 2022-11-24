@@ -14,7 +14,7 @@ const Markdown = ({ children }: { children: MarkdownResult }) => {
 
                     if (process.env.NEXT_PUBLIC_HOST && href.startsWith(process.env.NEXT_PUBLIC_HOST)) {
                         return (
-                            <Link href={href}>
+                            <Link legacyBehavior href={href}>
                                 <a {...props}></a>
                             </Link>
                         );
