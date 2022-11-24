@@ -1,4 +1,4 @@
-import { authOptions } from "pages/api/auth/[...nextauth]";
+// import { authOptions } from "pages/api/auth/[...nextauth]";
 import { unstable_getServerSession } from "next-auth/next";
 import type { NextApiHandler } from "next/types";
 import type { CartItem } from "context/types";
@@ -75,9 +75,9 @@ const handler: NextApiHandler<Response> = async (req, res) => {
 
     if (!isCookie) {
         setCookie("local-cart-item-user", `-${new Date().getTime()}${Math.random().toString(16).slice(2)}`, {
-            httpOnly: true,
+            // httpOnly: true,
             // secure: true,
-            sameSite: "lax",
+            // sameSite: "lax",
             req,
             res,
             maxAge: 60 * 60 * 24,
