@@ -1,5 +1,3 @@
-// import { authOptions } from "pages/api/auth/[...nextauth]";
-import { unstable_getServerSession } from "next-auth/next";
 import type { NextApiHandler } from "next/types";
 import type { CartItem } from "context/types";
 
@@ -56,9 +54,10 @@ const CART: Cart = [
 // -------------   -------------   -------------   -------------   -------------   -------------
 
 interface RequestApi {
-    readonly action: "get" | "add" | "remove" | "clear";
+    readonly action: "get" | "add" | "remove" | "clear" | "send";
     readonly product?: CartItem;
     readonly itemId?: string;
+    readonly userId?: CookieValueTypes;
 }
 
 interface Response {
@@ -71,26 +70,30 @@ const handler: NextApiHandler<Response> = async (req, res) => {
         res.status(400).json({ message: "bad request method" });
     }
 
-    const isCookie = hasCookie("local-cart-item-user", { req, res });
-
-    if (!isCookie) {
-        setCookie("local-cart-item-user", `-${new Date().getTime()}${Math.random().toString(16).slice(2)}`, {
-            // httpOnly: true,
-            // secure: true,
-            // sameSite: "lax",
-            req,
-            res,
-            maxAge: 60 * 60 * 24,
-        });
-    }
-
-    const userId = getCookie("local-cart-item-user", { req, res });
+    const { action, product, itemId }: RequestApi = JSON.parse(req.body);
+    let { userId }: RequestApi = JSON.parse(req.body);
 
     if (!userId) {
-        res.status(400).json({ message: "no cookies: local-cart-item-user" });
-    }
+        const isCookie = hasCookie("local-cart-item-user", { req, res });
 
-    const { action, product, itemId }: RequestApi = JSON.parse(req.body);
+        if (!isCookie) {
+            setCookie("local-cart-item-user", `-${new Date().getTime()}${Math.random().toString(16).slice(2)}`, {
+                httpOnly: true,
+                secure: true,
+                sameSite: "lax",
+                req,
+                res,
+                maxAge: 60 * 60 * 24,
+            });
+        }
+
+        userId = getCookie("local-cart-item-user", { req, res });
+        console.log("🚀 ~~  userId ", userId);
+
+        if (!userId) {
+            res.status(400).json({ message: "no cookies: local-cart-item-user" });
+        }
+    }
 
     switch (action) {
         case "get":
@@ -114,6 +117,9 @@ const handler: NextApiHandler<Response> = async (req, res) => {
             return;
         case "clear":
             res.status(200).json({ cartItems: clearCartItems(userId) });
+            return;
+        case "send":
+            res.status(200).json({ cartItems: getCartItems(userId) });
             return;
         default:
             res.status(400).json({ message: "bad request action" });
