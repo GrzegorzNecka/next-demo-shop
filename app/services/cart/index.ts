@@ -1,5 +1,7 @@
-// -------------   -------------   -------------   -------------   -------------   ------------- //* logged-in state / use GraphQl
+//* logged-in state / use GraphQl
 
+//!to jest trochę bez sensu - w tym miejscu powinienm łączyć się z graphQl anie z własnym api
+//! zamiast akcji pisz poprawne nagłówki !!!
 const handleAddItemToCart = async (productOptionId: string, quantity: number) =>
     await fetch("/api/cart/logged-in/add-to-cart-item", {
         method: "POST",
@@ -36,8 +38,6 @@ const handleClearCartItems = async () =>
         headers: { "Content-Type": "application/json;" },
     });
 
-// -------------   -------------   -------------   -------------   -------------   ------------- //* logged-out state / use Local Storage
-
-// -------------   -------------   -------------   -------------   -------------   -------------
+//* logged-out state / use Local Storage
 
 export { handleAddItemToCart, handleUpdateCartItem as updateCartItem, handleRemoveItemFromCart, handleClearCartItems };

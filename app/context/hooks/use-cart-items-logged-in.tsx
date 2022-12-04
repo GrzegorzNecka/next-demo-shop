@@ -70,6 +70,7 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
         const existProduct = data.cart?.cartItems.find((item) => item?.option?.id === productOptionId);
 
         if (!existProduct) {
+            //! pisz poprawne nagłówki REST!!!
             const result = await handleAddItemToCart(productOptionId, quantity);
 
             if (result.status === 200) {

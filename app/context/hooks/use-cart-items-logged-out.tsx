@@ -26,7 +26,7 @@ export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoadin
     }, [status]);
 
     // -------------   -------------   -------------   -------------   -------------   -------------
-
+    //! zamiast akcji pisz poprawne nagłówki !!! -----------------------------  TO JEST BARDZO WAŻNE
     const getCartItems = async () => {
         const res = await fetch("/api/cart/logged-out/crud-cart-items", {
             method: "POST",
