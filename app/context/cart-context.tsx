@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type { CartItem, CartState } from "./types";
-import { useCartItemsWithGraphQl } from "context/hooks/use-cart-items-logged-in";
-import { useCartItemsWithLocalStorage } from "context/hooks/use-cart-items-logged-out";
+import { useCartItemsWithGraphQl } from "context/hooks/use-server-session";
+import { useCartItemsWithLocalStorage } from "context/hooks/use-local-session";
 import { useSession } from "next-auth/react";
 import { useCartItems } from "./hooks/use-cart-items";
 

@@ -1,4 +1,4 @@
-import { InferGetStaticPropsType } from "next";
+import { GetStaticPathsResult, GetStaticPropsResult, InferGetStaticPropsType } from "next";
 import { InferGetStaticPathsType } from "types/types";
 import { apolloClient } from "graphQL/apolloClient";
 import { GetProductsListDocument, GetProductsListQuery } from "graphQL/generated/graphql";
@@ -6,6 +6,9 @@ import { Main } from "components/main";
 import ProductListUI from "components/products/products-list-ui";
 
 export type ProductListIdPageProps = InferGetStaticPropsType<typeof getStaticProps>;
+
+
+// page
 
 const ProductsListIdPage = ({ data }: ProductListIdPageProps) => {
     return (
@@ -19,7 +22,7 @@ const ProductsListIdPage = ({ data }: ProductListIdPageProps) => {
 
 export default ProductsListIdPage;
 
-// -----------------
+// paths
 
 export const getStaticPaths = async () => {
     const products = [1, 2];
@@ -33,10 +36,10 @@ export const getStaticPaths = async () => {
                 },
             };
         }),
-    };
+    } satisfies GetStaticPathsResult;
 };
 
-// -----------------
+// prosp
 
 export const getStaticProps = async ({ params }: InferGetStaticPathsType<typeof getStaticPaths>) => {
     if (!params?.id) {
@@ -49,17 +52,10 @@ export const getStaticProps = async ({ params }: InferGetStaticPathsType<typeof 
         query: GetProductsListDocument,
     });
 
-    // only productWithOptions
-    // const productsWithOptions = products.filter((product) => {
-    //     if (product.option.length === 0) {
-    //         return;
-    //     }
-    //     return product;
-    // });
 
     return {
         props: {
             data: products.map((product) => product),
         },
-    };
+    } satisfies GetStaticPropsResult<{data: typeof products}>;
 };

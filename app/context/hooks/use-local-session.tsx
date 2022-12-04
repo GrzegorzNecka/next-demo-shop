@@ -28,13 +28,10 @@ export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoadin
     // -------------   -------------   -------------   -------------   -------------   -------------
     //! zamiast akcji pisz poprawne nagłówki !!! -----------------------------  TO JEST BARDZO WAŻNE
     const getCartItems = async () => {
-        const res = await fetch("/api/cart/logged-out/crud-cart-items", {
-            method: "POST",
+        const res = await fetch("/api/cart/cart-local-session", {
+            method: "GET",
             credentials: "same-origin",
             headers: { "Content-Type": "application/json;" },
-            body: JSON.stringify({
-                action: "get",
-            }),
         });
 
         if (res.status !== 200) {
@@ -51,13 +48,12 @@ export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoadin
     const addItemToCart = async (product: CartItem) => {
         setIsLoading(true);
 
-        const res = await fetch("/api/cart/logged-out/crud-cart-items", {
+        const res = await fetch("/api/cart/cart-local-session", {
             method: "POST",
             credentials: "same-origin",
             headers: { "Content-Type": "application/json;" },
             body: JSON.stringify({
                 product,
-                action: "add",
             }),
         });
 
@@ -75,14 +71,12 @@ export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoadin
 
     const removeItemFromCart = async (itemId: CartItem["productOptionId"]) => {
         // setIsLoading(true);
-        const res = await fetch("/api/cart/logged-out/crud-cart-items", {
-            method: "POST",
+        const res = await fetch("/api/cart/cart-local-session", {
+            method: "DELETE",
             credentials: "same-origin",
             headers: { "Content-Type": "application/json;" },
             body: JSON.stringify({
                 itemId,
-
-                action: "remove",
             }),
         });
         if (res.status !== 200) {
@@ -96,12 +90,12 @@ export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoadin
     // -------------   -------------   -------------   -------------   -------------   -------------
 
     const clearCartItems = async () => {
-        const res = await fetch("/api/cart/logged-out/crud-cart-items", {
+        const res = await fetch("/api/cart/cart-local-session", {
             method: "POST",
             credentials: "same-origin",
             headers: { "Content-Type": "application/json;" },
             body: JSON.stringify({
-                action: "clear",
+                setEmpty: true,
             }),
         });
 

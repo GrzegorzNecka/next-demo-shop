@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { CartItem } from "context/types";
 import { useSession } from "next-auth/react";
 import { GetCartItemsByCartIdQuery, useGetCartItemsByCartIdQuery } from "graphQL/generated/graphql";
-import { handleAddItemToCart, handleClearCartItems, handleRemoveItemFromCart, updateCartItem } from "services/cart";
+// import { handleAddItemToCart, handleClearCartItems, handleRemoveItemFromCart, updateCartItem } from "services/cart";
 
 type useCartItemsProps = {
     setCartItems: Dispatch<SetStateAction<CartItem[]>>;
@@ -70,8 +70,14 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
         const existProduct = data.cart?.cartItems.find((item) => item?.option?.id === productOptionId);
 
         if (!existProduct) {
-            //! pisz poprawne nagłówki REST!!!
-            const result = await handleAddItemToCart(productOptionId, quantity);
+            const result = await fetch("/api/cart/cart-server-session", {
+                method: "POST",
+                headers: { "Content-Type": "application/json;" },
+                body: JSON.stringify({
+                    productOptionId,
+                    quantity,
+                }),
+            });
 
             if (result.status === 200) {
                 refetch({ id: cartId });
@@ -84,7 +90,14 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
 
         const updatedQuantity = existProduct?.quantity! + quantity;
 
-        const result = await updateCartItem(itemId, updatedQuantity);
+        const result = await fetch("/api/cart/cart-server-session", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json;" },
+            body: JSON.stringify({
+                itemId,
+                updatedQuantity,
+            }),
+        });
         if (result.status === 200) {
             refetch({ id: cartId });
         }
@@ -104,7 +117,15 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
             return;
         }
 
-        const result = await handleRemoveItemFromCart(itemId, existItem.quantity);
+        //! pisz poprawne nagłówki REST!!!
+        const result = await fetch("/api/cart/cart-server-session", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json;" },
+            body: JSON.stringify({
+                itemId,
+                quantity: existItem.quantity,
+            }),
+        });
 
         if (result.status === 200) {
             refetch({ id: cartId });
@@ -118,7 +139,14 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
             return;
         }
 
-        const result = await handleClearCartItems();
+        //! pisz poprawne nagłówki REST!!!
+        const result = await fetch("/api/cart/cart-server-session", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json;" },
+            body: JSON.stringify({
+                setEmpty: true,
+            }),
+        });
 
         if (result.status === 200) {
             refetch({ id: cartId });
