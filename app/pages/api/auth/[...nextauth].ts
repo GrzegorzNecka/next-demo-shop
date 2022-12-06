@@ -4,79 +4,102 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import * as bcrypt from "bcrypt";
 import { apolloClient, authApolloClient } from "graphQL/apolloClient";
 import {
+    AddItemOptionToCartByCartIdDocument,
+    AddItemOptionToCartByCartIdMutation,
+    AddItemOptionToCartByCartIdMutationVariables,
     GetAccountByEmailDocument,
     GetAccountByEmailQuery,
     GetAccountByEmailQueryVariables,
     GetCartIdByAccountIdDocument,
     GetCartIdByAccountIdQuery,
     GetCartIdByAccountIdQueryVariables,
-    GetCartItemsByAccountIdDocument,
-    GetCartItemsByAccountIdQuery,
-    GetCartItemsByAccountIdQueryVariables,
     GetCartItemsByCartIdDocument,
     GetCartItemsByCartIdQuery,
     GetCartItemsByCartIdQueryVariables,
+    UpdateItemQuantityByCartIdDocument,
+    UpdateItemQuantityByCartIdMutation,
+    UpdateItemQuantityByCartIdMutationVariables,
 } from "graphQL/generated/graphql";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getCookie } from "cookies-next";
+import { CartItem } from "context/types";
 
-let authOptions: NextAuthOptions;
+export const authOptions: NextAuthOptions = {
+    secret: process.env.NEXT_AUTH_SECRET,
+    providers: [
+        CredentialsProvider({
+            name: "Logowanie hasłem",
+            credentials: {
+                username: { label: "Email", type: "email", placeholder: "email@example.com" },
+                password: { label: "Password", type: "password" },
+            },
+            async authorize(credentials, req) {
+                if (!credentials) {
+                    return null;
+                }
+                const userByEmail = await authApolloClient.query<
+                    GetAccountByEmailQuery,
+                    GetAccountByEmailQueryVariables
+                >({
+                    query: GetAccountByEmailDocument,
+                    variables: { email: credentials?.username },
+                });
+                if (!userByEmail.data.account?.password) {
+                    return null;
+                }
+                const arePasswordsEqual = await bcrypt.compare(
+                    credentials.password,
+                    userByEmail.data.account?.password
+                );
+                if (!arePasswordsEqual) {
+                    return null;
+                }
+                const session = { id: userByEmail.data.account.id, email: userByEmail.data.account.email };
+                return session;
+            },
+        }),
+    ],
 
-function NextAuthHandler(req: NextApiRequest, res: NextApiResponse) {
+    callbacks: {
+        async session({ session, user, token }) {
+            if (typeof token.sub == "string") {
+                const cart = await authApolloClient.query<
+                    GetCartIdByAccountIdQuery,
+                    GetCartIdByAccountIdQueryVariables
+                >({
+                    query: GetCartIdByAccountIdDocument,
+                    variables: { id: token.sub },
+                });
+                const cartId = cart.data?.account?.cart?.id;
+                if (cartId) {
+                    session.user.cartId = cartId;
+                }
+            }
+            session.user.id = token.sub!;
+            return session;
+        },
+    },
+};
+
+export default async function NextAuthHandler(req: NextApiRequest, res: NextApiResponse) {
     const userId = getCookie("local-cart-item-user", { req, res });
 
-    authOptions = {
-        secret: process.env.NEXT_AUTH_SECRET,
-        providers: [
-            CredentialsProvider({
-                name: "Logowanie hasłem",
-                credentials: {
-                    username: { label: "Email", type: "email", placeholder: "email@example.com" },
-                    password: { label: "Password", type: "password" },
-                },
-                async authorize(credentials, req) {
-                    if (!credentials) {
-                        return null;
-                    }
-                    const userByEmail = await authApolloClient.query<
-                        GetAccountByEmailQuery,
-                        GetAccountByEmailQueryVariables
-                    >({
-                        query: GetAccountByEmailDocument,
-                        variables: { email: credentials?.username },
-                    });
-                    if (!userByEmail.data.account?.password) {
-                        return null;
-                    }
-                    const arePasswordsEqual = await bcrypt.compare(
-                        credentials.password,
-                        userByEmail.data.account?.password
-                    );
-                    if (!arePasswordsEqual) {
-                        return null;
-                    }
-                    const session = { id: userByEmail.data.account.id, email: userByEmail.data.account.email };
-                    return session;
-                },
-            }),
-        ],
+    const options: NextAuthOptions = {
+        ...authOptions,
         callbacks: {
+            ...authOptions.callbacks,
             async signIn({ user, account, profile, email, credentials }) {
-                console.log("🚀 ~    account,   account,   account,   account,", account?.providerAccountId);
-
-                console.log("🚀 ~ file:   next auth userId", userId);
-
                 if (!userId) {
                     return true;
                 }
 
-                const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/cart/logged-out/crud-cart-items`, {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/cart/local-session`, {
                     method: "POST",
                     credentials: "same-origin",
                     headers: { "Content-Type": "application/json;" },
                     body: JSON.stringify({
-                        action: "send",
                         userId,
+                        signIn: true,
                     }),
                 });
 
@@ -84,7 +107,7 @@ function NextAuthHandler(req: NextApiRequest, res: NextApiResponse) {
                     return true;
                 }
 
-                const { cartItems } = await res.json();
+                const { cartItems }: { cartItems: CartItem[] } = await res.json();
 
                 if (cartItems.length === 0) {
                     return true;
@@ -111,59 +134,63 @@ function NextAuthHandler(req: NextApiRequest, res: NextApiResponse) {
                 });
 
                 const sessionCartItems = getCartItemsByCartId.data.cart?.cartItems;
-                console.log("🚀 ~ file: [...nextauth].ts:116 ~ signIn ~ sessionCartItems", sessionCartItems);
+                console.log("🚀 ~ file: [...nextauth].ts:137 ~ signIn ~  sessionCartItems ", sessionCartItems);
 
                 if (cartItems.length > 0 && sessionCartItems) {
-                    //todo cartItems nie ma typ
+                    //cartItems === non session cart items
+                    cartItems.forEach(async (item) => {
+                        const isExist = sessionCartItems.find((s_item) => s_item.option?.id === item.productOptionId);
+                        console.log("🚀 ~ file: [...nextauth].ts:142 ~ cartItems.forEach ~ isExist", isExist);
 
-                    cartItems.forEach((item) => {
-                        console.log("🚀 ~ file: [...nextauth].ts:121 ~ cartItems.forEach ~ item", item);
+                        if (!isExist) {
+                            const createCartItem = await authApolloClient.mutate<
+                                AddItemOptionToCartByCartIdMutation,
+                                AddItemOptionToCartByCartIdMutationVariables
+                            >({
+                                mutation: AddItemOptionToCartByCartIdDocument,
+                                variables: {
+                                    cartId: id,
+                                    quantity: item.quantity,
+                                    productOptionId: item.productOptionId,
+                                },
+                            });
+                        }
 
-                        const isExist = sessionCartItems.find((s_item) => s_item.slug === item.slug);
-                        console.log("🚀 ~ file:  ~ isExist", isExist);
+                        if (isExist) {
+                            const updateCartItem = await authApolloClient.mutate<
+                                UpdateItemQuantityByCartIdMutation,
+                                UpdateItemQuantityByCartIdMutationVariables
+                            >({
+                                mutation: UpdateItemQuantityByCartIdDocument,
+                                variables: {
+                                    cartId: id,
+                                    itemId: isExist.id,
+                                    quantity: isExist.quantity + item.quantity,
+                                },
+                            });
+                        }
                     });
                 }
 
-                //     const getCartFromServer = await apolloClient.query<
-                //     AddItemOptionToCartByCartIdMutation,
-                //     AddItemOptionToCartByCartIdMutationVariables
-                // >({
-                //     mutation: AddItemOptionToCartByCartIdDocument,
-                //     variables: {
-                //         cartId,
-                //         quantity,
-                //         productOptionId: productOptionId,
-                //     },
-                // });
+                const setEmpty = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/cart/local-session`, {
+                    method: "DELETE",
+                    credentials: "same-origin",
+                    headers: { "Content-Type": "application/json;" },
+                    body: JSON.stringify({
+                        setEmpty: true,
+                        userId,
+                    }),
+                });
 
-                // cartItems.forEach((cartItem) => {
-
-                // })
+                // await apolloClient.refetchQueries({
+                //     include: ['GetCartItemsByCartId'],
+                //   });
+                //   refetchQueries: [{ query: GetReviewsForProductSlugDocument, variables: { slug: productSlug } }],
 
                 return true;
-            },
-            async session({ session, user, token }) {
-                console.log("🚀 ~ file: [...nextauth].ts:104 ~ session ~ token", token);
-                if (typeof token.sub == "string") {
-                    const cart = await authApolloClient.query<
-                        GetCartIdByAccountIdQuery,
-                        GetCartIdByAccountIdQueryVariables
-                    >({
-                        query: GetCartIdByAccountIdDocument,
-                        variables: { id: token.sub },
-                    });
-                    const cartId = cart.data?.account?.cart?.id;
-                    if (cartId) {
-                        session.user.cartId = cartId;
-                    }
-                }
-                session.user.id = token.sub!;
-                return session;
             },
         },
     };
 
-    return NextAuth(req, res, authOptions);
+    return NextAuth(req, res, options);
 }
-
-export { NextAuthHandler as default, authOptions };
