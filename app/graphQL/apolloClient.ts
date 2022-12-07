@@ -4,23 +4,20 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 // https://www.apollographql.com/docs/react/caching/cache-field-behavior/#merging-non-normalized-objects
 
 const cache = new InMemoryCache({
-    // typePolicies: {
-    //     Cart: {
-    //         fields: {
-    //             cartItems: {
-    //                 // Non-normalized Author object within Book
-    //                 merge(existing, incoming, { mergeObjects }) {
-    //                     if (!incoming || existing) {
-    //                         return;
-    //                     }
-    //                     console.log("🚀 ~ file: apolloClient.ts:10 ~ merge ~ incoming", incoming);
-    //                     console.log("🚀 ~ file: apolloClient.ts:10 ~ merge ~ existing", existing);
-    //                     return mergeObjects(existing, incoming);
-    //                 },
-    //             },
-    //         },
-    //     },
-    // },
+    typePolicies: {
+        Cart: {
+            fields: {
+                cartItems: {
+                    merge(existing = [], incoming: unknown[]) {
+                        console.log("🚀 ~ file: apolloClient.ts:21 ~ merge ~ incoming", incoming);
+                        console.log("🚀 ~ file: apolloClient.ts:21 ~ merge ~ existing", existing);
+
+                        return [...existing, ...incoming];
+                    },
+                },
+            },
+        },
+    },
 });
 
 const apolloClient = new ApolloClient({
