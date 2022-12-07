@@ -10,10 +10,17 @@ type useCartItemsProps = {
     status: "authenticated" | "loading" | "unauthenticated";
 };
 
+let didInit = false;
+
 export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoading }: useCartItemsProps) => {
     // -------------   -------------   -------------   -------------   -------------   -------------
 
     useEffect(() => {
+        if (!didInit) {
+            didInit = true;
+            return;
+        }
+
         if (status !== "unauthenticated") {
             return;
         }
