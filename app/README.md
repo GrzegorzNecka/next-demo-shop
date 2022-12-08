@@ -137,3 +137,64 @@ pytanie czy da sięto zapisywać w local storage czy może należ yto zrobić w 
 }
 
 ```
+
+// ------------- JSON ZBIGNIEW
+
+```
+{
+  "cart": [
+    {
+      "userId": "-587a8703092d5",
+      "cartItems": [
+        {
+          "itemId": "-9ca0bb1dbdb7f",
+          "productOptionId": "cl9lewa6nggtc09ueqfsjarb9",
+          "price": 1999,
+          "title": "Unisex Long Sleeve Tee",
+          "quantity": 1,
+          "imgUrl": "https: //media.graphassets.com/TSPnQGujTFC8nwtYMXmz",
+          "slug": "unisex-long-sleeve-tee"
+        }
+        {
+          "itemId": "-9ca0bb1dbdb7f",
+          "productOptionId": "cl9lewa6nggtc09ueqfsjarb9",
+          "price": 1999,
+          "title": "Unisex Long Sleeve Tee",
+          "quantity": 1,
+          "imgUrl": "https: //media.graphassets.com/TSPnQGujTFC8nwtYMXmz",
+          "slug": "unisex-long-sleeve-tee"
+        }
+      ]
+    }
+  ]
+}
+```
+
+// -------------
+
+```
+
+cartLocal: Id  = clbf5b00gaztd0auqgj3grv3z
+{
+      "cartItems": [
+        {
+          "itemId": "-9ca0bb1dbdb7f",
+          "productOptionId": "cl9lewa6nggtc09ueqfsjarb9",
+          "price": 1999,
+          "title": "Unisex Long Sleeve Tee",
+          "quantity": 1,
+          "imgUrl": "https: //media.graphassets.com/TSPnQGujTFC8nwtYMXmz",
+          "slug": "unisex-long-sleeve-tee"
+        },
+        {
+          "itemId": "-9ca0bb1dbdb7f",
+          "productOptionId": "cl9lewa6nggtc09ueqfsjarb9",
+          "price": 1999,
+          "title": "Unisex Long Sleeve Tee",
+          "quantity": 1,
+          "imgUrl": "https: //media.graphassets.com/TSPnQGujTFC8nwtYMXmz",
+          "slug": "unisex-long-sleeve-tee"
+        }
+      ]
+}
+```

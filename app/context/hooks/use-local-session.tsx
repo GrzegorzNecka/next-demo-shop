@@ -1,119 +1,111 @@
 import type { CartItem } from "context/types";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { useSession } from "next-auth/react";
 import { useEffect } from "react";
-
-// -------------   -------------   -------------   -------------   -------------   -------------
+import { useGetLocalCartQuery } from "graphQL/generated/graphql";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 type useCartItemsProps = {
     setCartItems: Dispatch<SetStateAction<CartItem[]>>;
     setIsLoading: Dispatch<SetStateAction<boolean>>;
-    status: "authenticated" | "loading" | "unauthenticated";
 };
 
-let didInit = false;
+const getCookies = async () => {
+    const res = await fetch("/api/cart/cookies", {
+        method: "GET",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json;" },
+    });
 
-export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoading }: useCartItemsProps) => {
-    // -------------   -------------   -------------   -------------   -------------   -------------
+    return res.json();
+};
+
+export const useCartItemsWithLocalStorage = ({ setCartItems, setIsLoading }: useCartItemsProps) => {
+    const session = useSession();
+
+    const cookie = useQuery({ queryKey: ["cookieId"], queryFn: getCookies });
+
+    const { data, refetch } = useGetLocalCartQuery({
+        skip: !Boolean(cookie.data?.id),
+        variables: {
+            id: cookie.data?.id,
+        },
+        onCompleted: () => {
+            setIsLoading(false);
+        },
+        onError(error) {
+            console.log("error", error);
+        },
+    });
 
     useEffect(() => {
-        if (!didInit) {
-            didInit = true;
+        if (session.status !== "unauthenticated" || !data) {
             return;
         }
 
-        if (status !== "unauthenticated") {
+        // const cartItems = JSON.parse(data?.cartLocal?.cartItem);
+        // console.log("🚀 ~ file: use-local-session.tsx:47 ~ useEffect ~ cartItems", cartItems);
+
+        const localCartItems: CartItem[] | undefined = JSON.parse(data?.cartLocal?.cartItem);
+
+        if (!localCartItems) {
+            setCartItems([]);
             return;
         }
 
-        const initialCartItems = async () => {
-            await getCartItems();
-        };
-
-        initialCartItems();
-    }, [status]);
-
-    // -------------   -------------   -------------   -------------   -------------   -------------
-    //! zamiast akcji pisz poprawne nagłówki !!! -----------------------------  TO JEST BARDZO WAŻNE
-    const getCartItems = async () => {
-        const res = await fetch("/api/cart/local-session", {
-            method: "GET",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json;" },
+        const cartItems = localCartItems.map((item) => {
+            return {
+                itemId: `-${Math.random().toString(16).slice(2)}`,
+                quantity: item?.quantity!,
+                price: item?.price!,
+                title: item?.title!,
+                imgUrl: item?.imgUrl!,
+                slug: item?.slug!,
+                productOptionId: item?.productOptionId!,
+            };
         });
 
-        if (res.status !== 200) {
-            return;
-        }
-
-        const { cartItems } = await res.json();
-
         setCartItems(cartItems);
-    };
 
-    // -------------   -------------   -------------   -------------   -------------   -------------
+        console.log(`data local cartItems from cookies id = ${cookie.data?.id}`, data?.cartLocal?.cartItem);
+    }, [data]);
 
     const addItemToCart = async (product: CartItem) => {
-        setIsLoading(true);
+        console.log("🚀 ~ file: use-local-session.tsx:69 ~ addItemToCart ~ product", product);
 
-        const res = await fetch("/api/cart/local-session", {
+        const result = await fetch("/api/cart/local-session", {
             method: "POST",
-            credentials: "same-origin",
             headers: { "Content-Type": "application/json;" },
             body: JSON.stringify({
-                product,
+                id: cookie.data?.id,
+                product: [product],
             }),
         });
 
-        if (res.status !== 200) {
-            return;
+        console.log(result);
+        if (result.status === 200) {
+            refetch({ id: cookie.data?.id });
         }
 
-        const { cartItems } = await res.json();
-
-        setCartItems(cartItems);
-        setIsLoading(false);
-    };
-
-    // -------------   -------------   -------------   -------------   -------------   -------------
-
-    const removeItemFromCart = async (itemId: CartItem["productOptionId"]) => {
-        // setIsLoading(true);
-        const res = await fetch("/api/cart/local-session", {
-            method: "DELETE",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json;" },
-            body: JSON.stringify({
-                itemId,
-            }),
-        });
-        if (res.status !== 200) {
-            return;
+        /*
+        {
+            "productOptionId": "cl9lewa6nggtc09ueqfsjarb9",
+            "price": 1999,
+            "title": "Unisex Long Sleeve Tee",
+            "quantity": 1,
+            "imgUrl": "https://media.graphassets.com/TSPnQGujTFC8nwtYMXmz",
+            "slug": "unisex-long-sleeve-tee"
         }
-        const { cartItems } = await res.json();
-        setCartItems(cartItems);
-        setIsLoading(false);
+        */
     };
 
-    // -------------   -------------   -------------   -------------   -------------   -------------
+    // ---
 
-    const clearCartItems = async () => {
-        const res = await fetch("/api/cart/local-session", {
-            method: "DELETE",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json;" },
-            body: JSON.stringify({
-                setEmpty: true,
-            }),
-        });
+    const removeItemFromCart = async (itemId: CartItem["productOptionId"]) => {};
 
-        if (res.status !== 200) {
-            return;
-        }
+    // ---
 
-        const { cartItems } = await res.json();
-
-        setCartItems(cartItems);
-    };
+    const clearCartItems = async () => {};
 
     return { addItemToCart, removeItemFromCart, clearCartItems } as const;
 };

@@ -160,3 +160,26 @@ query GetProductOptions($id: ID) {
         size
     }
 }
+
+fragment cartContentLocalQuery on CartLocal {
+    id
+    cartItem
+}
+
+query GetLocalCart($id: ID!) {
+    cartLocal(where: { id: $id }, stage: DRAFT) {
+        ...cartContentLocalQuery
+    }
+}
+
+mutation CreateCartItemLocal {
+    createCartLocal(data: {}) {
+        id
+    }
+}
+
+mutation AddItemToCartLocalById($id: ID!, $cartItem: Json!) {
+    updateCartLocal(where: { id: $id }, data: { cartItem: $cartItem }) {
+        ...cartContentLocalQuery
+    }
+}
