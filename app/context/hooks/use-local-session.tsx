@@ -1,118 +1,196 @@
 import type { CartItem } from "context/types";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { useSession } from "next-auth/react";
 import { useEffect } from "react";
-
-// -------------   -------------   -------------   -------------   -------------   -------------
-
+import { useGetLocalCartQuery } from "graphQL/generated/graphql";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { CookieValueTypes } from "cookies-next";
 type useCartItemsProps = {
     setCartItems: Dispatch<SetStateAction<CartItem[]>>;
     setIsLoading: Dispatch<SetStateAction<boolean>>;
-    status: "authenticated" | "loading" | "unauthenticated";
 };
 
-let didInit = false;
+const getCookies = async () => {
+    const res = await fetch("/api/cart/cookies", {
+        method: "GET",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json;" },
+    });
 
-export const useCartItemsWithLocalStorage = ({ status, setCartItems, setIsLoading }: useCartItemsProps) => {
-    // -------------   -------------   -------------   -------------   -------------   -------------
+    return res.json();
+};
+
+const updateLocalCart = async (id: CookieValueTypes, product: CartItem[]) => {
+    const result = await fetch("/api/cart/local-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json;" },
+        body: JSON.stringify({
+            id,
+            product,
+        }),
+    });
+    return result;
+};
+
+const createLocalCartItem = (item: CartItem) => {
+    return {
+        itemId: `-${Math.random().toString(16).slice(2)}`,
+        quantity: item?.quantity!,
+        price: item?.price!,
+        title: item?.title!,
+        imgUrl: item?.imgUrl!,
+        slug: item?.slug!,
+        productOptionId: item?.productOptionId!,
+    };
+};
+
+export const useCartItemsWithLocalStorage = ({ setCartItems, setIsLoading }: useCartItemsProps) => {
+    const session = useSession();
+
+    const cookie = useQuery({ queryKey: ["cookieId"], queryFn: getCookies });
+
+    const { data, refetch } = useGetLocalCartQuery({
+        skip: !Boolean(cookie.data?.id),
+        variables: {
+            id: cookie.data?.id,
+        },
+        onCompleted: () => {
+            setIsLoading(false);
+        },
+        onError(error) {
+            console.log("error", error);
+        },
+    });
+
+    const cartItems = useRef<CartItem[]>([]);
 
     useEffect(() => {
-        if (!didInit) {
-            didInit = true;
+        if (session.status !== "unauthenticated" || !data) {
             return;
         }
 
-        if (status !== "unauthenticated") {
-            return;
-        }
+        console.log("sssssss", data?.cartLocal?.cartItem);
 
-        const initialCartItems = async () => {
-            await getCartItems();
-        };
+        cartItems.current = JSON.parse(data?.cartLocal?.cartItem) || [];
 
-        initialCartItems();
-    }, [status]);
+        setCartItems(cartItems.current);
 
-    // -------------   -------------   -------------   -------------   -------------   -------------
-    //! zamiast akcji pisz poprawne nagłówki !!! -----------------------------  TO JEST BARDZO WAŻNE
-    const getCartItems = async () => {
-        const res = await fetch("/api/cart/local-session", {
-            method: "GET",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json;" },
-        });
+        console.log(cartItems.current);
+    }, [data]);
 
-        if (res.status !== 200) {
-            return;
-        }
-
-        const { cartItems } = await res.json();
-
-        setCartItems(cartItems);
-    };
-
-    // -------------   -------------   -------------   -------------   -------------   -------------
+    // add to cart and update cart
 
     const addItemToCart = async (product: CartItem) => {
+        if (session.status !== "unauthenticated") {
+            return;
+        }
+
         setIsLoading(true);
 
-        const res = await fetch("/api/cart/local-session", {
-            method: "POST",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json;" },
-            body: JSON.stringify({
-                product,
-            }),
-        });
+        if (!cartItems.current) {
+            const result = await updateLocalCart(cookie.data?.id, [createLocalCartItem(product)]);
 
-        if (res.status !== 200) {
+            if (result.status === 200) {
+                refetch({ id: cookie.data?.id });
+            }
             return;
         }
 
-        const { cartItems } = await res.json();
+        const existCartItem = cartItems.current.find((item) => item.productOptionId === product.productOptionId);
 
-        setCartItems(cartItems);
-        setIsLoading(false);
+        //update - increase
+
+        if (existCartItem) {
+            const updateCartItem = { ...existCartItem };
+            updateCartItem.quantity = updateCartItem.quantity + product.quantity;
+
+            const restCartItems = cartItems.current.filter((item) => item.productOptionId !== product.productOptionId);
+
+            const result = await updateLocalCart(cookie.data?.id, [
+                ...restCartItems,
+                createLocalCartItem(updateCartItem),
+            ]);
+
+            if (result.status === 200) {
+                refetch({ id: cookie.data?.id });
+            }
+            return;
+        }
+
+        //add new item
+
+        const result = await updateLocalCart(cookie.data?.id, [...cartItems.current, product]);
+
+        if (result.status === 200) {
+            refetch({ id: cookie.data?.id });
+        }
+        return;
     };
 
-    // -------------   -------------   -------------   -------------   -------------   -------------
+    //- remove cart item
 
     const removeItemFromCart = async (itemId: CartItem["productOptionId"]) => {
-        // setIsLoading(true);
-        const res = await fetch("/api/cart/local-session", {
-            method: "DELETE",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json;" },
-            body: JSON.stringify({
-                itemId,
-            }),
-        });
-        if (res.status !== 200) {
+        if (session.status !== "unauthenticated") {
             return;
         }
-        const { cartItems } = await res.json();
-        setCartItems(cartItems);
-        setIsLoading(false);
+
+        if (!cartItems.current) {
+            return;
+        }
+
+        const existCartItem = cartItems.current.find((item) => item.itemId === itemId);
+
+        if (!existCartItem) {
+            return;
+        }
+
+        // decrease
+
+        if (existCartItem.quantity > 1) {
+            const updateCartItems = cartItems.current.map((item) => {
+                if (item.itemId === itemId) {
+                    item.quantity = item.quantity - 1;
+                }
+
+                return item;
+            });
+
+            const result = await updateLocalCart(cookie.data?.id, updateCartItems);
+
+            if (result.status === 200) {
+                refetch({ id: cookie.data?.id });
+            }
+            return;
+        }
+
+        //clear whole item
+
+        const restCartItems = cartItems.current.filter((item) => item.itemId !== itemId);
+        const result = await updateLocalCart(cookie.data?.id, restCartItems);
+
+        if (result.status === 200) {
+            refetch({ id: cookie.data?.id });
+        }
+        return;
     };
 
-    // -------------   -------------   -------------   -------------   -------------   -------------
+    //- clear cart
 
     const clearCartItems = async () => {
-        const res = await fetch("/api/cart/local-session", {
-            method: "DELETE",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json;" },
-            body: JSON.stringify({
-                setEmpty: true,
-            }),
-        });
-
-        if (res.status !== 200) {
+        if (session.status !== "unauthenticated") {
             return;
         }
 
-        const { cartItems } = await res.json();
+        if (!cartItems.current) {
+            return;
+        }
 
-        setCartItems(cartItems);
+        const result = await updateLocalCart(cookie.data?.id, []);
+
+        if (result.status === 200) {
+            refetch({ id: cookie.data?.id });
+        }
+        return;
     };
 
     return { addItemToCart, removeItemFromCart, clearCartItems } as const;

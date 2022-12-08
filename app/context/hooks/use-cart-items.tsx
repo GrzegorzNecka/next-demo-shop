@@ -15,7 +15,6 @@ export const useCartItems = () => {
     });
 
     const localSession = useCartItemsWithLocalStorage({
-        status,
         setCartItems,
         setIsLoading,
     });

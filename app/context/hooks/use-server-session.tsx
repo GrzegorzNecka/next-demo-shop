@@ -12,12 +12,12 @@ type useCartItemsProps = {
 
 export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartItemsProps) => {
     const session = useSession();
-    const cartId = session.data?.user?.cartId!; //"cl7q56m7a1eqp0ateldaehrcs"
+    const cartId = session.data?.user?.cartId!;
 
-    // -------------   -------------   -------------   -------------   -------------   -------------
+    // ---
 
     const { data, refetch } = useGetCartItemsByCartIdQuery({
-        skip: !Boolean(cartId), // jeśli nie ma sesji przerywa
+        skip: !Boolean(cartId),
         variables: {
             id: cartId,
         },
@@ -29,13 +29,13 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
         },
     });
 
-    // -------------   -------------   -------------   -------------   -------------   -------------
+    // ---
 
     useEffect(() => {
         if (session.status !== "authenticated" || !data || !data.cart) {
             return;
         }
-        // console.log("🚀 ~ file: use-cart-items-logged-in.tsx ~ line 31 ~ useCartItemsWithGraphQl ~ data", data);
+
         const cartItems = data.cart.cartItems.map((item) => {
             return {
                 itemId: item.id,
@@ -47,21 +47,16 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
                 productOptionId: item?.option?.id!,
             };
         });
-        // console.log("🚀 ~ file: use-cart-items-logged-in.tsx ~ line 50 ~ cartItems ~ cartItems", cartItems);
 
         setCartItems(cartItems);
-
-        //-
     }, [session.status, data]);
 
-    // -------------   -------------   -------------   -------------   -------------   -------------
+    // ---
 
     const addItemToCart = async (product: CartItem) => {
         if (session.status === "unauthenticated" || !cartId || !data) {
             return;
         }
-
-        // console.log("🚀 ~ file: use-cart-items-logged-in.tsx ~ line 60 ~ addItemToCart ~ product", product);
 
         setIsLoading(true);
 
@@ -103,7 +98,7 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
         }
     };
 
-    // -------------   -------------   -------------   -------------   -------------   -------------
+    // --
 
     const removeItemFromCart = async (itemId: CartItem["productOptionId"]) => {
         if (!cartId || !data) {
@@ -117,7 +112,6 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
             return;
         }
 
-        //! pisz poprawne nagłówki REST!!!
         const result = await fetch("/api/cart/server-session", {
             method: "DELETE",
             headers: { "Content-Type": "application/json;" },
@@ -132,14 +126,13 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
         }
     };
 
-    // -------------   -------------   -------------   -------------   -------------   -------------
+    // ---
 
     const clearCartItems = async () => {
         if (!cartId || !data) {
             return;
         }
 
-        //! pisz poprawne nagłówki REST!!!
         const result = await fetch("/api/cart/server-session", {
             method: "DELETE",
             headers: { "Content-Type": "application/json;" },
