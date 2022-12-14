@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useGetLocalCartQuery } from "graphQL/generated/graphql";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-
+import { CookieValueTypes } from "cookies-next";
 type useCartItemsProps = {
     setCartItems: Dispatch<SetStateAction<CartItem[]>>;
     setIsLoading: Dispatch<SetStateAction<boolean>>;
@@ -18,6 +18,30 @@ const getCookies = async () => {
     });
 
     return res.json();
+};
+
+const updateLocalCart = async (id: CookieValueTypes, product: CartItem[]) => {
+    const result = await fetch("/api/cart/local-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json;" },
+        body: JSON.stringify({
+            id,
+            product,
+        }),
+    });
+    return result;
+};
+
+const createLocalCartItem = (item: CartItem) => {
+    return {
+        itemId: `-${Math.random().toString(16).slice(2)}`,
+        quantity: item?.quantity!,
+        price: item?.price!,
+        title: item?.title!,
+        imgUrl: item?.imgUrl!,
+        slug: item?.slug!,
+        productOptionId: item?.productOptionId!,
+    };
 };
 
 export const useCartItemsWithLocalStorage = ({ setCartItems, setIsLoading }: useCartItemsProps) => {
@@ -38,74 +62,136 @@ export const useCartItemsWithLocalStorage = ({ setCartItems, setIsLoading }: use
         },
     });
 
+    const cartItems = useRef<CartItem[]>([]);
+
     useEffect(() => {
         if (session.status !== "unauthenticated" || !data) {
             return;
         }
 
-        // const cartItems = JSON.parse(data?.cartLocal?.cartItem);
-        // console.log("🚀 ~ file: use-local-session.tsx:47 ~ useEffect ~ cartItems", cartItems);
+        console.log("sssssss", data?.cartLocal?.cartItem);
 
-        const localCartItems: CartItem[] | undefined = JSON.parse(data?.cartLocal?.cartItem);
+        cartItems.current = JSON.parse(data?.cartLocal?.cartItem) || [];
 
-        if (!localCartItems) {
-            setCartItems([]);
+        setCartItems(cartItems.current);
+
+        console.log(cartItems.current);
+    }, [data]);
+
+    // add to cart and update cart
+
+    const addItemToCart = async (product: CartItem) => {
+        if (session.status !== "unauthenticated") {
             return;
         }
 
-        const cartItems = localCartItems.map((item) => {
-            return {
-                itemId: `-${Math.random().toString(16).slice(2)}`,
-                quantity: item?.quantity!,
-                price: item?.price!,
-                title: item?.title!,
-                imgUrl: item?.imgUrl!,
-                slug: item?.slug!,
-                productOptionId: item?.productOptionId!,
-            };
-        });
+        setIsLoading(true);
 
-        setCartItems(cartItems);
+        if (!cartItems.current) {
+            const result = await updateLocalCart(cookie.data?.id, [createLocalCartItem(product)]);
 
-        console.log(`data local cartItems from cookies id = ${cookie.data?.id}`, data?.cartLocal?.cartItem);
-    }, [data]);
+            if (result.status === 200) {
+                refetch({ id: cookie.data?.id });
+            }
+            return;
+        }
 
-    const addItemToCart = async (product: CartItem) => {
-        console.log("🚀 ~ file: use-local-session.tsx:69 ~ addItemToCart ~ product", product);
+        const existCartItem = cartItems.current.find((item) => item.productOptionId === product.productOptionId);
 
-        const result = await fetch("/api/cart/local-session", {
-            method: "POST",
-            headers: { "Content-Type": "application/json;" },
-            body: JSON.stringify({
-                id: cookie.data?.id,
-                product: [product],
-            }),
-        });
+        //update - increase
 
-        console.log(result);
+        if (existCartItem) {
+            const updateCartItem = { ...existCartItem };
+            updateCartItem.quantity = updateCartItem.quantity + product.quantity;
+
+            const restCartItems = cartItems.current.filter((item) => item.productOptionId !== product.productOptionId);
+
+            const result = await updateLocalCart(cookie.data?.id, [
+                ...restCartItems,
+                createLocalCartItem(updateCartItem),
+            ]);
+
+            if (result.status === 200) {
+                refetch({ id: cookie.data?.id });
+            }
+            return;
+        }
+
+        //add new item
+
+        const result = await updateLocalCart(cookie.data?.id, [...cartItems.current, product]);
+
         if (result.status === 200) {
             refetch({ id: cookie.data?.id });
         }
-
-        /*
-        {
-            "productOptionId": "cl9lewa6nggtc09ueqfsjarb9",
-            "price": 1999,
-            "title": "Unisex Long Sleeve Tee",
-            "quantity": 1,
-            "imgUrl": "https://media.graphassets.com/TSPnQGujTFC8nwtYMXmz",
-            "slug": "unisex-long-sleeve-tee"
-        }
-        */
+        return;
     };
 
-    // ---
+    //- remove cart item
 
-    const removeItemFromCart = async (itemId: CartItem["productOptionId"]) => {};
+    const removeItemFromCart = async (itemId: CartItem["productOptionId"]) => {
+        if (session.status !== "unauthenticated") {
+            return;
+        }
 
-    // ---
+        if (!cartItems.current) {
+            return;
+        }
 
-    const clearCartItems = async () => {};
+        const existCartItem = cartItems.current.find((item) => item.itemId === itemId);
+
+        if (!existCartItem) {
+            return;
+        }
+
+        // decrease
+
+        if (existCartItem.quantity > 1) {
+            const updateCartItems = cartItems.current.map((item) => {
+                if (item.itemId === itemId) {
+                    item.quantity = item.quantity - 1;
+                }
+
+                return item;
+            });
+
+            const result = await updateLocalCart(cookie.data?.id, updateCartItems);
+
+            if (result.status === 200) {
+                refetch({ id: cookie.data?.id });
+            }
+            return;
+        }
+
+        //clear whole item
+
+        const restCartItems = cartItems.current.filter((item) => item.itemId !== itemId);
+        const result = await updateLocalCart(cookie.data?.id, restCartItems);
+
+        if (result.status === 200) {
+            refetch({ id: cookie.data?.id });
+        }
+        return;
+    };
+
+    //- clear cart
+
+    const clearCartItems = async () => {
+        if (session.status !== "unauthenticated") {
+            return;
+        }
+
+        if (!cartItems.current) {
+            return;
+        }
+
+        const result = await updateLocalCart(cookie.data?.id, []);
+
+        if (result.status === 200) {
+            refetch({ id: cookie.data?.id });
+        }
+        return;
+    };
 
     return { addItemToCart, removeItemFromCart, clearCartItems } as const;
 };

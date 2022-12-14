@@ -3,46 +3,30 @@ import { unstable_getServerSession } from "next-auth/next";
 import type { NextApiHandler } from "next/types";
 import { authApolloClient } from "graphQL/apolloClient";
 import {
-    AddItemOptionToCartByCartIdDocument,
-    AddItemOptionToCartByCartIdMutation,
-    AddItemOptionToCartByCartIdMutationVariables,
     AddItemToCartLocalByIdDocument,
     AddItemToCartLocalByIdMutation,
     AddItemToCartLocalByIdMutationVariables,
-    ClearCartItemsDocument,
-    ClearCartItemsMutation,
-    ClearCartItemsMutationVariables,
-    RemoveItemFromCartByCartIdDocument,
-    RemoveItemFromCartByCartIdMutation,
-    RemoveItemFromCartByCartIdMutationVariables,
-    UpdateItemQuantityByCartIdDocument,
-    UpdateItemQuantityByCartIdMutation,
-    UpdateItemQuantityByCartIdMutationVariables,
 } from "graphQL/generated/graphql";
 
 const handleCartSession: NextApiHandler = async (req, res) => {
+    //! przydało by się zabezpieczyć
     // const session = await unstable_getServerSession(req, res, authOptions);
 
-    // if (!session?.user.cartId) {
-    //     res.status(400).json({ message: "you have to be logged" });
+    // if (session) {
     //     return;
     // }
 
-    // const cartId = session.user.cartId;
+    //! gdzie syntax try catch - chyba w fetchu zwykłym
+
+    //! przydało by się zabezpieczyć
+
     const payload = await JSON.parse(req.body);
 
-    console.log("1", payload.product);
-
-    console.log("2", JSON.stringify(payload.product));
-
     switch (req.method) {
-        //add to cart item
-        case "POST":
-            // if (!payload?.productOptionId && !payload?.quantity) {
-            //     res.status(400).json({ message: "productOptionId is required" });
-            //     return;
-            // }
+        //todo - zmień nazwę na  UpdateLocalCartItemMutation,
 
+        //todo - dodaj auth do wyjątków w hygraph - tak aby zmiany byłuy możliwe tylko po stronie serwera
+        case "POST":
             const updateCartItem = await authApolloClient.mutate<
                 AddItemToCartLocalByIdMutation,
                 AddItemToCartLocalByIdMutationVariables
@@ -51,15 +35,9 @@ const handleCartSession: NextApiHandler = async (req, res) => {
                 variables: {
                     id: payload.id,
                     cartItem: `${JSON.stringify(payload.product)}`,
-                    // cartId,
-                    // quantity: payload.quantity,
-                    // productOptionId: payload.productOptionId,
                 },
             });
-            console.log(
-                "🚀 ~ file: local-session.ts:43 ~ consthandleCartSession:NextApiHandler= ~  createCartItem",
-                updateCartItem
-            );
+
             res.status(200).json({ updateCartItem });
 
             return;

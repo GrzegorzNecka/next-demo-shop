@@ -7,6 +7,9 @@ import {
     AddItemOptionToCartByCartIdDocument,
     AddItemOptionToCartByCartIdMutation,
     AddItemOptionToCartByCartIdMutationVariables,
+    AddItemToCartLocalByIdDocument,
+    AddItemToCartLocalByIdMutation,
+    AddItemToCartLocalByIdMutationVariables,
     GetAccountByEmailDocument,
     GetAccountByEmailQuery,
     GetAccountByEmailQueryVariables,
@@ -16,6 +19,9 @@ import {
     GetCartItemsByCartIdDocument,
     GetCartItemsByCartIdQuery,
     GetCartItemsByCartIdQueryVariables,
+    GetLocalCartDocument,
+    GetLocalCartQuery,
+    GetLocalCartQueryVariables,
     UpdateItemQuantityByCartIdDocument,
     UpdateItemQuantityByCartIdMutation,
     UpdateItemQuantityByCartIdMutationVariables,
@@ -82,38 +88,26 @@ export const authOptions: NextAuthOptions = {
 };
 
 export default async function NextAuthHandler(req: NextApiRequest, res: NextApiResponse) {
-    const userId = getCookie("local-cart-item-user", { req, res });
+    const cookieId = getCookie("local-cart-item-id", { req, res });
 
     const options: NextAuthOptions = {
         ...authOptions,
         callbacks: {
             ...authOptions.callbacks,
             async signIn({ user, account, profile, email, credentials }) {
-                if (!userId) {
+                if (typeof cookieId !== "string") {
                     return true;
                 }
 
-                const res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/cart/local-session`, {
-                    method: "POST",
-                    credentials: "same-origin",
-                    headers: { "Content-Type": "application/json;" },
-                    body: JSON.stringify({
-                        userId,
-                        signIn: true,
-                    }),
+                // - local cart items
+                const localCart = await apolloClient.query<GetLocalCartQuery, GetLocalCartQueryVariables>({
+                    query: GetLocalCartDocument,
+                    variables: { id: cookieId },
                 });
 
-                if (res.status !== 200) {
-                    return true;
-                }
+                // - server cart items
 
-                const { cartItems }: { cartItems: CartItem[] } = await res.json();
-
-                if (cartItems.length === 0) {
-                    return true;
-                }
-
-                const getCartIdByAccountId = await authApolloClient.query<
+                const serverCartId = await authApolloClient.query<
                     GetCartIdByAccountIdQuery,
                     GetCartIdByAccountIdQueryVariables
                 >({
@@ -121,9 +115,9 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
                     variables: { id: account?.providerAccountId! },
                 });
 
-                const { id } = getCartIdByAccountId.data?.account?.cart!;
+                const { id } = serverCartId.data?.account?.cart!;
 
-                const getCartItemsByCartId = await apolloClient.query<
+                const serverCart = await apolloClient.query<
                     GetCartItemsByCartIdQuery,
                     GetCartItemsByCartIdQueryVariables
                 >({
@@ -133,13 +127,16 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
                     },
                 });
 
-                const sessionCartItems = getCartItemsByCartId.data.cart?.cartItems;
-                console.log("🚀 ~ file: [...nextauth].ts:137 ~ signIn ~  sessionCartItems ", sessionCartItems);
+                //! zmień cart Item na cart Items
 
-                if (cartItems.length > 0 && sessionCartItems) {
-                    //cartItems === non session cart items
-                    cartItems.forEach(async (item) => {
-                        const isExist = sessionCartItems.find((s_item) => s_item.option?.id === item.productOptionId);
+                const localCartItems: CartItem[] = JSON.parse(localCart.data.cartLocal?.cartItem);
+                console.log("🚀 ~ file: [...nextauth].ts:133 ~ signIn ~ localCartItem", localCartItems);
+                const serverCartItems = serverCart.data.cart?.cartItems;
+                console.log("🚀 ~ file: [...nextauth].ts:135 ~ signIn ~ serverCartItems", serverCartItems);
+
+                if (localCartItems.length > 0 && serverCartItems) {
+                    localCartItems.forEach(async (item) => {
+                        const isExist = serverCartItems.find((s_item) => s_item.option?.id === item.productOptionId);
                         console.log("🚀 ~ file: [...nextauth].ts:142 ~ cartItems.forEach ~ isExist", isExist);
 
                         if (!isExist) {
@@ -157,6 +154,8 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
                         }
 
                         if (isExist) {
+                            //! quantity nie może być większe niż total
+
                             const updateCartItem = await authApolloClient.mutate<
                                 UpdateItemQuantityByCartIdMutation,
                                 UpdateItemQuantityByCartIdMutationVariables
@@ -172,20 +171,19 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
                     });
                 }
 
-                const setEmpty = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/cart/local-session`, {
-                    method: "DELETE",
-                    credentials: "same-origin",
-                    headers: { "Content-Type": "application/json;" },
-                    body: JSON.stringify({
-                        setEmpty: true,
-                        userId,
-                    }),
+                //todo - dodaj auth do wyjątków w hygraph - tak aby zmiany byłuy możliwe tylko po stronie serwera
+                const updateCartItem = await authApolloClient.mutate<
+                    AddItemToCartLocalByIdMutation,
+                    AddItemToCartLocalByIdMutationVariables
+                >({
+                    mutation: AddItemToCartLocalByIdDocument,
+                    variables: {
+                        id: cookieId,
+                        cartItem: `[]`,
+                    },
                 });
 
-                // await apolloClient.refetchQueries({
-                //     include: ['GetCartItemsByCartId'],
-                //   });
-                //   refetchQueries: [{ query: GetReviewsForProductSlugDocument, variables: { slug: productSlug } }],
+                // res.status(200).json({ updateCartItem });
 
                 return true;
             },

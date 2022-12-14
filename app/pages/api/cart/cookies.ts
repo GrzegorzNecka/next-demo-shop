@@ -42,7 +42,7 @@ const handler: NextApiHandler<Response> = async (req, res) => {
             sameSite: "lax",
             req,
             res,
-            maxAge: 60 * 60 * 24,
+            // maxAge: 60 * 60 * 24,
         });
     }
 
