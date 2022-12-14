@@ -189,3 +189,32 @@ mutation DeleteLocalCart($id: ID!) {
         id
     }
 }
+
+mutation CreateUnAuthCart {
+    createUnauthCart(data: {}) {
+        id
+    }
+}
+
+fragment unAuthCartContent on UnauthCart {
+    id
+    cartItems
+}
+
+query GetUnauthCart($id: ID!) {
+    unauthCart(where: { id: $id }, stage: DRAFT) {
+        ...unAuthCartContent
+    }
+}
+
+mutation UpdateUnauthCartById($id: ID!, $cartItems: Json!) {
+    updateUnauthCart(where: { id: $id }, data: { cartItems: $cartItems }) {
+        ...unAuthCartContent
+    }
+}
+
+mutation DeleteUnauthCart($id: ID!) {
+    deleteUnauthCart(where: { id: $id }) {
+        id
+    }
+}
