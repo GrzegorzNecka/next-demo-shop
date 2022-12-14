@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useGetLocalCartQuery } from "graphQL/generated/graphql";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { CookieValueTypes } from "cookies-next";
 type useCartItemsProps = {
     setCartItems: Dispatch<SetStateAction<CartItem[]>>;
@@ -21,7 +21,7 @@ const getCookies = async () => {
 };
 
 const updateLocalCart = async (id: CookieValueTypes, product: CartItem[]) => {
-    const result = await fetch("/api/cart/local-session", {
+    const result = await fetch("/api/cart/unauth-session", {
         method: "POST",
         headers: { "Content-Type": "application/json;" },
         body: JSON.stringify({
@@ -44,7 +44,7 @@ const createLocalCartItem = (item: CartItem) => {
     };
 };
 
-export const useCartItemsWithLocalStorage = ({ setCartItems, setIsLoading }: useCartItemsProps) => {
+export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading }: useCartItemsProps) => {
     const session = useSession();
 
     const cookie = useQuery({ queryKey: ["cookieId"], queryFn: getCookies });

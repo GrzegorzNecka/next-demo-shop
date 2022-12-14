@@ -1,5 +1,4 @@
-import type { NextApiHandler, NextApiRequest } from "next/types";
-import type { CartItem } from "context/types";
+import type { NextApiHandler } from "next/types";
 import { CookieValueTypes, getCookie, hasCookie, setCookie } from "cookies-next";
 import { authApolloClient } from "graphQL/apolloClient";
 import {

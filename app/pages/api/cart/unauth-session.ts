@@ -1,5 +1,3 @@
-import { authOptions } from "pages/api/auth/[...nextauth]";
-import { unstable_getServerSession } from "next-auth/next";
 import type { NextApiHandler } from "next/types";
 import { authApolloClient } from "graphQL/apolloClient";
 import {

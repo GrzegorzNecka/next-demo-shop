@@ -2,15 +2,14 @@ import type { Dispatch, SetStateAction } from "react";
 import { useEffect } from "react";
 import { CartItem } from "context/types";
 import { useSession } from "next-auth/react";
-import { GetCartItemsByCartIdQuery, useGetCartItemsByCartIdQuery } from "graphQL/generated/graphql";
-// import { handleAddItemToCart, handleClearCartItems, handleRemoveItemFromCart, updateCartItem } from "services/cart";
+import { useGetCartItemsByCartIdQuery } from "graphQL/generated/graphql";
 
 type useCartItemsProps = {
     setCartItems: Dispatch<SetStateAction<CartItem[]>>;
     setIsLoading: Dispatch<SetStateAction<boolean>>;
 };
 
-export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartItemsProps) => {
+export const useCartItemsWithAuthSession = ({ setCartItems, setIsLoading }: useCartItemsProps) => {
     const session = useSession();
     const cartId = session.data?.user?.cartId!;
 
@@ -65,7 +64,7 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
         const existProduct = data.cart?.cartItems.find((item) => item?.option?.id === productOptionId);
 
         if (!existProduct) {
-            const result = await fetch("/api/cart/server-session", {
+            const result = await fetch("/api/cart/auth-session", {
                 method: "POST",
                 headers: { "Content-Type": "application/json;" },
                 body: JSON.stringify({
@@ -85,7 +84,7 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
 
         const updatedQuantity = existProduct?.quantity! + quantity;
 
-        const result = await fetch("/api/cart/server-session", {
+        const result = await fetch("/api/cart/auth-session", {
             method: "PUT",
             headers: { "Content-Type": "application/json;" },
             body: JSON.stringify({
@@ -112,7 +111,7 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
             return;
         }
 
-        const result = await fetch("/api/cart/server-session", {
+        const result = await fetch("/api/cart/auth-session", {
             method: "DELETE",
             headers: { "Content-Type": "application/json;" },
             body: JSON.stringify({
@@ -133,7 +132,7 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
             return;
         }
 
-        const result = await fetch("/api/cart/server-session", {
+        const result = await fetch("/api/cart/auth-session", {
             method: "DELETE",
             headers: { "Content-Type": "application/json;" },
             body: JSON.stringify({
