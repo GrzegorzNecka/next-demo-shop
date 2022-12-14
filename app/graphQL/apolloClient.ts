@@ -9,9 +9,6 @@ const cache = new InMemoryCache({
             fields: {
                 cartItems: {
                     merge(existing = [], incoming: unknown[]) {
-                        console.log("🚀 ~ file: apolloClient.ts:21 ~ merge ~ incoming", incoming);
-                        console.log("🚀 ~ file: apolloClient.ts:21 ~ merge ~ existing", existing);
-
                         return [...existing, ...incoming];
                     },
                 },

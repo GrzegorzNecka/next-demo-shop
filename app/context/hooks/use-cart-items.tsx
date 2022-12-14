@@ -1,25 +1,30 @@
 import type { CartItem } from "context/types";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
-import { useCartItemsWithGraphQl } from "./use-server-session";
-import { useCartItemsWithLocalStorage } from "./use-local-session";
+import { useState, useMemo } from "react";
+import { useCartItemsWithAuthSession } from "./use-auth-session";
+import { useCartItemsWithUnauthSession } from "./use-unauth-session";
 
 export const useCartItems = () => {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const { status } = useSession();
+    const { status, data: session } = useSession();
 
-    const serverSession = useCartItemsWithGraphQl({
+    //! use memo
+
+    const authSession = useCartItemsWithAuthSession({
         setCartItems,
         setIsLoading,
+        status,
+        session,
     });
 
-    const localSession = useCartItemsWithLocalStorage({
+    const unauthSession = useCartItemsWithUnauthSession({
         setCartItems,
         setIsLoading,
+        status,
     });
 
-    const methods = status === "authenticated" ? serverSession : localSession;
+    const methods = status === "authenticated" ? authSession : unauthSession;
 
     return {
         cartItems,

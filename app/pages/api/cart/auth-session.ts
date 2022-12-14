@@ -29,8 +29,9 @@ const handleCartSession: NextApiHandler = async (req, res) => {
     const payload = await JSON.parse(req.body);
 
     switch (req.method) {
-        //add to cart item
         case "POST":
+            // -- add to cart item
+
             if (!payload?.productOptionId && !payload?.quantity) {
                 res.status(400).json({ message: "productOptionId is required" });
                 return;
@@ -50,8 +51,10 @@ const handleCartSession: NextApiHandler = async (req, res) => {
 
             res.status(200).json({ createCartItem });
             return;
-        //update cart item
+
         case "PUT":
+            // -- update cart item
+
             if (!payload.itemId && !payload.updatedQuantity) {
                 res.status(400).json({ message: "itemId and updatedQuantity are required" });
                 return;
@@ -73,7 +76,8 @@ const handleCartSession: NextApiHandler = async (req, res) => {
             return;
 
         case "DELETE":
-            //remove selected item
+            // -- remove selected item
+
             if (payload.itemId && payload.quantity) {
                 if (payload.quantity > 1) {
                     const increseCartItem = await authApolloClient.mutate<
@@ -105,7 +109,7 @@ const handleCartSession: NextApiHandler = async (req, res) => {
                 res.status(200).json({ removeCartItem });
                 return;
             }
-            //set empty Cart
+            // -- set empty Cart
             if (payload.setEmpty) {
                 const removeAllCartItems = await authApolloClient.mutate<
                     ClearCartItemsMutation,

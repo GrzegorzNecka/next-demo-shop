@@ -1802,396 +1802,6 @@ export type CartItemWhereUniqueInput = {
   readonly id?: InputMaybe<Scalars['ID']>;
 };
 
-export type CartLocal = Node & {
-  readonly __typename?: 'CartLocal';
-  readonly cartItem?: Maybe<Scalars['Json']>;
-  /** The time the document was created */
-  readonly createdAt: Scalars['DateTime'];
-  /** User that created this document */
-  readonly createdBy?: Maybe<User>;
-  /** Get the document in other stages */
-  readonly documentInStages: ReadonlyArray<CartLocal>;
-  /** List of CartLocal versions */
-  readonly history: ReadonlyArray<Version>;
-  /** The unique identifier */
-  readonly id: Scalars['ID'];
-  /** The time the document was published. Null on documents in draft stage. */
-  readonly publishedAt?: Maybe<Scalars['DateTime']>;
-  /** User that last published this document */
-  readonly publishedBy?: Maybe<User>;
-  readonly scheduledIn: ReadonlyArray<ScheduledOperation>;
-  /** System stage field */
-  readonly stage: Stage;
-  /** The time the document was updated */
-  readonly updatedAt: Scalars['DateTime'];
-  /** User that last updated this document */
-  readonly updatedBy?: Maybe<User>;
-};
-
-
-export type CartLocalCreatedByArgs = {
-  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-};
-
-
-export type CartLocalDocumentInStagesArgs = {
-  includeCurrent?: Scalars['Boolean'];
-  inheritLocale?: Scalars['Boolean'];
-  stages?: ReadonlyArray<Stage>;
-};
-
-
-export type CartLocalHistoryArgs = {
-  limit?: Scalars['Int'];
-  skip?: Scalars['Int'];
-  stageOverride?: InputMaybe<Stage>;
-};
-
-
-export type CartLocalPublishedByArgs = {
-  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-};
-
-
-export type CartLocalScheduledInArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<ScheduledOperationWhereInput>;
-};
-
-
-export type CartLocalUpdatedByArgs = {
-  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-};
-
-export type CartLocalConnectInput = {
-  /** Allow to specify document position in list of connected documents, will default to appending at end of list */
-  readonly position?: InputMaybe<ConnectPositionInput>;
-  /** Document to connect */
-  readonly where: CartLocalWhereUniqueInput;
-};
-
-/** A connection to a list of items. */
-export type CartLocalConnection = {
-  readonly __typename?: 'CartLocalConnection';
-  readonly aggregate: Aggregate;
-  /** A list of edges. */
-  readonly edges: ReadonlyArray<CartLocalEdge>;
-  /** Information to aid in pagination. */
-  readonly pageInfo: PageInfo;
-};
-
-export type CartLocalCreateInput = {
-  readonly cartItem?: InputMaybe<Scalars['Json']>;
-  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
-  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
-};
-
-export type CartLocalCreateManyInlineInput = {
-  /** Connect multiple existing CartLocal documents */
-  readonly connect?: InputMaybe<ReadonlyArray<CartLocalWhereUniqueInput>>;
-  /** Create and connect multiple existing CartLocal documents */
-  readonly create?: InputMaybe<ReadonlyArray<CartLocalCreateInput>>;
-};
-
-export type CartLocalCreateOneInlineInput = {
-  /** Connect one existing CartLocal document */
-  readonly connect?: InputMaybe<CartLocalWhereUniqueInput>;
-  /** Create and connect one CartLocal document */
-  readonly create?: InputMaybe<CartLocalCreateInput>;
-};
-
-/** An edge in a connection. */
-export type CartLocalEdge = {
-  readonly __typename?: 'CartLocalEdge';
-  /** A cursor for use in pagination. */
-  readonly cursor: Scalars['String'];
-  /** The item at the end of the edge. */
-  readonly node: CartLocal;
-};
-
-/** Identifies documents */
-export type CartLocalManyWhereInput = {
-  /** Logical AND on all given filters. */
-  readonly AND?: InputMaybe<ReadonlyArray<CartLocalWhereInput>>;
-  /** Logical NOT on all given filters combined by AND. */
-  readonly NOT?: InputMaybe<ReadonlyArray<CartLocalWhereInput>>;
-  /** Logical OR on all given filters. */
-  readonly OR?: InputMaybe<ReadonlyArray<CartLocalWhereInput>>;
-  /** Contains search across all appropriate fields. */
-  readonly _search?: InputMaybe<Scalars['String']>;
-  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than the given value. */
-  readonly createdAt_gt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than or equal the given value. */
-  readonly createdAt_gte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are contained in given list. */
-  readonly createdAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  /** All values less than the given value. */
-  readonly createdAt_lt?: InputMaybe<Scalars['DateTime']>;
-  /** All values less than or equal the given value. */
-  readonly createdAt_lte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not equal to given value. */
-  readonly createdAt_not?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not contained in given list. */
-  readonly createdAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  readonly createdBy?: InputMaybe<UserWhereInput>;
-  readonly documentInStages_every?: InputMaybe<CartLocalWhereStageInput>;
-  readonly documentInStages_none?: InputMaybe<CartLocalWhereStageInput>;
-  readonly documentInStages_some?: InputMaybe<CartLocalWhereStageInput>;
-  readonly id?: InputMaybe<Scalars['ID']>;
-  /** All values containing the given string. */
-  readonly id_contains?: InputMaybe<Scalars['ID']>;
-  /** All values ending with the given string. */
-  readonly id_ends_with?: InputMaybe<Scalars['ID']>;
-  /** All values that are contained in given list. */
-  readonly id_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
-  /** All values that are not equal to given value. */
-  readonly id_not?: InputMaybe<Scalars['ID']>;
-  /** All values not containing the given string. */
-  readonly id_not_contains?: InputMaybe<Scalars['ID']>;
-  /** All values not ending with the given string */
-  readonly id_not_ends_with?: InputMaybe<Scalars['ID']>;
-  /** All values that are not contained in given list. */
-  readonly id_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
-  /** All values not starting with the given string. */
-  readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
-  /** All values starting with the given string. */
-  readonly id_starts_with?: InputMaybe<Scalars['ID']>;
-  readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than the given value. */
-  readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than or equal the given value. */
-  readonly publishedAt_gte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are contained in given list. */
-  readonly publishedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  /** All values less than the given value. */
-  readonly publishedAt_lt?: InputMaybe<Scalars['DateTime']>;
-  /** All values less than or equal the given value. */
-  readonly publishedAt_lte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not equal to given value. */
-  readonly publishedAt_not?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not contained in given list. */
-  readonly publishedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  readonly publishedBy?: InputMaybe<UserWhereInput>;
-  readonly scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than the given value. */
-  readonly updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than or equal the given value. */
-  readonly updatedAt_gte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are contained in given list. */
-  readonly updatedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  /** All values less than the given value. */
-  readonly updatedAt_lt?: InputMaybe<Scalars['DateTime']>;
-  /** All values less than or equal the given value. */
-  readonly updatedAt_lte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not equal to given value. */
-  readonly updatedAt_not?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not contained in given list. */
-  readonly updatedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  readonly updatedBy?: InputMaybe<UserWhereInput>;
-};
-
-export enum CartLocalOrderByInput {
-  CreatedAtAsc = 'createdAt_ASC',
-  CreatedAtDesc = 'createdAt_DESC',
-  IdAsc = 'id_ASC',
-  IdDesc = 'id_DESC',
-  PublishedAtAsc = 'publishedAt_ASC',
-  PublishedAtDesc = 'publishedAt_DESC',
-  UpdatedAtAsc = 'updatedAt_ASC',
-  UpdatedAtDesc = 'updatedAt_DESC'
-}
-
-export type CartLocalUpdateInput = {
-  readonly cartItem?: InputMaybe<Scalars['Json']>;
-};
-
-export type CartLocalUpdateManyInlineInput = {
-  /** Connect multiple existing CartLocal documents */
-  readonly connect?: InputMaybe<ReadonlyArray<CartLocalConnectInput>>;
-  /** Create and connect multiple CartLocal documents */
-  readonly create?: InputMaybe<ReadonlyArray<CartLocalCreateInput>>;
-  /** Delete multiple CartLocal documents */
-  readonly delete?: InputMaybe<ReadonlyArray<CartLocalWhereUniqueInput>>;
-  /** Disconnect multiple CartLocal documents */
-  readonly disconnect?: InputMaybe<ReadonlyArray<CartLocalWhereUniqueInput>>;
-  /** Override currently-connected documents with multiple existing CartLocal documents */
-  readonly set?: InputMaybe<ReadonlyArray<CartLocalWhereUniqueInput>>;
-  /** Update multiple CartLocal documents */
-  readonly update?: InputMaybe<ReadonlyArray<CartLocalUpdateWithNestedWhereUniqueInput>>;
-  /** Upsert multiple CartLocal documents */
-  readonly upsert?: InputMaybe<ReadonlyArray<CartLocalUpsertWithNestedWhereUniqueInput>>;
-};
-
-export type CartLocalUpdateManyInput = {
-  readonly cartItem?: InputMaybe<Scalars['Json']>;
-};
-
-export type CartLocalUpdateManyWithNestedWhereInput = {
-  /** Update many input */
-  readonly data: CartLocalUpdateManyInput;
-  /** Document search */
-  readonly where: CartLocalWhereInput;
-};
-
-export type CartLocalUpdateOneInlineInput = {
-  /** Connect existing CartLocal document */
-  readonly connect?: InputMaybe<CartLocalWhereUniqueInput>;
-  /** Create and connect one CartLocal document */
-  readonly create?: InputMaybe<CartLocalCreateInput>;
-  /** Delete currently connected CartLocal document */
-  readonly delete?: InputMaybe<Scalars['Boolean']>;
-  /** Disconnect currently connected CartLocal document */
-  readonly disconnect?: InputMaybe<Scalars['Boolean']>;
-  /** Update single CartLocal document */
-  readonly update?: InputMaybe<CartLocalUpdateWithNestedWhereUniqueInput>;
-  /** Upsert single CartLocal document */
-  readonly upsert?: InputMaybe<CartLocalUpsertWithNestedWhereUniqueInput>;
-};
-
-export type CartLocalUpdateWithNestedWhereUniqueInput = {
-  /** Document to update */
-  readonly data: CartLocalUpdateInput;
-  /** Unique document search */
-  readonly where: CartLocalWhereUniqueInput;
-};
-
-export type CartLocalUpsertInput = {
-  /** Create document if it didn't exist */
-  readonly create: CartLocalCreateInput;
-  /** Update document if it exists */
-  readonly update: CartLocalUpdateInput;
-};
-
-export type CartLocalUpsertWithNestedWhereUniqueInput = {
-  /** Upsert data */
-  readonly data: CartLocalUpsertInput;
-  /** Unique document search */
-  readonly where: CartLocalWhereUniqueInput;
-};
-
-/** This contains a set of filters that can be used to compare values internally */
-export type CartLocalWhereComparatorInput = {
-  /** This field can be used to request to check if the entry is outdated by internal comparison */
-  readonly outdated_to?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** Identifies documents */
-export type CartLocalWhereInput = {
-  /** Logical AND on all given filters. */
-  readonly AND?: InputMaybe<ReadonlyArray<CartLocalWhereInput>>;
-  /** Logical NOT on all given filters combined by AND. */
-  readonly NOT?: InputMaybe<ReadonlyArray<CartLocalWhereInput>>;
-  /** Logical OR on all given filters. */
-  readonly OR?: InputMaybe<ReadonlyArray<CartLocalWhereInput>>;
-  /** Contains search across all appropriate fields. */
-  readonly _search?: InputMaybe<Scalars['String']>;
-  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than the given value. */
-  readonly createdAt_gt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than or equal the given value. */
-  readonly createdAt_gte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are contained in given list. */
-  readonly createdAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  /** All values less than the given value. */
-  readonly createdAt_lt?: InputMaybe<Scalars['DateTime']>;
-  /** All values less than or equal the given value. */
-  readonly createdAt_lte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not equal to given value. */
-  readonly createdAt_not?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not contained in given list. */
-  readonly createdAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  readonly createdBy?: InputMaybe<UserWhereInput>;
-  readonly documentInStages_every?: InputMaybe<CartLocalWhereStageInput>;
-  readonly documentInStages_none?: InputMaybe<CartLocalWhereStageInput>;
-  readonly documentInStages_some?: InputMaybe<CartLocalWhereStageInput>;
-  readonly id?: InputMaybe<Scalars['ID']>;
-  /** All values containing the given string. */
-  readonly id_contains?: InputMaybe<Scalars['ID']>;
-  /** All values ending with the given string. */
-  readonly id_ends_with?: InputMaybe<Scalars['ID']>;
-  /** All values that are contained in given list. */
-  readonly id_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
-  /** All values that are not equal to given value. */
-  readonly id_not?: InputMaybe<Scalars['ID']>;
-  /** All values not containing the given string. */
-  readonly id_not_contains?: InputMaybe<Scalars['ID']>;
-  /** All values not ending with the given string */
-  readonly id_not_ends_with?: InputMaybe<Scalars['ID']>;
-  /** All values that are not contained in given list. */
-  readonly id_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
-  /** All values not starting with the given string. */
-  readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
-  /** All values starting with the given string. */
-  readonly id_starts_with?: InputMaybe<Scalars['ID']>;
-  readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than the given value. */
-  readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than or equal the given value. */
-  readonly publishedAt_gte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are contained in given list. */
-  readonly publishedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  /** All values less than the given value. */
-  readonly publishedAt_lt?: InputMaybe<Scalars['DateTime']>;
-  /** All values less than or equal the given value. */
-  readonly publishedAt_lte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not equal to given value. */
-  readonly publishedAt_not?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not contained in given list. */
-  readonly publishedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  readonly publishedBy?: InputMaybe<UserWhereInput>;
-  readonly scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than the given value. */
-  readonly updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than or equal the given value. */
-  readonly updatedAt_gte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are contained in given list. */
-  readonly updatedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  /** All values less than the given value. */
-  readonly updatedAt_lt?: InputMaybe<Scalars['DateTime']>;
-  /** All values less than or equal the given value. */
-  readonly updatedAt_lte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not equal to given value. */
-  readonly updatedAt_not?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not contained in given list. */
-  readonly updatedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  readonly updatedBy?: InputMaybe<UserWhereInput>;
-};
-
-/** The document in stages filter allows specifying a stage entry to cross compare the same document between different stages */
-export type CartLocalWhereStageInput = {
-  /** Logical AND on all given filters. */
-  readonly AND?: InputMaybe<ReadonlyArray<CartLocalWhereStageInput>>;
-  /** Logical NOT on all given filters combined by AND. */
-  readonly NOT?: InputMaybe<ReadonlyArray<CartLocalWhereStageInput>>;
-  /** Logical OR on all given filters. */
-  readonly OR?: InputMaybe<ReadonlyArray<CartLocalWhereStageInput>>;
-  /** This field contains fields which can be set as true or false to specify an internal comparison */
-  readonly compareWithParent?: InputMaybe<CartLocalWhereComparatorInput>;
-  /** Specify the stage to compare with */
-  readonly stage?: InputMaybe<Stage>;
-};
-
-/** References CartLocal record uniquely */
-export type CartLocalWhereUniqueInput = {
-  readonly id?: InputMaybe<Scalars['ID']>;
-};
-
 /** Identifies documents */
 export type CartManyWhereInput = {
   /** Logical AND on all given filters. */
@@ -4458,8 +4068,6 @@ export type Mutation = {
   readonly createCart?: Maybe<Cart>;
   /** Create one cartItem */
   readonly createCartItem?: Maybe<CartItem>;
-  /** Create one cartLocal */
-  readonly createCartLocal?: Maybe<CartLocal>;
   /** Create one category */
   readonly createCategory?: Maybe<Category>;
   /** Create one collection */
@@ -4486,6 +4094,8 @@ export type Mutation = {
   readonly createReview?: Maybe<Review>;
   /** Create one scheduledRelease */
   readonly createScheduledRelease?: Maybe<ScheduledRelease>;
+  /** Create one unauthCart */
+  readonly createUnauthCart?: Maybe<UnauthCart>;
   /** Delete one account from _all_ existing stages. Returns deleted document. */
   readonly deleteAccount?: Maybe<Account>;
   /** Delete one asset from _all_ existing stages. Returns deleted document. */
@@ -4494,8 +4104,6 @@ export type Mutation = {
   readonly deleteCart?: Maybe<Cart>;
   /** Delete one cartItem from _all_ existing stages. Returns deleted document. */
   readonly deleteCartItem?: Maybe<CartItem>;
-  /** Delete one cartLocal from _all_ existing stages. Returns deleted document. */
-  readonly deleteCartLocal?: Maybe<CartLocal>;
   /** Delete one category from _all_ existing stages. Returns deleted document. */
   readonly deleteCategory?: Maybe<Category>;
   /** Delete one collection from _all_ existing stages. Returns deleted document. */
@@ -4530,13 +4138,6 @@ export type Mutation = {
   readonly deleteManyCarts: BatchPayload;
   /** Delete many Cart documents, return deleted documents */
   readonly deleteManyCartsConnection: CartConnection;
-  /**
-   * Delete many CartLocal documents
-   * @deprecated Please use the new paginated many mutation (deleteManyCartsLocalConnection)
-   */
-  readonly deleteManyCartsLocal: BatchPayload;
-  /** Delete many CartLocal documents, return deleted documents */
-  readonly deleteManyCartsLocalConnection: CartLocalConnection;
   /**
    * Delete many Category documents
    * @deprecated Please use the new paginated many mutation (deleteManyCategoriesConnection)
@@ -4621,6 +4222,13 @@ export type Mutation = {
   readonly deleteManyReviews: BatchPayload;
   /** Delete many Review documents, return deleted documents */
   readonly deleteManyReviewsConnection: ReviewConnection;
+  /**
+   * Delete many UnauthCart documents
+   * @deprecated Please use the new paginated many mutation (deleteManyUnauthCartsConnection)
+   */
+  readonly deleteManyUnauthCarts: BatchPayload;
+  /** Delete many UnauthCart documents, return deleted documents */
+  readonly deleteManyUnauthCartsConnection: UnauthCartConnection;
   /** Delete one option from _all_ existing stages. Returns deleted document. */
   readonly deleteOption?: Maybe<Option>;
   /** Delete one order from _all_ existing stages. Returns deleted document. */
@@ -4643,6 +4251,8 @@ export type Mutation = {
   readonly deleteScheduledOperation?: Maybe<ScheduledOperation>;
   /** Delete one scheduledRelease from _all_ existing stages. Returns deleted document. */
   readonly deleteScheduledRelease?: Maybe<ScheduledRelease>;
+  /** Delete one unauthCart from _all_ existing stages. Returns deleted document. */
+  readonly deleteUnauthCart?: Maybe<UnauthCart>;
   /** Publish one account */
   readonly publishAccount?: Maybe<Account>;
   /** Publish one asset */
@@ -4651,8 +4261,6 @@ export type Mutation = {
   readonly publishCart?: Maybe<Cart>;
   /** Publish one cartItem */
   readonly publishCartItem?: Maybe<CartItem>;
-  /** Publish one cartLocal */
-  readonly publishCartLocal?: Maybe<CartLocal>;
   /** Publish one category */
   readonly publishCategory?: Maybe<Category>;
   /** Publish one collection */
@@ -4687,13 +4295,6 @@ export type Mutation = {
   readonly publishManyCarts: BatchPayload;
   /** Publish many Cart documents */
   readonly publishManyCartsConnection: CartConnection;
-  /**
-   * Publish many CartLocal documents
-   * @deprecated Please use the new paginated many mutation (publishManyCartsLocalConnection)
-   */
-  readonly publishManyCartsLocal: BatchPayload;
-  /** Publish many CartLocal documents */
-  readonly publishManyCartsLocalConnection: CartLocalConnection;
   /**
    * Publish many Category documents
    * @deprecated Please use the new paginated many mutation (publishManyCategoriesConnection)
@@ -4778,6 +4379,13 @@ export type Mutation = {
   readonly publishManyReviews: BatchPayload;
   /** Publish many Review documents */
   readonly publishManyReviewsConnection: ReviewConnection;
+  /**
+   * Publish many UnauthCart documents
+   * @deprecated Please use the new paginated many mutation (publishManyUnauthCartsConnection)
+   */
+  readonly publishManyUnauthCarts: BatchPayload;
+  /** Publish many UnauthCart documents */
+  readonly publishManyUnauthCartsConnection: UnauthCartConnection;
   /** Publish one option */
   readonly publishOption?: Maybe<Option>;
   /** Publish one order */
@@ -4796,6 +4404,8 @@ export type Mutation = {
   readonly publishProductSizeVariant?: Maybe<ProductSizeVariant>;
   /** Publish one review */
   readonly publishReview?: Maybe<Review>;
+  /** Publish one unauthCart */
+  readonly publishUnauthCart?: Maybe<UnauthCart>;
   /** Schedule to publish one account */
   readonly schedulePublishAccount?: Maybe<Account>;
   /** Schedule to publish one asset */
@@ -4804,8 +4414,6 @@ export type Mutation = {
   readonly schedulePublishCart?: Maybe<Cart>;
   /** Schedule to publish one cartItem */
   readonly schedulePublishCartItem?: Maybe<CartItem>;
-  /** Schedule to publish one cartLocal */
-  readonly schedulePublishCartLocal?: Maybe<CartLocal>;
   /** Schedule to publish one category */
   readonly schedulePublishCategory?: Maybe<Category>;
   /** Schedule to publish one collection */
@@ -4830,6 +4438,8 @@ export type Mutation = {
   readonly schedulePublishProductSizeVariant?: Maybe<ProductSizeVariant>;
   /** Schedule to publish one review */
   readonly schedulePublishReview?: Maybe<Review>;
+  /** Schedule to publish one unauthCart */
+  readonly schedulePublishUnauthCart?: Maybe<UnauthCart>;
   /** Unpublish one account from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly scheduleUnpublishAccount?: Maybe<Account>;
   /** Unpublish one asset from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
@@ -4838,8 +4448,6 @@ export type Mutation = {
   readonly scheduleUnpublishCart?: Maybe<Cart>;
   /** Unpublish one cartItem from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly scheduleUnpublishCartItem?: Maybe<CartItem>;
-  /** Unpublish one cartLocal from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
-  readonly scheduleUnpublishCartLocal?: Maybe<CartLocal>;
   /** Unpublish one category from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly scheduleUnpublishCategory?: Maybe<Category>;
   /** Unpublish one collection from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
@@ -4864,6 +4472,8 @@ export type Mutation = {
   readonly scheduleUnpublishProductSizeVariant?: Maybe<ProductSizeVariant>;
   /** Unpublish one review from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly scheduleUnpublishReview?: Maybe<Review>;
+  /** Unpublish one unauthCart from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
+  readonly scheduleUnpublishUnauthCart?: Maybe<UnauthCart>;
   /** Unpublish one account from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly unpublishAccount?: Maybe<Account>;
   /** Unpublish one asset from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
@@ -4872,8 +4482,6 @@ export type Mutation = {
   readonly unpublishCart?: Maybe<Cart>;
   /** Unpublish one cartItem from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly unpublishCartItem?: Maybe<CartItem>;
-  /** Unpublish one cartLocal from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
-  readonly unpublishCartLocal?: Maybe<CartLocal>;
   /** Unpublish one category from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly unpublishCategory?: Maybe<Category>;
   /** Unpublish one collection from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
@@ -4908,13 +4516,6 @@ export type Mutation = {
   readonly unpublishManyCarts: BatchPayload;
   /** Find many Cart documents that match criteria in specified stage and unpublish from target stages */
   readonly unpublishManyCartsConnection: CartConnection;
-  /**
-   * Unpublish many CartLocal documents
-   * @deprecated Please use the new paginated many mutation (unpublishManyCartsLocalConnection)
-   */
-  readonly unpublishManyCartsLocal: BatchPayload;
-  /** Find many CartLocal documents that match criteria in specified stage and unpublish from target stages */
-  readonly unpublishManyCartsLocalConnection: CartLocalConnection;
   /**
    * Unpublish many Category documents
    * @deprecated Please use the new paginated many mutation (unpublishManyCategoriesConnection)
@@ -4999,6 +4600,13 @@ export type Mutation = {
   readonly unpublishManyReviews: BatchPayload;
   /** Find many Review documents that match criteria in specified stage and unpublish from target stages */
   readonly unpublishManyReviewsConnection: ReviewConnection;
+  /**
+   * Unpublish many UnauthCart documents
+   * @deprecated Please use the new paginated many mutation (unpublishManyUnauthCartsConnection)
+   */
+  readonly unpublishManyUnauthCarts: BatchPayload;
+  /** Find many UnauthCart documents that match criteria in specified stage and unpublish from target stages */
+  readonly unpublishManyUnauthCartsConnection: UnauthCartConnection;
   /** Unpublish one option from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly unpublishOption?: Maybe<Option>;
   /** Unpublish one order from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
@@ -5017,6 +4625,8 @@ export type Mutation = {
   readonly unpublishProductSizeVariant?: Maybe<ProductSizeVariant>;
   /** Unpublish one review from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly unpublishReview?: Maybe<Review>;
+  /** Unpublish one unauthCart from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
+  readonly unpublishUnauthCart?: Maybe<UnauthCart>;
   /** Update one account */
   readonly updateAccount?: Maybe<Account>;
   /** Update one asset */
@@ -5025,8 +4635,6 @@ export type Mutation = {
   readonly updateCart?: Maybe<Cart>;
   /** Update one cartItem */
   readonly updateCartItem?: Maybe<CartItem>;
-  /** Update one cartLocal */
-  readonly updateCartLocal?: Maybe<CartLocal>;
   /** Update one category */
   readonly updateCategory?: Maybe<Category>;
   /** Update one collection */
@@ -5061,13 +4669,6 @@ export type Mutation = {
   readonly updateManyCarts: BatchPayload;
   /** Update many Cart documents */
   readonly updateManyCartsConnection: CartConnection;
-  /**
-   * Update many cartsLocal
-   * @deprecated Please use the new paginated many mutation (updateManyCartsLocalConnection)
-   */
-  readonly updateManyCartsLocal: BatchPayload;
-  /** Update many CartLocal documents */
-  readonly updateManyCartsLocalConnection: CartLocalConnection;
   /**
    * Update many categories
    * @deprecated Please use the new paginated many mutation (updateManyCategoriesConnection)
@@ -5152,6 +4753,13 @@ export type Mutation = {
   readonly updateManyReviews: BatchPayload;
   /** Update many Review documents */
   readonly updateManyReviewsConnection: ReviewConnection;
+  /**
+   * Update many unauthCarts
+   * @deprecated Please use the new paginated many mutation (updateManyUnauthCartsConnection)
+   */
+  readonly updateManyUnauthCarts: BatchPayload;
+  /** Update many UnauthCart documents */
+  readonly updateManyUnauthCartsConnection: UnauthCartConnection;
   /** Update one option */
   readonly updateOption?: Maybe<Option>;
   /** Update one order */
@@ -5172,6 +4780,8 @@ export type Mutation = {
   readonly updateReview?: Maybe<Review>;
   /** Update one scheduledRelease */
   readonly updateScheduledRelease?: Maybe<ScheduledRelease>;
+  /** Update one unauthCart */
+  readonly updateUnauthCart?: Maybe<UnauthCart>;
   /** Upsert one account */
   readonly upsertAccount?: Maybe<Account>;
   /** Upsert one asset */
@@ -5180,8 +4790,6 @@ export type Mutation = {
   readonly upsertCart?: Maybe<Cart>;
   /** Upsert one cartItem */
   readonly upsertCartItem?: Maybe<CartItem>;
-  /** Upsert one cartLocal */
-  readonly upsertCartLocal?: Maybe<CartLocal>;
   /** Upsert one category */
   readonly upsertCategory?: Maybe<Category>;
   /** Upsert one collection */
@@ -5206,6 +4814,8 @@ export type Mutation = {
   readonly upsertProductSizeVariant?: Maybe<ProductSizeVariant>;
   /** Upsert one review */
   readonly upsertReview?: Maybe<Review>;
+  /** Upsert one unauthCart */
+  readonly upsertUnauthCart?: Maybe<UnauthCart>;
 };
 
 
@@ -5226,11 +4836,6 @@ export type MutationCreateCartArgs = {
 
 export type MutationCreateCartItemArgs = {
   data: CartItemCreateInput;
-};
-
-
-export type MutationCreateCartLocalArgs = {
-  data: CartLocalCreateInput;
 };
 
 
@@ -5299,6 +4904,11 @@ export type MutationCreateScheduledReleaseArgs = {
 };
 
 
+export type MutationCreateUnauthCartArgs = {
+  data: UnauthCartCreateInput;
+};
+
+
 export type MutationDeleteAccountArgs = {
   where: AccountWhereUniqueInput;
 };
@@ -5316,11 +4926,6 @@ export type MutationDeleteCartArgs = {
 
 export type MutationDeleteCartItemArgs = {
   where: CartItemWhereUniqueInput;
-};
-
-
-export type MutationDeleteCartLocalArgs = {
-  where: CartLocalWhereUniqueInput;
 };
 
 
@@ -5396,21 +5001,6 @@ export type MutationDeleteManyCartsConnectionArgs = {
   last?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<CartManyWhereInput>;
-};
-
-
-export type MutationDeleteManyCartsLocalArgs = {
-  where?: InputMaybe<CartLocalManyWhereInput>;
-};
-
-
-export type MutationDeleteManyCartsLocalConnectionArgs = {
-  after?: InputMaybe<Scalars['ID']>;
-  before?: InputMaybe<Scalars['ID']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<CartLocalManyWhereInput>;
 };
 
 
@@ -5594,6 +5184,21 @@ export type MutationDeleteManyReviewsConnectionArgs = {
 };
 
 
+export type MutationDeleteManyUnauthCartsArgs = {
+  where?: InputMaybe<UnauthCartManyWhereInput>;
+};
+
+
+export type MutationDeleteManyUnauthCartsConnectionArgs = {
+  after?: InputMaybe<Scalars['ID']>;
+  before?: InputMaybe<Scalars['ID']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<UnauthCartManyWhereInput>;
+};
+
+
 export type MutationDeleteOptionArgs = {
   where: OptionWhereUniqueInput;
 };
@@ -5649,6 +5254,11 @@ export type MutationDeleteScheduledReleaseArgs = {
 };
 
 
+export type MutationDeleteUnauthCartArgs = {
+  where: UnauthCartWhereUniqueInput;
+};
+
+
 export type MutationPublishAccountArgs = {
   to?: ReadonlyArray<Stage>;
   where: AccountWhereUniqueInput;
@@ -5673,12 +5283,6 @@ export type MutationPublishCartArgs = {
 export type MutationPublishCartItemArgs = {
   to?: ReadonlyArray<Stage>;
   where: CartItemWhereUniqueInput;
-};
-
-
-export type MutationPublishCartLocalArgs = {
-  to?: ReadonlyArray<Stage>;
-  where: CartLocalWhereUniqueInput;
 };
 
 
@@ -5781,24 +5385,6 @@ export type MutationPublishManyCartsConnectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   to?: ReadonlyArray<Stage>;
   where?: InputMaybe<CartManyWhereInput>;
-};
-
-
-export type MutationPublishManyCartsLocalArgs = {
-  to?: ReadonlyArray<Stage>;
-  where?: InputMaybe<CartLocalManyWhereInput>;
-};
-
-
-export type MutationPublishManyCartsLocalConnectionArgs = {
-  after?: InputMaybe<Scalars['ID']>;
-  before?: InputMaybe<Scalars['ID']>;
-  first?: InputMaybe<Scalars['Int']>;
-  from?: InputMaybe<Stage>;
-  last?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  to?: ReadonlyArray<Stage>;
-  where?: InputMaybe<CartLocalManyWhereInput>;
 };
 
 
@@ -6060,6 +5646,24 @@ export type MutationPublishManyReviewsConnectionArgs = {
 };
 
 
+export type MutationPublishManyUnauthCartsArgs = {
+  to?: ReadonlyArray<Stage>;
+  where?: InputMaybe<UnauthCartManyWhereInput>;
+};
+
+
+export type MutationPublishManyUnauthCartsConnectionArgs = {
+  after?: InputMaybe<Scalars['ID']>;
+  before?: InputMaybe<Scalars['ID']>;
+  first?: InputMaybe<Scalars['Int']>;
+  from?: InputMaybe<Stage>;
+  last?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  to?: ReadonlyArray<Stage>;
+  where?: InputMaybe<UnauthCartManyWhereInput>;
+};
+
+
 export type MutationPublishOptionArgs = {
   locales?: InputMaybe<ReadonlyArray<Locale>>;
   publishBase?: InputMaybe<Scalars['Boolean']>;
@@ -6129,6 +5733,12 @@ export type MutationPublishReviewArgs = {
 };
 
 
+export type MutationPublishUnauthCartArgs = {
+  to?: ReadonlyArray<Stage>;
+  where: UnauthCartWhereUniqueInput;
+};
+
+
 export type MutationSchedulePublishAccountArgs = {
   releaseAt?: InputMaybe<Scalars['DateTime']>;
   releaseId?: InputMaybe<Scalars['String']>;
@@ -6161,14 +5771,6 @@ export type MutationSchedulePublishCartItemArgs = {
   releaseId?: InputMaybe<Scalars['String']>;
   to?: ReadonlyArray<Stage>;
   where: CartItemWhereUniqueInput;
-};
-
-
-export type MutationSchedulePublishCartLocalArgs = {
-  releaseAt?: InputMaybe<Scalars['DateTime']>;
-  releaseId?: InputMaybe<Scalars['String']>;
-  to?: ReadonlyArray<Stage>;
-  where: CartLocalWhereUniqueInput;
 };
 
 
@@ -6289,6 +5891,14 @@ export type MutationSchedulePublishReviewArgs = {
 };
 
 
+export type MutationSchedulePublishUnauthCartArgs = {
+  releaseAt?: InputMaybe<Scalars['DateTime']>;
+  releaseId?: InputMaybe<Scalars['String']>;
+  to?: ReadonlyArray<Stage>;
+  where: UnauthCartWhereUniqueInput;
+};
+
+
 export type MutationScheduleUnpublishAccountArgs = {
   from?: ReadonlyArray<Stage>;
   releaseAt?: InputMaybe<Scalars['DateTime']>;
@@ -6320,14 +5930,6 @@ export type MutationScheduleUnpublishCartItemArgs = {
   releaseAt?: InputMaybe<Scalars['DateTime']>;
   releaseId?: InputMaybe<Scalars['String']>;
   where: CartItemWhereUniqueInput;
-};
-
-
-export type MutationScheduleUnpublishCartLocalArgs = {
-  from?: ReadonlyArray<Stage>;
-  releaseAt?: InputMaybe<Scalars['DateTime']>;
-  releaseId?: InputMaybe<Scalars['String']>;
-  where: CartLocalWhereUniqueInput;
 };
 
 
@@ -6441,6 +6043,14 @@ export type MutationScheduleUnpublishReviewArgs = {
 };
 
 
+export type MutationScheduleUnpublishUnauthCartArgs = {
+  from?: ReadonlyArray<Stage>;
+  releaseAt?: InputMaybe<Scalars['DateTime']>;
+  releaseId?: InputMaybe<Scalars['String']>;
+  where: UnauthCartWhereUniqueInput;
+};
+
+
 export type MutationUnpublishAccountArgs = {
   from?: ReadonlyArray<Stage>;
   where: AccountWhereUniqueInput;
@@ -6464,12 +6074,6 @@ export type MutationUnpublishCartArgs = {
 export type MutationUnpublishCartItemArgs = {
   from?: ReadonlyArray<Stage>;
   where: CartItemWhereUniqueInput;
-};
-
-
-export type MutationUnpublishCartLocalArgs = {
-  from?: ReadonlyArray<Stage>;
-  where: CartLocalWhereUniqueInput;
 };
 
 
@@ -6568,24 +6172,6 @@ export type MutationUnpublishManyCartsConnectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   stage?: InputMaybe<Stage>;
   where?: InputMaybe<CartManyWhereInput>;
-};
-
-
-export type MutationUnpublishManyCartsLocalArgs = {
-  from?: ReadonlyArray<Stage>;
-  where?: InputMaybe<CartLocalManyWhereInput>;
-};
-
-
-export type MutationUnpublishManyCartsLocalConnectionArgs = {
-  after?: InputMaybe<Scalars['ID']>;
-  before?: InputMaybe<Scalars['ID']>;
-  first?: InputMaybe<Scalars['Int']>;
-  from?: ReadonlyArray<Stage>;
-  last?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  stage?: InputMaybe<Stage>;
-  where?: InputMaybe<CartLocalManyWhereInput>;
 };
 
 
@@ -6833,6 +6419,24 @@ export type MutationUnpublishManyReviewsConnectionArgs = {
 };
 
 
+export type MutationUnpublishManyUnauthCartsArgs = {
+  from?: ReadonlyArray<Stage>;
+  where?: InputMaybe<UnauthCartManyWhereInput>;
+};
+
+
+export type MutationUnpublishManyUnauthCartsConnectionArgs = {
+  after?: InputMaybe<Scalars['ID']>;
+  before?: InputMaybe<Scalars['ID']>;
+  first?: InputMaybe<Scalars['Int']>;
+  from?: ReadonlyArray<Stage>;
+  last?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  stage?: InputMaybe<Stage>;
+  where?: InputMaybe<UnauthCartManyWhereInput>;
+};
+
+
 export type MutationUnpublishOptionArgs = {
   from?: ReadonlyArray<Stage>;
   locales?: InputMaybe<ReadonlyArray<Locale>>;
@@ -6897,6 +6501,12 @@ export type MutationUnpublishReviewArgs = {
 };
 
 
+export type MutationUnpublishUnauthCartArgs = {
+  from?: ReadonlyArray<Stage>;
+  where: UnauthCartWhereUniqueInput;
+};
+
+
 export type MutationUpdateAccountArgs = {
   data: AccountUpdateInput;
   where: AccountWhereUniqueInput;
@@ -6918,12 +6528,6 @@ export type MutationUpdateCartArgs = {
 export type MutationUpdateCartItemArgs = {
   data: CartItemUpdateInput;
   where: CartItemWhereUniqueInput;
-};
-
-
-export type MutationUpdateCartLocalArgs = {
-  data: CartLocalUpdateInput;
-  where: CartLocalWhereUniqueInput;
 };
 
 
@@ -7010,23 +6614,6 @@ export type MutationUpdateManyCartsConnectionArgs = {
   last?: InputMaybe<Scalars['Int']>;
   skip?: InputMaybe<Scalars['Int']>;
   where?: InputMaybe<CartManyWhereInput>;
-};
-
-
-export type MutationUpdateManyCartsLocalArgs = {
-  data: CartLocalUpdateManyInput;
-  where?: InputMaybe<CartLocalManyWhereInput>;
-};
-
-
-export type MutationUpdateManyCartsLocalConnectionArgs = {
-  after?: InputMaybe<Scalars['ID']>;
-  before?: InputMaybe<Scalars['ID']>;
-  data: CartLocalUpdateManyInput;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<CartLocalManyWhereInput>;
 };
 
 
@@ -7234,6 +6821,23 @@ export type MutationUpdateManyReviewsConnectionArgs = {
 };
 
 
+export type MutationUpdateManyUnauthCartsArgs = {
+  data: UnauthCartUpdateManyInput;
+  where?: InputMaybe<UnauthCartManyWhereInput>;
+};
+
+
+export type MutationUpdateManyUnauthCartsConnectionArgs = {
+  after?: InputMaybe<Scalars['ID']>;
+  before?: InputMaybe<Scalars['ID']>;
+  data: UnauthCartUpdateManyInput;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<UnauthCartManyWhereInput>;
+};
+
+
 export type MutationUpdateOptionArgs = {
   data: OptionUpdateInput;
   where: OptionWhereUniqueInput;
@@ -7294,6 +6898,12 @@ export type MutationUpdateScheduledReleaseArgs = {
 };
 
 
+export type MutationUpdateUnauthCartArgs = {
+  data: UnauthCartUpdateInput;
+  where: UnauthCartWhereUniqueInput;
+};
+
+
 export type MutationUpsertAccountArgs = {
   upsert: AccountUpsertInput;
   where: AccountWhereUniqueInput;
@@ -7315,12 +6925,6 @@ export type MutationUpsertCartArgs = {
 export type MutationUpsertCartItemArgs = {
   upsert: CartItemUpsertInput;
   where: CartItemWhereUniqueInput;
-};
-
-
-export type MutationUpsertCartLocalArgs = {
-  upsert: CartLocalUpsertInput;
-  where: CartLocalWhereUniqueInput;
 };
 
 
@@ -7393,6 +6997,12 @@ export type MutationUpsertProductSizeVariantArgs = {
 export type MutationUpsertReviewArgs = {
   upsert: ReviewUpsertInput;
   where: ReviewWhereUniqueInput;
+};
+
+
+export type MutationUpsertUnauthCartArgs = {
+  upsert: UnauthCartUpsertInput;
+  where: UnauthCartWhereUniqueInput;
 };
 
 /** An object with an ID */
@@ -11790,20 +11400,12 @@ export type Query = {
   readonly cartItems: ReadonlyArray<CartItem>;
   /** Retrieve multiple cartItems using the Relay connection interface */
   readonly cartItemsConnection: CartItemConnection;
-  /** Retrieve a single cartLocal */
-  readonly cartLocal?: Maybe<CartLocal>;
-  /** Retrieve document version */
-  readonly cartLocalVersion?: Maybe<DocumentVersion>;
   /** Retrieve document version */
   readonly cartVersion?: Maybe<DocumentVersion>;
   /** Retrieve multiple carts */
   readonly carts: ReadonlyArray<Cart>;
   /** Retrieve multiple carts using the Relay connection interface */
   readonly cartsConnection: CartConnection;
-  /** Retrieve multiple cartsLocal */
-  readonly cartsLocal: ReadonlyArray<CartLocal>;
-  /** Retrieve multiple cartsLocal using the Relay connection interface */
-  readonly cartsLocalConnection: CartLocalConnection;
   /** Retrieve multiple categories */
   readonly categories: ReadonlyArray<Category>;
   /** Retrieve multiple categories using the Relay connection interface */
@@ -11914,6 +11516,14 @@ export type Query = {
   readonly scheduledReleases: ReadonlyArray<ScheduledRelease>;
   /** Retrieve multiple scheduledReleases using the Relay connection interface */
   readonly scheduledReleasesConnection: ScheduledReleaseConnection;
+  /** Retrieve a single unauthCart */
+  readonly unauthCart?: Maybe<UnauthCart>;
+  /** Retrieve document version */
+  readonly unauthCartVersion?: Maybe<DocumentVersion>;
+  /** Retrieve multiple unauthCarts */
+  readonly unauthCarts: ReadonlyArray<UnauthCart>;
+  /** Retrieve multiple unauthCarts using the Relay connection interface */
+  readonly unauthCartsConnection: UnauthCartConnection;
   /** Retrieve a single user */
   readonly user?: Maybe<User>;
   /** Retrieve multiple users */
@@ -12044,18 +11654,6 @@ export type QueryCartItemsConnectionArgs = {
 };
 
 
-export type QueryCartLocalArgs = {
-  locales?: ReadonlyArray<Locale>;
-  stage?: Stage;
-  where: CartLocalWhereUniqueInput;
-};
-
-
-export type QueryCartLocalVersionArgs = {
-  where: VersionWhereInput;
-};
-
-
 export type QueryCartVersionArgs = {
   where: VersionWhereInput;
 };
@@ -12084,32 +11682,6 @@ export type QueryCartsConnectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   stage?: Stage;
   where?: InputMaybe<CartWhereInput>;
-};
-
-
-export type QueryCartsLocalArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: ReadonlyArray<Locale>;
-  orderBy?: InputMaybe<CartLocalOrderByInput>;
-  skip?: InputMaybe<Scalars['Int']>;
-  stage?: Stage;
-  where?: InputMaybe<CartLocalWhereInput>;
-};
-
-
-export type QueryCartsLocalConnectionArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: ReadonlyArray<Locale>;
-  orderBy?: InputMaybe<CartLocalOrderByInput>;
-  skip?: InputMaybe<Scalars['Int']>;
-  stage?: Stage;
-  where?: InputMaybe<CartLocalWhereInput>;
 };
 
 
@@ -12639,6 +12211,44 @@ export type QueryScheduledReleasesConnectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   stage?: Stage;
   where?: InputMaybe<ScheduledReleaseWhereInput>;
+};
+
+
+export type QueryUnauthCartArgs = {
+  locales?: ReadonlyArray<Locale>;
+  stage?: Stage;
+  where: UnauthCartWhereUniqueInput;
+};
+
+
+export type QueryUnauthCartVersionArgs = {
+  where: VersionWhereInput;
+};
+
+
+export type QueryUnauthCartsArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  locales?: ReadonlyArray<Locale>;
+  orderBy?: InputMaybe<UnauthCartOrderByInput>;
+  skip?: InputMaybe<Scalars['Int']>;
+  stage?: Stage;
+  where?: InputMaybe<UnauthCartWhereInput>;
+};
+
+
+export type QueryUnauthCartsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  locales?: ReadonlyArray<Locale>;
+  orderBy?: InputMaybe<UnauthCartOrderByInput>;
+  skip?: InputMaybe<Scalars['Int']>;
+  stage?: Stage;
+  where?: InputMaybe<UnauthCartWhereInput>;
 };
 
 
@@ -13395,7 +13005,7 @@ export type ScheduledOperationUpdatedByArgs = {
   locales?: InputMaybe<ReadonlyArray<Locale>>;
 };
 
-export type ScheduledOperationAffectedDocument = Account | Asset | Cart | CartItem | CartLocal | Category | Collection | Currency | Option | Order | OrderItem | Person | Product | ProductColorVariant | ProductSizeColorVariant | ProductSizeVariant | Review;
+export type ScheduledOperationAffectedDocument = Account | Asset | Cart | CartItem | Category | Collection | Currency | Option | Order | OrderItem | Person | Product | ProductColorVariant | ProductSizeColorVariant | ProductSizeVariant | Review | UnauthCart;
 
 export type ScheduledOperationConnectInput = {
   /** Allow to specify document position in list of connected documents, will default to appending at end of list */
@@ -14324,6 +13934,396 @@ export enum SystemDateTimeFieldVariation {
   Localization = 'LOCALIZATION'
 }
 
+export type UnauthCart = Node & {
+  readonly __typename?: 'UnauthCart';
+  readonly cartItems?: Maybe<Scalars['Json']>;
+  /** The time the document was created */
+  readonly createdAt: Scalars['DateTime'];
+  /** User that created this document */
+  readonly createdBy?: Maybe<User>;
+  /** Get the document in other stages */
+  readonly documentInStages: ReadonlyArray<UnauthCart>;
+  /** List of UnauthCart versions */
+  readonly history: ReadonlyArray<Version>;
+  /** The unique identifier */
+  readonly id: Scalars['ID'];
+  /** The time the document was published. Null on documents in draft stage. */
+  readonly publishedAt?: Maybe<Scalars['DateTime']>;
+  /** User that last published this document */
+  readonly publishedBy?: Maybe<User>;
+  readonly scheduledIn: ReadonlyArray<ScheduledOperation>;
+  /** System stage field */
+  readonly stage: Stage;
+  /** The time the document was updated */
+  readonly updatedAt: Scalars['DateTime'];
+  /** User that last updated this document */
+  readonly updatedBy?: Maybe<User>;
+};
+
+
+export type UnauthCartCreatedByArgs = {
+  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+};
+
+
+export type UnauthCartDocumentInStagesArgs = {
+  includeCurrent?: Scalars['Boolean'];
+  inheritLocale?: Scalars['Boolean'];
+  stages?: ReadonlyArray<Stage>;
+};
+
+
+export type UnauthCartHistoryArgs = {
+  limit?: Scalars['Int'];
+  skip?: Scalars['Int'];
+  stageOverride?: InputMaybe<Stage>;
+};
+
+
+export type UnauthCartPublishedByArgs = {
+  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+};
+
+
+export type UnauthCartScheduledInArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
+  last?: InputMaybe<Scalars['Int']>;
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ScheduledOperationWhereInput>;
+};
+
+
+export type UnauthCartUpdatedByArgs = {
+  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+};
+
+export type UnauthCartConnectInput = {
+  /** Allow to specify document position in list of connected documents, will default to appending at end of list */
+  readonly position?: InputMaybe<ConnectPositionInput>;
+  /** Document to connect */
+  readonly where: UnauthCartWhereUniqueInput;
+};
+
+/** A connection to a list of items. */
+export type UnauthCartConnection = {
+  readonly __typename?: 'UnauthCartConnection';
+  readonly aggregate: Aggregate;
+  /** A list of edges. */
+  readonly edges: ReadonlyArray<UnauthCartEdge>;
+  /** Information to aid in pagination. */
+  readonly pageInfo: PageInfo;
+};
+
+export type UnauthCartCreateInput = {
+  readonly cartItems?: InputMaybe<Scalars['Json']>;
+  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
+  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type UnauthCartCreateManyInlineInput = {
+  /** Connect multiple existing UnauthCart documents */
+  readonly connect?: InputMaybe<ReadonlyArray<UnauthCartWhereUniqueInput>>;
+  /** Create and connect multiple existing UnauthCart documents */
+  readonly create?: InputMaybe<ReadonlyArray<UnauthCartCreateInput>>;
+};
+
+export type UnauthCartCreateOneInlineInput = {
+  /** Connect one existing UnauthCart document */
+  readonly connect?: InputMaybe<UnauthCartWhereUniqueInput>;
+  /** Create and connect one UnauthCart document */
+  readonly create?: InputMaybe<UnauthCartCreateInput>;
+};
+
+/** An edge in a connection. */
+export type UnauthCartEdge = {
+  readonly __typename?: 'UnauthCartEdge';
+  /** A cursor for use in pagination. */
+  readonly cursor: Scalars['String'];
+  /** The item at the end of the edge. */
+  readonly node: UnauthCart;
+};
+
+/** Identifies documents */
+export type UnauthCartManyWhereInput = {
+  /** Logical AND on all given filters. */
+  readonly AND?: InputMaybe<ReadonlyArray<UnauthCartWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  readonly NOT?: InputMaybe<ReadonlyArray<UnauthCartWhereInput>>;
+  /** Logical OR on all given filters. */
+  readonly OR?: InputMaybe<ReadonlyArray<UnauthCartWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  readonly _search?: InputMaybe<Scalars['String']>;
+  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  readonly createdAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  readonly createdAt_gte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  readonly createdAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  /** All values less than the given value. */
+  readonly createdAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  readonly createdAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  readonly createdAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not contained in given list. */
+  readonly createdAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  readonly createdBy?: InputMaybe<UserWhereInput>;
+  readonly documentInStages_every?: InputMaybe<UnauthCartWhereStageInput>;
+  readonly documentInStages_none?: InputMaybe<UnauthCartWhereStageInput>;
+  readonly documentInStages_some?: InputMaybe<UnauthCartWhereStageInput>;
+  readonly id?: InputMaybe<Scalars['ID']>;
+  /** All values containing the given string. */
+  readonly id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  readonly id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  readonly id_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
+  /** All values that are not equal to given value. */
+  readonly id_not?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  readonly id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  readonly id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are not contained in given list. */
+  readonly id_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
+  /** All values not starting with the given string. */
+  readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  readonly id_starts_with?: InputMaybe<Scalars['ID']>;
+  readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  readonly publishedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  readonly publishedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  /** All values less than the given value. */
+  readonly publishedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  readonly publishedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  readonly publishedAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not contained in given list. */
+  readonly publishedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  readonly publishedBy?: InputMaybe<UserWhereInput>;
+  readonly scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
+  readonly scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
+  readonly scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
+  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  readonly updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  readonly updatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  readonly updatedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  /** All values less than the given value. */
+  readonly updatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  readonly updatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  readonly updatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not contained in given list. */
+  readonly updatedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  readonly updatedBy?: InputMaybe<UserWhereInput>;
+};
+
+export enum UnauthCartOrderByInput {
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  PublishedAtAsc = 'publishedAt_ASC',
+  PublishedAtDesc = 'publishedAt_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC'
+}
+
+export type UnauthCartUpdateInput = {
+  readonly cartItems?: InputMaybe<Scalars['Json']>;
+};
+
+export type UnauthCartUpdateManyInlineInput = {
+  /** Connect multiple existing UnauthCart documents */
+  readonly connect?: InputMaybe<ReadonlyArray<UnauthCartConnectInput>>;
+  /** Create and connect multiple UnauthCart documents */
+  readonly create?: InputMaybe<ReadonlyArray<UnauthCartCreateInput>>;
+  /** Delete multiple UnauthCart documents */
+  readonly delete?: InputMaybe<ReadonlyArray<UnauthCartWhereUniqueInput>>;
+  /** Disconnect multiple UnauthCart documents */
+  readonly disconnect?: InputMaybe<ReadonlyArray<UnauthCartWhereUniqueInput>>;
+  /** Override currently-connected documents with multiple existing UnauthCart documents */
+  readonly set?: InputMaybe<ReadonlyArray<UnauthCartWhereUniqueInput>>;
+  /** Update multiple UnauthCart documents */
+  readonly update?: InputMaybe<ReadonlyArray<UnauthCartUpdateWithNestedWhereUniqueInput>>;
+  /** Upsert multiple UnauthCart documents */
+  readonly upsert?: InputMaybe<ReadonlyArray<UnauthCartUpsertWithNestedWhereUniqueInput>>;
+};
+
+export type UnauthCartUpdateManyInput = {
+  readonly cartItems?: InputMaybe<Scalars['Json']>;
+};
+
+export type UnauthCartUpdateManyWithNestedWhereInput = {
+  /** Update many input */
+  readonly data: UnauthCartUpdateManyInput;
+  /** Document search */
+  readonly where: UnauthCartWhereInput;
+};
+
+export type UnauthCartUpdateOneInlineInput = {
+  /** Connect existing UnauthCart document */
+  readonly connect?: InputMaybe<UnauthCartWhereUniqueInput>;
+  /** Create and connect one UnauthCart document */
+  readonly create?: InputMaybe<UnauthCartCreateInput>;
+  /** Delete currently connected UnauthCart document */
+  readonly delete?: InputMaybe<Scalars['Boolean']>;
+  /** Disconnect currently connected UnauthCart document */
+  readonly disconnect?: InputMaybe<Scalars['Boolean']>;
+  /** Update single UnauthCart document */
+  readonly update?: InputMaybe<UnauthCartUpdateWithNestedWhereUniqueInput>;
+  /** Upsert single UnauthCart document */
+  readonly upsert?: InputMaybe<UnauthCartUpsertWithNestedWhereUniqueInput>;
+};
+
+export type UnauthCartUpdateWithNestedWhereUniqueInput = {
+  /** Document to update */
+  readonly data: UnauthCartUpdateInput;
+  /** Unique document search */
+  readonly where: UnauthCartWhereUniqueInput;
+};
+
+export type UnauthCartUpsertInput = {
+  /** Create document if it didn't exist */
+  readonly create: UnauthCartCreateInput;
+  /** Update document if it exists */
+  readonly update: UnauthCartUpdateInput;
+};
+
+export type UnauthCartUpsertWithNestedWhereUniqueInput = {
+  /** Upsert data */
+  readonly data: UnauthCartUpsertInput;
+  /** Unique document search */
+  readonly where: UnauthCartWhereUniqueInput;
+};
+
+/** This contains a set of filters that can be used to compare values internally */
+export type UnauthCartWhereComparatorInput = {
+  /** This field can be used to request to check if the entry is outdated by internal comparison */
+  readonly outdated_to?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** Identifies documents */
+export type UnauthCartWhereInput = {
+  /** Logical AND on all given filters. */
+  readonly AND?: InputMaybe<ReadonlyArray<UnauthCartWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  readonly NOT?: InputMaybe<ReadonlyArray<UnauthCartWhereInput>>;
+  /** Logical OR on all given filters. */
+  readonly OR?: InputMaybe<ReadonlyArray<UnauthCartWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  readonly _search?: InputMaybe<Scalars['String']>;
+  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  readonly createdAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  readonly createdAt_gte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  readonly createdAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  /** All values less than the given value. */
+  readonly createdAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  readonly createdAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  readonly createdAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not contained in given list. */
+  readonly createdAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  readonly createdBy?: InputMaybe<UserWhereInput>;
+  readonly documentInStages_every?: InputMaybe<UnauthCartWhereStageInput>;
+  readonly documentInStages_none?: InputMaybe<UnauthCartWhereStageInput>;
+  readonly documentInStages_some?: InputMaybe<UnauthCartWhereStageInput>;
+  readonly id?: InputMaybe<Scalars['ID']>;
+  /** All values containing the given string. */
+  readonly id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  readonly id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  readonly id_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
+  /** All values that are not equal to given value. */
+  readonly id_not?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  readonly id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  readonly id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are not contained in given list. */
+  readonly id_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
+  /** All values not starting with the given string. */
+  readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  readonly id_starts_with?: InputMaybe<Scalars['ID']>;
+  readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  readonly publishedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  readonly publishedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  /** All values less than the given value. */
+  readonly publishedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  readonly publishedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  readonly publishedAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not contained in given list. */
+  readonly publishedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  readonly publishedBy?: InputMaybe<UserWhereInput>;
+  readonly scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
+  readonly scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
+  readonly scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
+  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  readonly updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  readonly updatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  readonly updatedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  /** All values less than the given value. */
+  readonly updatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  readonly updatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  readonly updatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not contained in given list. */
+  readonly updatedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  readonly updatedBy?: InputMaybe<UserWhereInput>;
+};
+
+/** The document in stages filter allows specifying a stage entry to cross compare the same document between different stages */
+export type UnauthCartWhereStageInput = {
+  /** Logical AND on all given filters. */
+  readonly AND?: InputMaybe<ReadonlyArray<UnauthCartWhereStageInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  readonly NOT?: InputMaybe<ReadonlyArray<UnauthCartWhereStageInput>>;
+  /** Logical OR on all given filters. */
+  readonly OR?: InputMaybe<ReadonlyArray<UnauthCartWhereStageInput>>;
+  /** This field contains fields which can be set as true or false to specify an internal comparison */
+  readonly compareWithParent?: InputMaybe<UnauthCartWhereComparatorInput>;
+  /** Specify the stage to compare with */
+  readonly stage?: InputMaybe<Stage>;
+};
+
+/** References UnauthCart record uniquely */
+export type UnauthCartWhereUniqueInput = {
+  readonly id?: InputMaybe<Scalars['ID']>;
+};
+
 export type UnpublishLocaleInput = {
   /** Locales to unpublish */
   readonly locale: Locale;
@@ -15160,27 +15160,34 @@ export type GetProductOptionsQueryVariables = Exact<{
 
 export type GetProductOptionsQuery = { readonly __typename?: 'Query', readonly option?: { readonly __typename?: 'Option', readonly id: string, readonly color?: ProductColor | null, readonly size?: ProductSize | null } | null };
 
-export type CartContentLocalQueryFragment = { readonly __typename?: 'CartLocal', readonly id: string, readonly cartItem?: any | null };
+export type CreateUnAuthCartMutationVariables = Exact<{ [key: string]: never; }>;
 
-export type GetLocalCartQueryVariables = Exact<{
+
+export type CreateUnAuthCartMutation = { readonly __typename?: 'Mutation', readonly createUnauthCart?: { readonly __typename?: 'UnauthCart', readonly id: string } | null };
+
+export type UnAuthCartContentFragment = { readonly __typename?: 'UnauthCart', readonly id: string, readonly cartItems?: any | null };
+
+export type GetUnauthCartQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type GetLocalCartQuery = { readonly __typename?: 'Query', readonly cartLocal?: { readonly __typename?: 'CartLocal', readonly id: string, readonly cartItem?: any | null } | null };
+export type GetUnauthCartQuery = { readonly __typename?: 'Query', readonly unauthCart?: { readonly __typename?: 'UnauthCart', readonly id: string, readonly cartItems?: any | null } | null };
 
-export type CreateCartItemLocalMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type CreateCartItemLocalMutation = { readonly __typename?: 'Mutation', readonly createCartLocal?: { readonly __typename?: 'CartLocal', readonly id: string } | null };
-
-export type AddItemToCartLocalByIdMutationVariables = Exact<{
+export type UpdateUnauthCartByIdMutationVariables = Exact<{
   id: Scalars['ID'];
-  cartItem: Scalars['Json'];
+  cartItems: Scalars['Json'];
 }>;
 
 
-export type AddItemToCartLocalByIdMutation = { readonly __typename?: 'Mutation', readonly updateCartLocal?: { readonly __typename?: 'CartLocal', readonly id: string, readonly cartItem?: any | null } | null };
+export type UpdateUnauthCartByIdMutation = { readonly __typename?: 'Mutation', readonly updateUnauthCart?: { readonly __typename?: 'UnauthCart', readonly id: string, readonly cartItems?: any | null } | null };
+
+export type DeleteUnauthCartMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteUnauthCartMutation = { readonly __typename?: 'Mutation', readonly deleteUnauthCart?: { readonly __typename?: 'UnauthCart', readonly id: string } | null };
 
 export const CartContentQueryWithOptionFragmentDoc = gql`
     fragment cartContentQueryWithOption on Cart {
@@ -15206,10 +15213,10 @@ export const CartContentQueryWithOptionFragmentDoc = gql`
   }
 }
     `;
-export const CartContentLocalQueryFragmentDoc = gql`
-    fragment cartContentLocalQuery on CartLocal {
+export const UnAuthCartContentFragmentDoc = gql`
+    fragment unAuthCartContent on UnauthCart {
   id
-  cartItem
+  cartItems
 }
     `;
 export const CreateAccountDocument = gql`
@@ -15777,104 +15784,137 @@ export function useGetProductOptionsLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetProductOptionsQueryHookResult = ReturnType<typeof useGetProductOptionsQuery>;
 export type GetProductOptionsLazyQueryHookResult = ReturnType<typeof useGetProductOptionsLazyQuery>;
 export type GetProductOptionsQueryResult = Apollo.QueryResult<GetProductOptionsQuery, GetProductOptionsQueryVariables>;
-export const GetLocalCartDocument = gql`
-    query GetLocalCart($id: ID!) {
-  cartLocal(where: {id: $id}, stage: DRAFT) {
-    ...cartContentLocalQuery
+export const CreateUnAuthCartDocument = gql`
+    mutation CreateUnAuthCart {
+  createUnauthCart(data: {}) {
+    id
   }
 }
-    ${CartContentLocalQueryFragmentDoc}`;
+    `;
+export type CreateUnAuthCartMutationFn = Apollo.MutationFunction<CreateUnAuthCartMutation, CreateUnAuthCartMutationVariables>;
 
 /**
- * __useGetLocalCartQuery__
+ * __useCreateUnAuthCartMutation__
  *
- * To run a query within a React component, call `useGetLocalCartQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetLocalCartQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a mutation, you first call `useCreateUnAuthCartMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUnAuthCartMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUnAuthCartMutation, { data, loading, error }] = useCreateUnAuthCartMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCreateUnAuthCartMutation(baseOptions?: Apollo.MutationHookOptions<CreateUnAuthCartMutation, CreateUnAuthCartMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateUnAuthCartMutation, CreateUnAuthCartMutationVariables>(CreateUnAuthCartDocument, options);
+      }
+export type CreateUnAuthCartMutationHookResult = ReturnType<typeof useCreateUnAuthCartMutation>;
+export type CreateUnAuthCartMutationResult = Apollo.MutationResult<CreateUnAuthCartMutation>;
+export type CreateUnAuthCartMutationOptions = Apollo.BaseMutationOptions<CreateUnAuthCartMutation, CreateUnAuthCartMutationVariables>;
+export const GetUnauthCartDocument = gql`
+    query GetUnauthCart($id: ID!) {
+  unauthCart(where: {id: $id}, stage: DRAFT) {
+    ...unAuthCartContent
+  }
+}
+    ${UnAuthCartContentFragmentDoc}`;
+
+/**
+ * __useGetUnauthCartQuery__
+ *
+ * To run a query within a React component, call `useGetUnauthCartQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUnauthCartQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetLocalCartQuery({
+ * const { data, loading, error } = useGetUnauthCartQuery({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useGetLocalCartQuery(baseOptions: Apollo.QueryHookOptions<GetLocalCartQuery, GetLocalCartQueryVariables>) {
+export function useGetUnauthCartQuery(baseOptions: Apollo.QueryHookOptions<GetUnauthCartQuery, GetUnauthCartQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetLocalCartQuery, GetLocalCartQueryVariables>(GetLocalCartDocument, options);
+        return Apollo.useQuery<GetUnauthCartQuery, GetUnauthCartQueryVariables>(GetUnauthCartDocument, options);
       }
-export function useGetLocalCartLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLocalCartQuery, GetLocalCartQueryVariables>) {
+export function useGetUnauthCartLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUnauthCartQuery, GetUnauthCartQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetLocalCartQuery, GetLocalCartQueryVariables>(GetLocalCartDocument, options);
+          return Apollo.useLazyQuery<GetUnauthCartQuery, GetUnauthCartQueryVariables>(GetUnauthCartDocument, options);
         }
-export type GetLocalCartQueryHookResult = ReturnType<typeof useGetLocalCartQuery>;
-export type GetLocalCartLazyQueryHookResult = ReturnType<typeof useGetLocalCartLazyQuery>;
-export type GetLocalCartQueryResult = Apollo.QueryResult<GetLocalCartQuery, GetLocalCartQueryVariables>;
-export const CreateCartItemLocalDocument = gql`
-    mutation CreateCartItemLocal {
-  createCartLocal(data: {}) {
+export type GetUnauthCartQueryHookResult = ReturnType<typeof useGetUnauthCartQuery>;
+export type GetUnauthCartLazyQueryHookResult = ReturnType<typeof useGetUnauthCartLazyQuery>;
+export type GetUnauthCartQueryResult = Apollo.QueryResult<GetUnauthCartQuery, GetUnauthCartQueryVariables>;
+export const UpdateUnauthCartByIdDocument = gql`
+    mutation UpdateUnauthCartById($id: ID!, $cartItems: Json!) {
+  updateUnauthCart(where: {id: $id}, data: {cartItems: $cartItems}) {
+    ...unAuthCartContent
+  }
+}
+    ${UnAuthCartContentFragmentDoc}`;
+export type UpdateUnauthCartByIdMutationFn = Apollo.MutationFunction<UpdateUnauthCartByIdMutation, UpdateUnauthCartByIdMutationVariables>;
+
+/**
+ * __useUpdateUnauthCartByIdMutation__
+ *
+ * To run a mutation, you first call `useUpdateUnauthCartByIdMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUnauthCartByIdMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUnauthCartByIdMutation, { data, loading, error }] = useUpdateUnauthCartByIdMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      cartItems: // value for 'cartItems'
+ *   },
+ * });
+ */
+export function useUpdateUnauthCartByIdMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUnauthCartByIdMutation, UpdateUnauthCartByIdMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUnauthCartByIdMutation, UpdateUnauthCartByIdMutationVariables>(UpdateUnauthCartByIdDocument, options);
+      }
+export type UpdateUnauthCartByIdMutationHookResult = ReturnType<typeof useUpdateUnauthCartByIdMutation>;
+export type UpdateUnauthCartByIdMutationResult = Apollo.MutationResult<UpdateUnauthCartByIdMutation>;
+export type UpdateUnauthCartByIdMutationOptions = Apollo.BaseMutationOptions<UpdateUnauthCartByIdMutation, UpdateUnauthCartByIdMutationVariables>;
+export const DeleteUnauthCartDocument = gql`
+    mutation DeleteUnauthCart($id: ID!) {
+  deleteUnauthCart(where: {id: $id}) {
     id
   }
 }
     `;
-export type CreateCartItemLocalMutationFn = Apollo.MutationFunction<CreateCartItemLocalMutation, CreateCartItemLocalMutationVariables>;
+export type DeleteUnauthCartMutationFn = Apollo.MutationFunction<DeleteUnauthCartMutation, DeleteUnauthCartMutationVariables>;
 
 /**
- * __useCreateCartItemLocalMutation__
+ * __useDeleteUnauthCartMutation__
  *
- * To run a mutation, you first call `useCreateCartItemLocalMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateCartItemLocalMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useDeleteUnauthCartMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUnauthCartMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [createCartItemLocalMutation, { data, loading, error }] = useCreateCartItemLocalMutation({
- *   variables: {
- *   },
- * });
- */
-export function useCreateCartItemLocalMutation(baseOptions?: Apollo.MutationHookOptions<CreateCartItemLocalMutation, CreateCartItemLocalMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateCartItemLocalMutation, CreateCartItemLocalMutationVariables>(CreateCartItemLocalDocument, options);
-      }
-export type CreateCartItemLocalMutationHookResult = ReturnType<typeof useCreateCartItemLocalMutation>;
-export type CreateCartItemLocalMutationResult = Apollo.MutationResult<CreateCartItemLocalMutation>;
-export type CreateCartItemLocalMutationOptions = Apollo.BaseMutationOptions<CreateCartItemLocalMutation, CreateCartItemLocalMutationVariables>;
-export const AddItemToCartLocalByIdDocument = gql`
-    mutation AddItemToCartLocalById($id: ID!, $cartItem: Json!) {
-  updateCartLocal(where: {id: $id}, data: {cartItem: $cartItem}) {
-    ...cartContentLocalQuery
-  }
-}
-    ${CartContentLocalQueryFragmentDoc}`;
-export type AddItemToCartLocalByIdMutationFn = Apollo.MutationFunction<AddItemToCartLocalByIdMutation, AddItemToCartLocalByIdMutationVariables>;
-
-/**
- * __useAddItemToCartLocalByIdMutation__
- *
- * To run a mutation, you first call `useAddItemToCartLocalByIdMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddItemToCartLocalByIdMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [addItemToCartLocalByIdMutation, { data, loading, error }] = useAddItemToCartLocalByIdMutation({
+ * const [deleteUnauthCartMutation, { data, loading, error }] = useDeleteUnauthCartMutation({
  *   variables: {
  *      id: // value for 'id'
- *      cartItem: // value for 'cartItem'
  *   },
  * });
  */
-export function useAddItemToCartLocalByIdMutation(baseOptions?: Apollo.MutationHookOptions<AddItemToCartLocalByIdMutation, AddItemToCartLocalByIdMutationVariables>) {
+export function useDeleteUnauthCartMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUnauthCartMutation, DeleteUnauthCartMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AddItemToCartLocalByIdMutation, AddItemToCartLocalByIdMutationVariables>(AddItemToCartLocalByIdDocument, options);
+        return Apollo.useMutation<DeleteUnauthCartMutation, DeleteUnauthCartMutationVariables>(DeleteUnauthCartDocument, options);
       }
-export type AddItemToCartLocalByIdMutationHookResult = ReturnType<typeof useAddItemToCartLocalByIdMutation>;
-export type AddItemToCartLocalByIdMutationResult = Apollo.MutationResult<AddItemToCartLocalByIdMutation>;
-export type AddItemToCartLocalByIdMutationOptions = Apollo.BaseMutationOptions<AddItemToCartLocalByIdMutation, AddItemToCartLocalByIdMutationVariables>;
+export type DeleteUnauthCartMutationHookResult = ReturnType<typeof useDeleteUnauthCartMutation>;
+export type DeleteUnauthCartMutationResult = Apollo.MutationResult<DeleteUnauthCartMutation>;
+export type DeleteUnauthCartMutationOptions = Apollo.BaseMutationOptions<DeleteUnauthCartMutation, DeleteUnauthCartMutationVariables>;
