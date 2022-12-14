@@ -1,9 +1,9 @@
 import type { NextApiHandler } from "next/types";
 import { authApolloClient } from "graphQL/apolloClient";
 import {
-    AddItemToCartLocalByIdDocument,
-    AddItemToCartLocalByIdMutation,
-    AddItemToCartLocalByIdMutationVariables,
+    UpdateUnauthCartByIdDocument,
+    UpdateUnauthCartByIdMutation,
+    UpdateUnauthCartByIdMutationVariables,
 } from "graphQL/generated/graphql";
 
 const handleCartSession: NextApiHandler = async (req, res) => {
@@ -21,18 +21,16 @@ const handleCartSession: NextApiHandler = async (req, res) => {
     const payload = await JSON.parse(req.body);
 
     switch (req.method) {
-        //todo - zmień nazwę na  UpdateLocalCartItemMutation,
-
         //todo - dodaj auth do wyjątków w hygraph - tak aby zmiany byłuy możliwe tylko po stronie serwera
         case "POST":
             const updateCartItem = await authApolloClient.mutate<
-                AddItemToCartLocalByIdMutation,
-                AddItemToCartLocalByIdMutationVariables
+                UpdateUnauthCartByIdMutation,
+                UpdateUnauthCartByIdMutationVariables
             >({
-                mutation: AddItemToCartLocalByIdDocument,
+                mutation: UpdateUnauthCartByIdDocument,
                 variables: {
                     id: payload.id,
-                    cartItem: `${JSON.stringify(payload.product)}`,
+                    cartItems: `${JSON.stringify(payload.product)}`,
                 },
             });
 

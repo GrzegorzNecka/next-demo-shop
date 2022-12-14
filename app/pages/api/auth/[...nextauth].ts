@@ -7,12 +7,12 @@ import {
     AddItemOptionToCartByCartIdDocument,
     AddItemOptionToCartByCartIdMutation,
     AddItemOptionToCartByCartIdMutationVariables,
-    AddItemToCartLocalByIdDocument,
-    AddItemToCartLocalByIdMutation,
-    AddItemToCartLocalByIdMutationVariables,
-    DeleteLocalCartDocument,
-    DeleteLocalCartMutation,
-    DeleteLocalCartMutationVariables,
+    UpdateUnauthCartByIdDocument,
+    UpdateUnauthCartByIdMutation,
+    UpdateUnauthCartByIdMutationVariables,
+    DeleteUnauthCartDocument,
+    DeleteUnauthCartMutation,
+    DeleteUnauthCartMutationVariables,
     GetAccountByEmailDocument,
     GetAccountByEmailQuery,
     GetAccountByEmailQueryVariables,
@@ -22,9 +22,9 @@ import {
     GetCartItemsByCartIdDocument,
     GetCartItemsByCartIdQuery,
     GetCartItemsByCartIdQueryVariables,
-    GetLocalCartDocument,
-    GetLocalCartQuery,
-    GetLocalCartQueryVariables,
+    GetUnauthCartDocument,
+    GetUnauthCartQuery,
+    GetUnauthCartQueryVariables,
     UpdateItemQuantityByCartIdDocument,
     UpdateItemQuantityByCartIdMutation,
     UpdateItemQuantityByCartIdMutationVariables,
@@ -91,26 +91,27 @@ export const authOptions: NextAuthOptions = {
 };
 
 export default async function NextAuthHandler(req: NextApiRequest, res: NextApiResponse) {
-    const cookieId = getCookie("local-cart-item-id", { req, res });
+    const cookieId = getCookie("hygraph-unauth-cart-id", { req, res });
 
     const options: NextAuthOptions = {
         ...authOptions,
         callbacks: {
             ...authOptions.callbacks,
+
             async signIn({ user, account, profile, email, credentials }) {
                 if (typeof cookieId !== "string") {
                     return true;
                 }
 
                 // - local cart items
-                const localCart = await apolloClient.query<GetLocalCartQuery, GetLocalCartQueryVariables>({
-                    query: GetLocalCartDocument,
+                const unauthCart = await apolloClient.query<GetUnauthCartQuery, GetUnauthCartQueryVariables>({
+                    query: GetUnauthCartDocument,
                     variables: { id: cookieId },
                 });
 
                 // - server cart items
 
-                const serverCartId = await authApolloClient.query<
+                const authCartId = await authApolloClient.query<
                     GetCartIdByAccountIdQuery,
                     GetCartIdByAccountIdQueryVariables
                 >({
@@ -118,9 +119,9 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
                     variables: { id: account?.providerAccountId! },
                 });
 
-                const { id } = serverCartId.data?.account?.cart!;
+                const { id } = authCartId.data?.account?.cart!;
 
-                const serverCart = await apolloClient.query<
+                const authCart = await apolloClient.query<
                     GetCartItemsByCartIdQuery,
                     GetCartItemsByCartIdQueryVariables
                 >({
@@ -130,21 +131,18 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
                     },
                 });
 
-                //! zmień cart Item na cart Items
+                const unauthCartItems: CartItem[] = JSON.parse(unauthCart.data.unauthCart?.cartItems);
+                const serverCartItems = authCart.data.cart?.cartItems;
 
-                const localCartItems: CartItem[] = JSON.parse(localCart.data.cartLocal?.cartItem);
-                console.log("🚀 ~ file: [...nextauth].ts:133 ~ signIn ~ localCartItem", localCartItems);
-                const serverCartItems = serverCart.data.cart?.cartItems;
-                console.log("🚀 ~ file: [...nextauth].ts:135 ~ signIn ~ serverCartItems", serverCartItems);
+                if (unauthCartItems.length > 0 && serverCartItems) {
+                    unauthCartItems.forEach(async (item) => {
+                        //
+                        const repeatedItem = serverCartItems.find(
+                            (s_item) => s_item.option?.id === item.productOptionId
+                        );
 
-                if (localCartItems.length > 0 && serverCartItems) {
-                    localCartItems.forEach(async (item) => {
-                        const isExist = serverCartItems.find((s_item) => s_item.option?.id === item.productOptionId);
-
-                        console.log("🚀 ~ file: [...nextauth].ts:142 ~ cartItems.forEach ~ isExist", isExist);
-
-                        if (!isExist) {
-                            const createCartItem = await authApolloClient.mutate<
+                        if (!repeatedItem) {
+                            const createAuthCartItems = await authApolloClient.mutate<
                                 AddItemOptionToCartByCartIdMutation,
                                 AddItemOptionToCartByCartIdMutationVariables
                             >({
@@ -157,24 +155,23 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
                             });
                         }
 
-                        if (isExist) {
+                        if (repeatedItem) {
                             //quantity must by less or equal than total
-                            const total = isExist.option?.total;
+                            const total = repeatedItem.option?.total;
 
-                            let quantity = isExist.quantity + item.quantity;
-
+                            let quantity = repeatedItem.quantity + item.quantity;
                             if (total) {
                                 quantity = quantity >= total ? total : quantity;
                             }
 
-                            const updateCartItem = await authApolloClient.mutate<
+                            const updateAuthCartItems = await authApolloClient.mutate<
                                 UpdateItemQuantityByCartIdMutation,
                                 UpdateItemQuantityByCartIdMutationVariables
                             >({
                                 mutation: UpdateItemQuantityByCartIdDocument,
                                 variables: {
                                     cartId: id,
-                                    itemId: isExist.id,
+                                    itemId: repeatedItem.id,
                                     quantity,
                                 },
                             });
@@ -183,31 +180,31 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
                 }
 
                 //todo - dodaj auth do wyjątków w hygraph - tak aby zmiany byłuy możliwe tylko po stronie serwera
-                const updateCartItem = await authApolloClient.mutate<
-                    AddItemToCartLocalByIdMutation,
-                    AddItemToCartLocalByIdMutationVariables
+                const updateUnauthCartItems = await authApolloClient.mutate<
+                    UpdateUnauthCartByIdMutation,
+                    UpdateUnauthCartByIdMutationVariables
                 >({
-                    mutation: AddItemToCartLocalByIdDocument,
+                    mutation: UpdateUnauthCartByIdDocument,
                     variables: {
                         id: cookieId,
-                        cartItem: `[]`,
+                        cartItems: `[]`,
                     },
                 });
 
                 // res.status(200).json({ updateCartItem });
 
                 //todo - alternatywnie - usuń token z bazy i z cookies
-                // const deleteLocalCartItem = await authApolloClient.mutate<
-                //     DeleteLocalCartMutation,
-                //     DeleteLocalCartMutationVariables
+                // const DeleteUnauthCartItem = await authApolloClient.mutate<
+                //     DeleteUnauthCartMutation,
+                //     DeleteUnauthCartMutationVariables
                 // >({
-                //     mutation: DeleteLocalCartDocument,
+                //     mutation: DeleteUnauthCartDocument,
                 //     variables: {
                 //         id: cookieId,
                 //     },
                 // });
 
-                // deleteCookie("local-cart-item-id", { req, res });
+                // deleteCookie("hygraph-unauth-cart-id", { req, res });
 
                 return true;
             },

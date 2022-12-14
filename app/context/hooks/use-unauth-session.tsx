@@ -2,7 +2,7 @@ import type { CartItem } from "context/types";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
-import { useGetLocalCartQuery } from "graphQL/generated/graphql";
+import { useGetUnauthCartQuery } from "graphQL/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
 import { CookieValueTypes } from "cookies-next";
 type useCartItemsProps = {
@@ -20,7 +20,7 @@ const getCookies = async () => {
     return res.json();
 };
 
-const updateLocalCart = async (id: CookieValueTypes, product: CartItem[]) => {
+const updateUnauthCart = async (id: CookieValueTypes, product: CartItem[]) => {
     const result = await fetch("/api/cart/unauth-session", {
         method: "POST",
         headers: { "Content-Type": "application/json;" },
@@ -32,7 +32,7 @@ const updateLocalCart = async (id: CookieValueTypes, product: CartItem[]) => {
     return result;
 };
 
-const createLocalCartItem = (item: CartItem) => {
+const createUnauthCartItem = (item: CartItem) => {
     return {
         itemId: `-${Math.random().toString(16).slice(2)}`,
         quantity: item?.quantity!,
@@ -47,9 +47,9 @@ const createLocalCartItem = (item: CartItem) => {
 export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading }: useCartItemsProps) => {
     const session = useSession();
 
-    const cookie = useQuery({ queryKey: ["cookieId"], queryFn: getCookies });
+    const cookie = useQuery({ queryKey: ["cookieCartId"], queryFn: getCookies });
 
-    const { data, refetch } = useGetLocalCartQuery({
+    const { data, refetch } = useGetUnauthCartQuery({
         skip: !Boolean(cookie.data?.id),
         variables: {
             id: cookie.data?.id,
@@ -69,9 +69,14 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading }: us
             return;
         }
 
-        console.log("sssssss", data?.cartLocal?.cartItem);
+        //! try catch
 
-        cartItems.current = JSON.parse(data?.cartLocal?.cartItem) || [];
+        if (!data?.unauthCart?.cartItems) {
+            setCartItems([]);
+            return;
+        }
+
+        cartItems.current = JSON.parse(data?.unauthCart?.cartItems) || [];
 
         setCartItems(cartItems.current);
 
@@ -88,7 +93,7 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading }: us
         setIsLoading(true);
 
         if (!cartItems.current) {
-            const result = await updateLocalCart(cookie.data?.id, [createLocalCartItem(product)]);
+            const result = await updateUnauthCart(cookie.data?.id, [createUnauthCartItem(product)]);
 
             if (result.status === 200) {
                 refetch({ id: cookie.data?.id });
@@ -106,9 +111,9 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading }: us
 
             const restCartItems = cartItems.current.filter((item) => item.productOptionId !== product.productOptionId);
 
-            const result = await updateLocalCart(cookie.data?.id, [
+            const result = await updateUnauthCart(cookie.data?.id, [
                 ...restCartItems,
-                createLocalCartItem(updateCartItem),
+                createUnauthCartItem(updateCartItem),
             ]);
 
             if (result.status === 200) {
@@ -119,7 +124,7 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading }: us
 
         //add new item
 
-        const result = await updateLocalCart(cookie.data?.id, [...cartItems.current, product]);
+        const result = await updateUnauthCart(cookie.data?.id, [...cartItems.current, product]);
 
         if (result.status === 200) {
             refetch({ id: cookie.data?.id });
@@ -155,7 +160,7 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading }: us
                 return item;
             });
 
-            const result = await updateLocalCart(cookie.data?.id, updateCartItems);
+            const result = await updateUnauthCart(cookie.data?.id, updateCartItems);
 
             if (result.status === 200) {
                 refetch({ id: cookie.data?.id });
@@ -166,7 +171,7 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading }: us
         //clear whole item
 
         const restCartItems = cartItems.current.filter((item) => item.itemId !== itemId);
-        const result = await updateLocalCart(cookie.data?.id, restCartItems);
+        const result = await updateUnauthCart(cookie.data?.id, restCartItems);
 
         if (result.status === 200) {
             refetch({ id: cookie.data?.id });
@@ -185,7 +190,7 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading }: us
             return;
         }
 
-        const result = await updateLocalCart(cookie.data?.id, []);
+        const result = await updateUnauthCart(cookie.data?.id, []);
 
         if (result.status === 200) {
             refetch({ id: cookie.data?.id });

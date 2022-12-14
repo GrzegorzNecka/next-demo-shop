@@ -43,3 +43,9 @@ test(when adding missing tests): ...
 -   sipmle browser
 -   better graphQl package -> [urql](https://formidable.com/open-source/urql/)
 -   graphql-code-generator -> [link](https://www.the-guild.dev/graphql/codegen)
+
+## błędy w konsoli
+
+`Unchecked runtime.lastError: A listener indicated an asynchronous response by returning true, but the message channel closed before a response was received`
+[topic](https://stackoverflow.com/questions/72494154/a-listener-indicated-an-asynchronous-response-by-returning-true-but-the-messag)
+[opis problemu](https://www.chromium.org/Home/chromium-security/extension-content-script-fetches/)
