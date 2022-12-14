@@ -1,11 +1,10 @@
-import type { NextApiHandler, NextApiRequest } from "next/types";
-import type { CartItem } from "context/types";
+import type { NextApiHandler } from "next/types";
 import { CookieValueTypes, getCookie, hasCookie, setCookie } from "cookies-next";
-import { apolloClient } from "graphQL/apolloClient";
+import { authApolloClient } from "graphQL/apolloClient";
 import {
-    CreateCartItemLocalDocument,
-    CreateCartItemLocalMutation,
-    CreateCartItemLocalMutationVariables,
+    CreateUnAuthCartDocument,
+    CreateUnAuthCartMutation,
+    CreateUnAuthCartMutationVariables,
 } from "graphQL/generated/graphql";
 
 interface Response {
@@ -19,24 +18,24 @@ const handler: NextApiHandler<Response> = async (req, res) => {
         return;
     }
 
-    const isCookie = hasCookie("local-cart-item-id", { req, res });
+    const isCookie = hasCookie("hygraph-unauth-cart-id", { req, res });
+
     //! a co jeśli jest w cookies ale nie ma w hygraph
+
     if (!isCookie) {
-        const createLocalCartItemId = await apolloClient.mutate<
-            CreateCartItemLocalMutation,
-            CreateCartItemLocalMutationVariables
-        >({
-            mutation: CreateCartItemLocalDocument,
+        //-
+        const cart = await authApolloClient.mutate<CreateUnAuthCartMutation, CreateUnAuthCartMutationVariables>({
+            mutation: CreateUnAuthCartDocument,
         });
 
         //todo do obsłużenia wyjątek kiedy nie ma połączenia z siecią
-        const id = createLocalCartItemId.data?.createCartLocal?.id;
+        const id = cart.data?.createUnauthCart?.id;
 
         if (!id) {
-            res.status(500).json({ message: "problem with server connecting" });
+            res.status(500).json({ message: "problem with server (hygraph) connecting" });
         }
 
-        setCookie("local-cart-item-id", id, {
+        setCookie("hygraph-unauth-cart-id", id, {
             httpOnly: true,
             secure: true,
             sameSite: "lax",
@@ -46,7 +45,7 @@ const handler: NextApiHandler<Response> = async (req, res) => {
         });
     }
 
-    const cookieId = getCookie("local-cart-item-id", { req, res });
+    const cookieId = getCookie("hygraph-unauth-cart-id", { req, res });
 
     if (!cookieId) {
         res.status(400).json({ message: "not found cookie" });

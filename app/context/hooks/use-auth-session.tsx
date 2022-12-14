@@ -1,20 +1,21 @@
 import type { Dispatch, SetStateAction } from "react";
 import { useEffect } from "react";
 import { CartItem } from "context/types";
-import { useSession } from "next-auth/react";
-import { GetCartItemsByCartIdQuery, useGetCartItemsByCartIdQuery } from "graphQL/generated/graphql";
-// import { handleAddItemToCart, handleClearCartItems, handleRemoveItemFromCart, updateCartItem } from "services/cart";
+// import { useSession } from "next-auth/react";
+import { useGetCartItemsByCartIdQuery } from "graphQL/generated/graphql";
+import { Session } from "next-auth";
 
 type useCartItemsProps = {
     setCartItems: Dispatch<SetStateAction<CartItem[]>>;
     setIsLoading: Dispatch<SetStateAction<boolean>>;
+    status: "unauthenticated" | "authenticated" | "loading";
+    session: Session | null;
 };
 
-export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartItemsProps) => {
-    const session = useSession();
-    const cartId = session.data?.user?.cartId!;
+export const useCartItemsWithAuthSession = ({ setCartItems, setIsLoading, status, session }: useCartItemsProps) => {
+    const cartId = session?.user?.cartId!;
 
-    // ---
+    // --
 
     const { data, refetch } = useGetCartItemsByCartIdQuery({
         skip: !Boolean(cartId),
@@ -29,10 +30,10 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
         },
     });
 
-    // ---
+    // --
 
     useEffect(() => {
-        if (session.status !== "authenticated" || !data || !data.cart) {
+        if (status !== "authenticated" || !data || !data.cart) {
             return;
         }
 
@@ -49,12 +50,12 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
         });
 
         setCartItems(cartItems);
-    }, [session.status, data]);
+    }, [status, data]);
 
-    // ---
+    // -- handlers
 
     const addItemToCart = async (product: CartItem) => {
-        if (session.status === "unauthenticated" || !cartId || !data) {
+        if (status === "unauthenticated" || !cartId || !data) {
             return;
         }
 
@@ -64,8 +65,10 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
 
         const existProduct = data.cart?.cartItems.find((item) => item?.option?.id === productOptionId);
 
+        // -- add new product to cart items
+
         if (!existProduct) {
-            const result = await fetch("/api/cart/server-session", {
+            const result = await fetch("/api/cart/auth-session", {
                 method: "POST",
                 headers: { "Content-Type": "application/json;" },
                 body: JSON.stringify({
@@ -81,16 +84,14 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
             return;
         }
 
-        const itemId = existProduct?.id!;
+        // -- update cart items
 
-        const updatedQuantity = existProduct?.quantity! + quantity;
-
-        const result = await fetch("/api/cart/server-session", {
+        const result = await fetch("/api/cart/auth-session", {
             method: "PUT",
             headers: { "Content-Type": "application/json;" },
             body: JSON.stringify({
-                itemId,
-                updatedQuantity,
+                itemId: existProduct?.id!,
+                updatedQuantity: existProduct?.quantity! + quantity,
             }),
         });
         if (result.status === 200) {
@@ -112,7 +113,7 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
             return;
         }
 
-        const result = await fetch("/api/cart/server-session", {
+        const result = await fetch("/api/cart/auth-session", {
             method: "DELETE",
             headers: { "Content-Type": "application/json;" },
             body: JSON.stringify({
@@ -126,14 +127,14 @@ export const useCartItemsWithGraphQl = ({ setCartItems, setIsLoading }: useCartI
         }
     };
 
-    // ---
+    // --
 
     const clearCartItems = async () => {
         if (!cartId || !data) {
             return;
         }
 
-        const result = await fetch("/api/cart/server-session", {
+        const result = await fetch("/api/cart/auth-session", {
             method: "DELETE",
             headers: { "Content-Type": "application/json;" },
             body: JSON.stringify({
