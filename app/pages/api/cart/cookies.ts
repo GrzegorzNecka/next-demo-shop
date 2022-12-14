@@ -1,7 +1,7 @@
 import type { NextApiHandler, NextApiRequest } from "next/types";
 import type { CartItem } from "context/types";
 import { CookieValueTypes, getCookie, hasCookie, setCookie } from "cookies-next";
-import { apolloClient } from "graphQL/apolloClient";
+import { authApolloClient } from "graphQL/apolloClient";
 import {
     CreateCartItemLocalDocument,
     CreateCartItemLocalMutation,
@@ -22,7 +22,7 @@ const handler: NextApiHandler<Response> = async (req, res) => {
     const isCookie = hasCookie("local-cart-item-id", { req, res });
     //! a co jeśli jest w cookies ale nie ma w hygraph
     if (!isCookie) {
-        const createLocalCartItemId = await apolloClient.mutate<
+        const createLocalCartItemId = await authApolloClient.mutate<
             CreateCartItemLocalMutation,
             CreateCartItemLocalMutationVariables
         >({

@@ -10,6 +10,9 @@ import {
     AddItemToCartLocalByIdDocument,
     AddItemToCartLocalByIdMutation,
     AddItemToCartLocalByIdMutationVariables,
+    DeleteLocalCartDocument,
+    DeleteLocalCartMutation,
+    DeleteLocalCartMutationVariables,
     GetAccountByEmailDocument,
     GetAccountByEmailQuery,
     GetAccountByEmailQueryVariables,
@@ -27,7 +30,7 @@ import {
     UpdateItemQuantityByCartIdMutationVariables,
 } from "graphQL/generated/graphql";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getCookie } from "cookies-next";
+import { deleteCookie, getCookie } from "cookies-next";
 import { CartItem } from "context/types";
 
 export const authOptions: NextAuthOptions = {
@@ -137,6 +140,7 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
                 if (localCartItems.length > 0 && serverCartItems) {
                     localCartItems.forEach(async (item) => {
                         const isExist = serverCartItems.find((s_item) => s_item.option?.id === item.productOptionId);
+
                         console.log("🚀 ~ file: [...nextauth].ts:142 ~ cartItems.forEach ~ isExist", isExist);
 
                         if (!isExist) {
@@ -154,7 +158,14 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
                         }
 
                         if (isExist) {
-                            //! quantity nie może być większe niż total
+                            //quantity must by less or equal than total
+                            const total = isExist.option?.total;
+
+                            let quantity = isExist.quantity + item.quantity;
+
+                            if (total) {
+                                quantity = quantity >= total ? total : quantity;
+                            }
 
                             const updateCartItem = await authApolloClient.mutate<
                                 UpdateItemQuantityByCartIdMutation,
@@ -164,7 +175,7 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
                                 variables: {
                                     cartId: id,
                                     itemId: isExist.id,
-                                    quantity: isExist.quantity + item.quantity,
+                                    quantity,
                                 },
                             });
                         }
@@ -184,6 +195,19 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
                 });
 
                 // res.status(200).json({ updateCartItem });
+
+                //todo - alternatywnie - usuń token z bazy i z cookies
+                // const deleteLocalCartItem = await authApolloClient.mutate<
+                //     DeleteLocalCartMutation,
+                //     DeleteLocalCartMutationVariables
+                // >({
+                //     mutation: DeleteLocalCartDocument,
+                //     variables: {
+                //         id: cookieId,
+                //     },
+                // });
+
+                // deleteCookie("local-cart-item-id", { req, res });
 
                 return true;
             },

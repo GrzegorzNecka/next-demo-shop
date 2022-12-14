@@ -183,3 +183,9 @@ mutation AddItemToCartLocalById($id: ID!, $cartItem: Json!) {
         ...cartContentLocalQuery
     }
 }
+
+mutation DeleteLocalCart($id: ID!) {
+    deleteCartLocal(where: { id: $id }) {
+        id
+    }
+}
