@@ -9,8 +9,6 @@ export const useCartItems = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { status, data: session } = useSession();
 
-    //! use memo
-
     const authSession = useCartItemsWithAuthSession({
         setCartItems,
         setIsLoading,

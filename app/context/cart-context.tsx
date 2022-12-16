@@ -7,7 +7,7 @@ import { useCartItems } from "./hooks/use-cart-items";
 
 export const CartStateContext = createContext<CartState | null>(null);
 
-// -------------   -------------   -------------   -------------   -------------   ------------- //* Provider
+// -- PROVIDER
 
 export const CartStateContextProvider = ({ children }: { children: React.ReactNode }) => {
     const { cartItems, isLoading, addItemToCart, removeItemFromCart, clearCartItems } = useCartItems();
@@ -24,7 +24,7 @@ export const CartStateContextProvider = ({ children }: { children: React.ReactNo
     return <CartStateContext.Provider value={initialCartState}>{children}</CartStateContext.Provider>;
 };
 
-// -------------   -------------   -------------   -------------   -------------   ------------- //* Client
+// -- CLIENT
 
 export const useCartState = () => {
     const cartState = useContext(CartStateContext);

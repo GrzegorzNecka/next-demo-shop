@@ -9,7 +9,7 @@ import {
     GetProductsSlugsQuery,
 } from "graphQL/generated/graphql";
 
-import { InferGetStaticPropsType } from "next";
+import { GetStaticPathsResult, GetStaticPropsResult, InferGetStaticPropsType } from "next";
 import { serialize } from "next-mdx-remote/serialize";
 import type { InferGetStaticPathsType } from "types/types";
 import { changeToCurrency, moveTheComa } from "utils/currency";
@@ -21,8 +21,6 @@ const ProductSingleSlugPage = ({ product }: InferGetStaticPropsType<typeof getSt
 
     return (
         <Main>
-            {/* <pre>{JSON.stringify(product, null, 2)}</pre> */}
-
             <ProductSingleUI
                 data={{
                     id: product.id,
@@ -53,7 +51,7 @@ export const getStaticPaths = async () => {
         return {
             paths: [],
             fallback: "blocking",
-        };
+        } satisfies GetStaticPathsResult;
     }
 
     return {
@@ -87,20 +85,14 @@ export const getStaticProps = async ({ params }: InferGetStaticPathsType<typeof 
         };
     }
 
-    // only productWithOptions
-    // if (data.product.option.length === 0) {
-    //     return {
-    //         props: {},
-    //         notFound: true,
-    //     };
-    // }
-
     const markdown: string = data.product.description;
+
+    const product = { ...data.product, longDescription: await serialize(markdown) };
 
     return {
         props: {
-            product: { ...data.product, longDescription: await serialize(markdown) },
+            product,
         },
         revalidate: 10,
-    };
+    } satisfies GetStaticPropsResult<{ product: typeof product }>;
 };

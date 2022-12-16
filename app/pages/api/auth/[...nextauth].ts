@@ -33,6 +33,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { deleteCookie, getCookie } from "cookies-next";
 import { CartItem } from "context/types";
 
+// -- INIT AUTHOPTIONS
+
 export const authOptions: NextAuthOptions = {
     secret: process.env.NEXT_AUTH_SECRET,
     providers: [
@@ -69,6 +71,8 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
 
+    // -- INIT CALLBACKS
+
     callbacks: {
         async session({ session, user, token }) {
             if (typeof token.sub == "string") {
@@ -97,13 +101,14 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
         ...authOptions,
         callbacks: {
             ...authOptions.callbacks,
-
+            // -- EXTENDS CALLBACKS
             async signIn({ user, account, profile, email, credentials }) {
                 if (typeof cookieId !== "string") {
                     return true;
                 }
 
                 // - local cart items
+
                 const unauthCart = await apolloClient.query<GetUnauthCartQuery, GetUnauthCartQueryVariables>({
                     query: GetUnauthCartDocument,
                     variables: { id: cookieId },
@@ -159,7 +164,8 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
                         }
 
                         if (repeatedItem) {
-                            //quantity must by less or equal than total
+                            // -- quantity must by less or equal than total
+
                             const total = repeatedItem.option?.total;
 
                             let quantity = repeatedItem.quantity + item.quantity;
@@ -183,6 +189,7 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
                 }
 
                 //todo - dodaj auth do wyjątków w hygraph - tak aby zmiany byłuy możliwe tylko po stronie serwera
+
                 const updateUnauthCartItems = await authApolloClient.mutate<
                     UpdateUnauthCartByIdMutation,
                     UpdateUnauthCartByIdMutationVariables
@@ -193,22 +200,6 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
                         cartItems: `[]`,
                     },
                 });
-
-                // res.status(200).json({ updateCartItem });
-
-                //todo - alternatywnie - usuń token z bazy i z cookies
-
-                // const DeleteUnauthCartItem = await authApolloClient.mutate<
-                //     DeleteUnauthCartMutation,
-                //     DeleteUnauthCartMutationVariables
-                // >({
-                //     mutation: DeleteUnauthCartDocument,
-                //     variables: {
-                //         id: cookieId,
-                //     },
-                // });
-
-                // deleteCookie("hygraph-unauth-cart-id", { req, res });
 
                 return true;
             },

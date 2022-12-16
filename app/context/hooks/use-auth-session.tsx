@@ -52,7 +52,7 @@ export const useCartItemsWithAuthSession = ({ setCartItems, setIsLoading, status
         setCartItems(cartItems);
     }, [status, data]);
 
-    // -- handlers
+    // -- CONTEXT HANDLERS
 
     const addItemToCart = async (product: CartItem) => {
         if (status === "unauthenticated" || !cartId || !data) {
