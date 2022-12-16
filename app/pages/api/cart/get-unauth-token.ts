@@ -20,7 +20,7 @@ const handler: NextApiHandler<Response> = async (req, res) => {
 
     const isCookie = hasCookie("hygraph-unauth-cart-id", { req, res });
 
-    //! a co jeśli jest w cookies ale nie ma w hygraph
+    //todo - do obsłużenia wyjątek kiedy  w cookies jest id ale ale nie ma go w hygraph
 
     if (!isCookie) {
         //-
@@ -28,7 +28,8 @@ const handler: NextApiHandler<Response> = async (req, res) => {
             mutation: CreateUnAuthCartDocument,
         });
 
-        //todo do obsłużenia wyjątek kiedy nie ma połączenia z siecią
+        //todo - do obsłużenia wyjątek kiedy nie ma połączenia z siecią
+
         const id = cart.data?.createUnauthCart?.id;
 
         if (!id) {

@@ -39,9 +39,7 @@ const SignupHandler: NextApiHandler = async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 12);
 
-    /* 
-      --- connect with server 
-    */
+    // -- HYGRAPH CONNECT
 
     const account = await authApolloClient.mutate<CreateAccountMutation, CreateAccountMutationVariables>({
         mutation: CreateAccountDocument,

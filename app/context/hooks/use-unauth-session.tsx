@@ -11,14 +11,15 @@ type useCartItemsProps = {
 };
 
 export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, status }: useCartItemsProps) => {
-    //todo: użyj codegen do react query
+    //todo - sprawdź czy codegen może generować typy dla reactQuery
+
     const { data: cookie } = useQuery({
         queryKey: ["cookieCartId"],
         queryFn: getCookies,
         enabled: status === "unauthenticated" ? true : false,
     });
 
-    const cookieId = cookie?.id;
+    const cookieId: string = cookie?.id;
 
     const { data, refetch } = useGetUnauthCartQuery({
         skip: !Boolean(cookieId),
@@ -40,8 +41,6 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
             return;
         }
 
-        //! try catch ?
-
         if (!data?.unauthCart?.cartItems) {
             setCartItems([]);
             return;
@@ -50,11 +49,9 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
         cartItems.current = JSON.parse(data?.unauthCart?.cartItems) || [];
 
         setCartItems(cartItems.current);
-
-        console.log(cartItems.current);
     }, [data]);
 
-    // -- handlers
+    // -- CONTEXT HANDLERS
 
     const addItemToCart = async (product: CartItem) => {
         if (status !== "unauthenticated") {
@@ -165,7 +162,7 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
     return { addItemToCart, removeItemFromCart, clearCartItems } as const;
 };
 
-// helpers
+// HELPERS
 
 async function getCookies() {
     const res = await fetch("/api/cart/get-unauth-token", {
@@ -177,7 +174,7 @@ async function getCookies() {
     return res.json();
 }
 
-async function updateUnauthCart(id: CookieValueTypes, product: CartItem[]) {
+async function updateUnauthCart<T, U>(id: T, product: U) {
     const result = await fetch("/api/cart/unauth-session", {
         method: "POST",
         headers: { "Content-Type": "application/json;" },
@@ -189,7 +186,7 @@ async function updateUnauthCart(id: CookieValueTypes, product: CartItem[]) {
     return result;
 }
 
-function createUnauthCartItem(item: CartItem) {
+function createUnauthCartItem<T extends CartItem>(item: T) {
     return {
         itemId: `-${Math.random().toString(16).slice(2)}`,
         quantity: item?.quantity!,
