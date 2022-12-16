@@ -12,11 +12,7 @@ type useCartItemsProps = {
     session: Session | null;
 };
 
-let counter = 1;
-
 export const useCartItemsWithAuthSession = ({ setCartItems, setIsLoading, status, session }: useCartItemsProps) => {
-    console.log("🚀 //**** useCartItemsWithAuthSession", counter);
-    counter++;
     const cartId = session?.user?.cartId!;
 
     // --
