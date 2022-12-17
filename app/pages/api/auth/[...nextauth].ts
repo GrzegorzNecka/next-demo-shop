@@ -95,7 +95,7 @@ export const authOptions: NextAuthOptions = {
 };
 
 export default async function NextAuthHandler(req: NextApiRequest, res: NextApiResponse) {
-    const cookieId = getCookie("hygraph-unauth-cart-id", { req, res });
+    const cookieId = getCookie(`${process.env.NEXT_PUBLIC_COOKIE_CART_ID}`, { req, res });
 
     const options: NextAuthOptions = {
         ...authOptions,

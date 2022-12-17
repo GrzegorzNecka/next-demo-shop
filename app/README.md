@@ -1,6 +1,6 @@
 # next-demo-shop
 
-## envirolment
+## środowisko
 
 -   System:
     -   OS: Windows 10 10.0.19043
@@ -14,6 +14,14 @@
 -   npmPackages:
     -   next: 12.3.1 => 12.3.1
     -   react: 18.2.0 => 18.2.0
+
+## funkcjonalności
+
+### koszyk
+
+-   sesja koszyka dla klienta zalogowanego oraz niezalogowanego
+-   podczas logowania dokonuje się przenisienie pozycji w koszyka od klienta nizalogowanego do koszyka dal klienta zalogowanego. Po ponownym wylogowaniu koszyk jet pusty dla klienta niezalogowanego
+-   aktualizacja id koszyka w cookies, w sytuacji kiedy id zostanie usunięty na serwerze, a w pamięci podręcznej dalej istnieje
 
 ## git flow
 

@@ -11,22 +11,37 @@ type useCartItemsProps = {
 };
 
 export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, status }: useCartItemsProps) => {
+    //
     //todo - sprawdź czy codegen może generować typy dla reactQuery
-
-    const { data: cookie } = useQuery({
+    const { data: cookie, refetch: refetchCookieId } = useQuery({
         queryKey: ["cookieCartId"],
-        queryFn: getCookies,
+        queryFn: getCookieCartId,
         enabled: status === "unauthenticated" ? true : false,
     });
 
     const cookieId: string = cookie?.id;
 
-    const { data, refetch } = useGetUnauthCartQuery({
+    const { data, refetch: refetchCart } = useGetUnauthCartQuery({
         skip: !Boolean(cookieId),
         variables: {
             id: cookieId,
         },
-        onCompleted: () => {
+        onCompleted: async (data) => {
+            if (!data.unauthCart && typeof cookieId === "string") {
+                console.log("!data.unauthCart && typeof cookieId === 'string'");
+
+                // if id was remove on hygraf and exist in cookie
+
+                if (!data?.unauthCart && typeof cookieId === "string") {
+                    const deleteStatus = await deleteCookieCartId(cookieId);
+
+                    if (deleteStatus === 200) {
+                        refetchCookieId();
+                        refetchCart();
+                    }
+                }
+            }
+
             setIsLoading(false);
         },
         onError(error) {
@@ -61,10 +76,10 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
         setIsLoading(true);
 
         if (!cartItems.current) {
-            const result = await updateUnauthCart(cookieId, [createUnauthCartItem(product)]);
+            const result = await updateCart(cookieId, [createCartItem(product)]);
 
             if (result.status === 200) {
-                refetch({ id: cookieId });
+                refetchCart({ id: cookieId });
             }
             return;
         }
@@ -79,20 +94,20 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
 
             const restCartItems = cartItems.current.filter((item) => item.productOptionId !== product.productOptionId);
 
-            const result = await updateUnauthCart(cookieId, [...restCartItems, createUnauthCartItem(updateCartItem)]);
+            const result = await updateCart(cookieId, [...restCartItems, createCartItem(updateCartItem)]);
 
             if (result.status === 200) {
-                refetch({ id: cookieId });
+                refetchCart({ id: cookieId });
             }
             return;
         }
 
         // -- add new item
 
-        const result = await updateUnauthCart(cookieId, [...cartItems.current, product]);
+        const result = await updateCart(cookieId, [...cartItems.current, product]);
 
         if (result.status === 200) {
-            refetch({ id: cookieId });
+            refetchCart({ id: cookieId });
         }
         return;
     };
@@ -123,10 +138,10 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
                 return item;
             });
 
-            const result = await updateUnauthCart(cookieId, updateCartItems);
+            const result = await updateCart(cookieId, updateCartItems);
 
             if (result.status === 200) {
-                refetch({ id: cookieId });
+                refetchCart({ id: cookieId });
             }
             return;
         }
@@ -134,10 +149,10 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
         // -- clear whole item
 
         const restCartItems = cartItems.current.filter((item) => item.itemId !== itemId);
-        const result = await updateUnauthCart(cookieId, restCartItems);
+        const result = await updateCart(cookieId, restCartItems);
 
         if (result.status === 200) {
-            refetch({ id: cookieId });
+            refetchCart({ id: cookieId });
         }
         return;
     };
@@ -151,10 +166,10 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
             return;
         }
 
-        const result = await updateUnauthCart(cookieId, []);
+        const result = await updateCart(cookieId, []);
 
         if (result.status === 200) {
-            refetch({ id: cookieId });
+            refetchCart({ id: cookieId });
         }
         return;
     };
@@ -164,8 +179,8 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
 
 // HELPERS
 
-async function getCookies() {
-    const res = await fetch("/api/cart/get-unauth-token", {
+async function getCookieCartId() {
+    const res = await fetch("/api/cart/get-unauth-cookie", {
         method: "GET",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json;" },
@@ -174,7 +189,19 @@ async function getCookies() {
     return res.json();
 }
 
-async function updateUnauthCart<T, U>(id: T, product: U) {
+async function deleteCookieCartId<T>(id: T) {
+    const deleteCookieId = await fetch("/api/cart/delete-unauth-cookie", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json;" },
+        body: JSON.stringify({
+            id,
+        }),
+    });
+
+    return deleteCookieId.status;
+}
+
+async function updateCart<T, U>(id: T, product: U) {
     const result = await fetch("/api/cart/unauth-session", {
         method: "POST",
         headers: { "Content-Type": "application/json;" },
@@ -186,7 +213,7 @@ async function updateUnauthCart<T, U>(id: T, product: U) {
     return result;
 }
 
-function createUnauthCartItem<T extends CartItem>(item: T) {
+function createCartItem<T extends CartItem>(item: T) {
     return {
         itemId: `-${Math.random().toString(16).slice(2)}`,
         quantity: item?.quantity!,

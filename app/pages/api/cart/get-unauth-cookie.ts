@@ -18,9 +18,7 @@ const handler: NextApiHandler<Response> = async (req, res) => {
         return;
     }
 
-    const isCookie = hasCookie("hygraph-unauth-cart-id", { req, res });
-
-    //todo - do obsłużenia wyjątek kiedy  w cookies jest id ale ale nie ma go w hygraph
+    const isCookie = hasCookie(`${process.env.NEXT_PUBLIC_COOKIE_CART_ID}`, { req, res });
 
     if (!isCookie) {
         //-
@@ -36,7 +34,7 @@ const handler: NextApiHandler<Response> = async (req, res) => {
             res.status(500).json({ message: "problem with server (hygraph) connecting" });
         }
 
-        setCookie("hygraph-unauth-cart-id", id, {
+        setCookie(`${process.env.NEXT_PUBLIC_COOKIE_CART_ID}`, id, {
             httpOnly: true,
             secure: true,
             sameSite: "lax",
@@ -46,7 +44,7 @@ const handler: NextApiHandler<Response> = async (req, res) => {
         });
     }
 
-    const cookieId = getCookie("hygraph-unauth-cart-id", { req, res });
+    const cookieId = getCookie(`${process.env.NEXT_PUBLIC_COOKIE_CART_ID}`, { req, res });
 
     if (!cookieId) {
         res.status(400).json({ message: "not found cookie" });

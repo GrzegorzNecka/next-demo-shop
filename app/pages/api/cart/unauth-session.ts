@@ -7,16 +7,15 @@ import {
 } from "graphQL/generated/graphql";
 
 const handleCartSession: NextApiHandler = async (req, res) => {
-    //! przydało by się zabezpieczyć
-
-    //! gdzie syntax try catch - chyba w fetchu zwykłym
-
-    //! przydało by się zabezpieczyć
-
     const payload = await JSON.parse(req.body);
 
     switch (req.method) {
         case "POST":
+            if (!payload.id && typeof payload.id !== "string") {
+                res.status(400).json({ message: "bad request body" });
+                return;
+            }
+
             const updateCartItem = await authApolloClient.mutate<
                 UpdateUnauthCartByIdMutation,
                 UpdateUnauthCartByIdMutationVariables
