@@ -8,6 +8,7 @@ import { CartItem } from "context/types";
 import { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import { CartOptions } from "components/cart/cart-product-options";
+import { useSession } from "next-auth/react";
 // import Stripe from "stripe";
 
 interface CartContentProps {
@@ -48,7 +49,7 @@ const CartContent = ({ targetButton, setTargetButton }: CartContentProps) => {
                                     {changeToCurrency(moveTheComa(item.price))}
 
                                     <div>
-                                        {cartState.isLoading && targetButton === item.title ? (
+                                        {cartState.isLoading ? (
                                             <button disabled className="ml-4 text-red-300">
                                                 <TrashIcon
                                                     stroke="currentColor"
@@ -82,6 +83,7 @@ const CartContent = ({ targetButton, setTargetButton }: CartContentProps) => {
 
 const CartSummary = () => {
     const cartState = useCartState();
+    const { data: session, status } = useSession();
 
     // if (!stripeSecret) {
     //     return <div></div>;
@@ -132,13 +134,19 @@ const CartSummary = () => {
                 </button>
             </div>
             <div className="mt-4">
-                <button
-                    // onClick={pay}
-                    type="button"
-                    className="w-full btn-custom-primary"
-                >
-                    złóż zmówienie
-                </button>
+                {status === "authenticated" ? (
+                    <button
+                        // onClick={pay}
+                        type="button"
+                        className="w-full btn-custom-primary"
+                    >
+                        złóż zmówienie
+                    </button>
+                ) : (
+                    <Link className="block w-full btn-custom-primary" href="/api/auth/signin">
+                        zaloguj się aby złożyć zamówienie
+                    </Link>
+                )}
             </div>
         </div>
     );
