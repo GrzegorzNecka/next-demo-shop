@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { Account } from "next-auth";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import * as bcrypt from "bcrypt";
@@ -30,10 +30,10 @@ import {
     UpdateItemQuantityByCartIdMutationVariables,
 } from "graphQL/generated/graphql";
 import { NextApiRequest, NextApiResponse } from "next";
-import { deleteCookie, getCookie } from "cookies-next";
+import { CookieValueTypes, deleteCookie, getCookie } from "cookies-next";
 import { CartItem } from "context/types";
 
-// -- INIT AUTHOPTIONS
+// -- INIT AUTH_OPTIONS
 
 export const authOptions: NextAuthOptions = {
     secret: process.env.NEXT_AUTH_SECRET,
@@ -94,6 +94,110 @@ export const authOptions: NextAuthOptions = {
     },
 };
 
+// -- EXTEND CALLBACK to  async signIn()
+
+interface handleSignInProps {
+    account: Account | null;
+}
+
+const handleSignIn = async ({ account }: handleSignInProps, cookieCartId: CookieValueTypes) => {
+    if (typeof cookieCartId !== "string") {
+        return true;
+    }
+
+    // - cart and cartItems for unauth session
+
+    const unauthCart = await apolloClient.query<GetUnauthCartQuery, GetUnauthCartQueryVariables>({
+        query: GetUnauthCartDocument,
+        variables: { id: cookieCartId },
+    });
+
+    const unauthCartItems: CartItem[] | undefined = JSON.parse(unauthCart.data.unauthCart?.cartItems);
+
+    if (!unauthCartItems || !unauthCartItems.length) {
+        return true;
+    }
+
+    // - cart and cartItems for auth session
+
+    const authCartId = await authApolloClient.query<GetCartIdByAccountIdQuery, GetCartIdByAccountIdQueryVariables>({
+        query: GetCartIdByAccountIdDocument,
+        variables: { id: account?.providerAccountId! },
+    });
+
+    const { id } = authCartId.data?.account?.cart!;
+
+    const authCart = await apolloClient.query<GetCartItemsByCartIdQuery, GetCartItemsByCartIdQueryVariables>({
+        query: GetCartItemsByCartIdDocument,
+        variables: {
+            id: id!,
+        },
+    });
+
+    const authCartItems = authCart.data.cart?.cartItems;
+
+    // - compare datas from sessions
+
+    if (unauthCartItems.length > 0 && authCartItems) {
+        unauthCartItems.forEach(async (item) => {
+            //
+            const repeatedItem = authCartItems.find((s_item) => s_item.option?.id === item.productOptionId);
+
+            if (!repeatedItem) {
+                const createAuthCartItems = await authApolloClient.mutate<
+                    AddItemOptionToCartByCartIdMutation,
+                    AddItemOptionToCartByCartIdMutationVariables
+                >({
+                    mutation: AddItemOptionToCartByCartIdDocument,
+                    variables: {
+                        cartId: id,
+                        quantity: item.quantity,
+                        productOptionId: item.productOptionId,
+                    },
+                });
+            }
+
+            if (repeatedItem) {
+                // -- quantity must by less or equal than total
+
+                const total = repeatedItem.option?.total;
+
+                let quantity = repeatedItem.quantity + item.quantity;
+                if (total) {
+                    quantity = quantity >= total ? total : quantity;
+                }
+
+                const increaseAuthCartItems = await authApolloClient.mutate<
+                    UpdateItemQuantityByCartIdMutation,
+                    UpdateItemQuantityByCartIdMutationVariables
+                >({
+                    mutation: UpdateItemQuantityByCartIdDocument,
+                    variables: {
+                        cartId: id,
+                        itemId: repeatedItem.id,
+                        quantity,
+                    },
+                });
+            }
+        });
+    }
+
+    const clearUnauthCart = await authApolloClient.mutate<
+        UpdateUnauthCartByIdMutation,
+        UpdateUnauthCartByIdMutationVariables
+    >({
+        mutation: UpdateUnauthCartByIdDocument,
+        variables: {
+            id: cookieCartId,
+            cartItems: `[]`,
+        },
+    });
+
+    return true;
+};
+
+// NEXT_AUTH HANDLER
+
 export default async function NextAuthHandler(req: NextApiRequest, res: NextApiResponse) {
     const cookieCartId = getCookie(`${process.env.NEXT_PUBLIC_COOKIE_CART_ID}`, { req, res });
 
@@ -101,107 +205,8 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
         ...authOptions,
         callbacks: {
             ...authOptions.callbacks,
-            // -- EXTENDS CALLBACKS
-            async signIn({ user, account, profile, email, credentials }) {
-                if (typeof cookieCartId !== "string") {
-                    return true;
-                }
-
-                // - local cart items
-
-                const unauthCart = await apolloClient.query<GetUnauthCartQuery, GetUnauthCartQueryVariables>({
-                    query: GetUnauthCartDocument,
-                    variables: { id: cookieCartId },
-                });
-
-                const unauthCartItems: CartItem[] | undefined = JSON.parse(unauthCart.data.unauthCart?.cartItems);
-
-                if (!unauthCartItems || !unauthCartItems.length) {
-                    return true;
-                }
-
-                // - server cart items
-
-                const authCartId = await authApolloClient.query<
-                    GetCartIdByAccountIdQuery,
-                    GetCartIdByAccountIdQueryVariables
-                >({
-                    query: GetCartIdByAccountIdDocument,
-                    variables: { id: account?.providerAccountId! },
-                });
-
-                const { id } = authCartId.data?.account?.cart!;
-
-                const authCart = await apolloClient.query<
-                    GetCartItemsByCartIdQuery,
-                    GetCartItemsByCartIdQueryVariables
-                >({
-                    query: GetCartItemsByCartIdDocument,
-                    variables: {
-                        id: id!,
-                    },
-                });
-
-                const authCartItems = authCart.data.cart?.cartItems;
-
-                if (unauthCartItems.length > 0 && authCartItems) {
-                    unauthCartItems.forEach(async (item) => {
-                        //
-                        const repeatedItem = authCartItems.find((s_item) => s_item.option?.id === item.productOptionId);
-
-                        if (!repeatedItem) {
-                            const createAuthCartItems = await authApolloClient.mutate<
-                                AddItemOptionToCartByCartIdMutation,
-                                AddItemOptionToCartByCartIdMutationVariables
-                            >({
-                                mutation: AddItemOptionToCartByCartIdDocument,
-                                variables: {
-                                    cartId: id,
-                                    quantity: item.quantity,
-                                    productOptionId: item.productOptionId,
-                                },
-                            });
-                        }
-
-                        if (repeatedItem) {
-                            // -- quantity must by less or equal than total
-
-                            const total = repeatedItem.option?.total;
-
-                            let quantity = repeatedItem.quantity + item.quantity;
-                            if (total) {
-                                quantity = quantity >= total ? total : quantity;
-                            }
-
-                            const updateAuthCartItems = await authApolloClient.mutate<
-                                UpdateItemQuantityByCartIdMutation,
-                                UpdateItemQuantityByCartIdMutationVariables
-                            >({
-                                mutation: UpdateItemQuantityByCartIdDocument,
-                                variables: {
-                                    cartId: id,
-                                    itemId: repeatedItem.id,
-                                    quantity,
-                                },
-                            });
-                        }
-                    });
-                }
-
-                //todo - dodaj auth do wyjątków w hygraph - tak aby zmiany byłuy możliwe tylko po stronie serwera
-
-                const updateUnauthCartItems = await authApolloClient.mutate<
-                    UpdateUnauthCartByIdMutation,
-                    UpdateUnauthCartByIdMutationVariables
-                >({
-                    mutation: UpdateUnauthCartByIdDocument,
-                    variables: {
-                        id: cookieCartId,
-                        cartItems: `[]`,
-                    },
-                });
-
-                return true;
+            async signIn({ account }) {
+                return handleSignIn({ account }, cookieCartId);
             },
         },
     };
