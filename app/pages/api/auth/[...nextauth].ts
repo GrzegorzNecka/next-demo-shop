@@ -95,7 +95,7 @@ export const authOptions: NextAuthOptions = {
 };
 
 export default async function NextAuthHandler(req: NextApiRequest, res: NextApiResponse) {
-    const cookieId = getCookie(`${process.env.NEXT_PUBLIC_COOKIE_CART_ID}`, { req, res });
+    const cookieCartId = getCookie(`${process.env.NEXT_PUBLIC_COOKIE_CART_ID}`, { req, res });
 
     const options: NextAuthOptions = {
         ...authOptions,
@@ -103,7 +103,7 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
             ...authOptions.callbacks,
             // -- EXTENDS CALLBACKS
             async signIn({ user, account, profile, email, credentials }) {
-                if (typeof cookieId !== "string") {
+                if (typeof cookieCartId !== "string") {
                     return true;
                 }
 
@@ -111,7 +111,7 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
 
                 const unauthCart = await apolloClient.query<GetUnauthCartQuery, GetUnauthCartQueryVariables>({
                     query: GetUnauthCartDocument,
-                    variables: { id: cookieId },
+                    variables: { id: cookieCartId },
                 });
 
                 const unauthCartItems: CartItem[] | undefined = JSON.parse(unauthCart.data.unauthCart?.cartItems);
@@ -196,7 +196,7 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
                 >({
                     mutation: UpdateUnauthCartByIdDocument,
                     variables: {
-                        id: cookieId,
+                        id: cookieCartId,
                         cartItems: `[]`,
                     },
                 });

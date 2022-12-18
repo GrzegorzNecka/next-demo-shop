@@ -44,14 +44,14 @@ const handler: NextApiHandler<Response> = async (req, res) => {
         });
     }
 
-    const cookieId = getCookie(`${process.env.NEXT_PUBLIC_COOKIE_CART_ID}`, { req, res });
+    const cookieCartId = getCookie(`${process.env.NEXT_PUBLIC_COOKIE_CART_ID}`, { req, res });
 
-    if (!cookieId) {
+    if (!cookieCartId) {
         res.status(400).json({ message: "not found cookie" });
         return;
     }
 
-    res.status(200).json({ id: cookieId });
+    res.status(200).json({ id: cookieCartId });
 };
 
 export default handler;

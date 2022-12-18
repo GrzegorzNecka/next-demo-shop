@@ -30,7 +30,7 @@ const handleCartSession: NextApiHandler = async (req, res) => {
 
     switch (req.method) {
         case "POST":
-            // -- add to cart item
+            // -- add to cartitemmode
 
             if (!payload?.productOptionId && !payload?.quantity) {
                 res.status(400).json({ message: "productOptionId is required" });

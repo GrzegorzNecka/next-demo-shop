@@ -12,6 +12,7 @@ type useCartItemsProps = {
 
 export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, status }: useCartItemsProps) => {
     //
+    const cartItems = useRef<CartItem[]>([]);
     //todo - sprawdź czy codegen może generować typy dla reactQuery
     const { data: cookie, refetch: refetchCookieId } = useQuery({
         queryKey: ["cookieCartId"],
@@ -19,21 +20,19 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
         enabled: status === "unauthenticated" ? true : false,
     });
 
-    const cookieId: string = cookie?.id;
+    const cookieCartId: string = cookie?.id;
 
     const { data, refetch: refetchCart } = useGetUnauthCartQuery({
-        skip: !Boolean(cookieId),
+        skip: !Boolean(cookieCartId),
         variables: {
-            id: cookieId,
+            id: cookieCartId,
         },
         onCompleted: async (data) => {
-            if (!data.unauthCart && typeof cookieId === "string") {
-                console.log("!data.unauthCart && typeof cookieId === 'string'");
+            if (!data.unauthCart && typeof cookieCartId === "string") {
+                // if cookieCartId was remove on hygraf and still exist in cookie memory, then renew cookieCartId
 
-                // if id was remove on hygraf and exist in cookie
-
-                if (!data?.unauthCart && typeof cookieId === "string") {
-                    const deleteStatus = await deleteCookieCartId(cookieId);
+                if (!data?.unauthCart && typeof cookieCartId === "string") {
+                    const deleteStatus = await deleteCookieCartId(cookieCartId);
 
                     if (deleteStatus === 200) {
                         refetchCookieId();
@@ -48,8 +47,6 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
             console.log("error", error);
         },
     });
-
-    const cartItems = useRef<CartItem[]>([]);
 
     useEffect(() => {
         if (status !== "unauthenticated" || !data) {
@@ -75,39 +72,28 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
 
         setIsLoading(true);
 
-        if (!cartItems.current) {
-            const result = await updateCart(cookieId, [createCartItem(product)]);
-
-            if (result.status === 200) {
-                refetchCart({ id: cookieId });
-            }
-            return;
-        }
-
         const existCartItem = cartItems.current.find((item) => item.productOptionId === product.productOptionId);
 
-        // -- update - increase quantity
+        // -- create new cartItem
+        if (!existCartItem) {
+            const create = await updateCart(cookieCartId, [...cartItems.current, changeToCartItem(product)]);
 
-        if (existCartItem) {
-            const updateCartItem = { ...existCartItem };
-            updateCartItem.quantity = updateCartItem.quantity + product.quantity;
-
-            const restCartItems = cartItems.current.filter((item) => item.productOptionId !== product.productOptionId);
-
-            const result = await updateCart(cookieId, [...restCartItems, createCartItem(updateCartItem)]);
-
-            if (result.status === 200) {
-                refetchCart({ id: cookieId });
+            if (create.status === 200) {
+                refetchCart({ id: cookieCartId });
             }
             return;
         }
 
-        // -- add new item
+        // -- update cartItem (increase quantity)
 
-        const result = await updateCart(cookieId, [...cartItems.current, product]);
+        existCartItem.quantity = existCartItem.quantity + product.quantity;
 
-        if (result.status === 200) {
-            refetchCart({ id: cookieId });
+        const restCartItems = cartItems.current.filter((item) => item.productOptionId !== product.productOptionId);
+
+        const increase = await updateCart(cookieCartId, [...restCartItems, existCartItem]);
+
+        if (increase.status === 200) {
+            refetchCart({ id: cookieCartId });
         }
         return;
     };
@@ -127,7 +113,9 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
             return;
         }
 
-        // --  decrease quantity
+        setIsLoading(true);
+
+        // --  decrease cartItem quantity
 
         if (existCartItem.quantity > 1) {
             const updateCartItems = cartItems.current.map((item) => {
@@ -138,21 +126,21 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
                 return item;
             });
 
-            const result = await updateCart(cookieId, updateCartItems);
+            const decrease = await updateCart(cookieCartId, updateCartItems);
 
-            if (result.status === 200) {
-                refetchCart({ id: cookieId });
+            if (decrease.status === 200) {
+                refetchCart({ id: cookieCartId });
             }
             return;
         }
 
-        // -- clear whole item
+        // -- delete cartItem
 
         const restCartItems = cartItems.current.filter((item) => item.itemId !== itemId);
-        const result = await updateCart(cookieId, restCartItems);
+        const remove = await updateCart(cookieCartId, restCartItems);
 
-        if (result.status === 200) {
-            refetchCart({ id: cookieId });
+        if (remove.status === 200) {
+            refetchCart({ id: cookieCartId });
         }
         return;
     };
@@ -166,10 +154,10 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
             return;
         }
 
-        const result = await updateCart(cookieId, []);
+        const clear = await updateCart(cookieCartId, []);
 
-        if (result.status === 200) {
-            refetchCart({ id: cookieId });
+        if (clear.status === 200) {
+            refetchCart({ id: cookieCartId });
         }
         return;
     };
@@ -201,6 +189,18 @@ async function deleteCookieCartId<T>(id: T) {
     return deleteCookieId.status;
 }
 
+function changeToCartItem(item: CartItem) {
+    return {
+        itemId: `-${Math.random().toString(16).slice(2)}`,
+        quantity: item?.quantity!,
+        price: item?.price!,
+        title: item?.title!,
+        imgUrl: item?.imgUrl!,
+        slug: item?.slug!,
+        productOptionId: item?.productOptionId!,
+    };
+}
+
 async function updateCart<T, U>(id: T, product: U) {
     const result = await fetch("/api/cart/unauth-session", {
         method: "POST",
@@ -211,16 +211,4 @@ async function updateCart<T, U>(id: T, product: U) {
         }),
     });
     return result;
-}
-
-function createCartItem<T extends CartItem>(item: T) {
-    return {
-        itemId: `-${Math.random().toString(16).slice(2)}`,
-        quantity: item?.quantity!,
-        price: item?.price!,
-        title: item?.title!,
-        imgUrl: item?.imgUrl!,
-        slug: item?.slug!,
-        productOptionId: item?.productOptionId!,
-    };
 }
