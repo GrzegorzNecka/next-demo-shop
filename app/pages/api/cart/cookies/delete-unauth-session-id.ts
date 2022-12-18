@@ -1,11 +1,5 @@
 import type { NextApiHandler } from "next/types";
-import { CookieValueTypes, getCookie, hasCookie, setCookie, deleteCookie } from "cookies-next";
-import { authApolloClient } from "graphQL/apolloClient";
-import {
-    CreateUnAuthCartDocument,
-    CreateUnAuthCartMutation,
-    CreateUnAuthCartMutationVariables,
-} from "graphQL/generated/graphql";
+import { CookieValueTypes, getCookie, hasCookie, deleteCookie } from "cookies-next";
 
 interface Response {
     readonly message?: string;

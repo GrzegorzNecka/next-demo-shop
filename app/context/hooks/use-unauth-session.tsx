@@ -168,7 +168,7 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
 // HELPERS
 
 async function getCookieCartId() {
-    const res = await fetch("/api/cart/get-unauth-cookie", {
+    const res = await fetch("/api/cart/cookies/create-unauth-session-id", {
         method: "GET",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json;" },
@@ -178,7 +178,7 @@ async function getCookieCartId() {
 }
 
 async function deleteCookieCartId<T>(id: T) {
-    const deleteCookieId = await fetch("/api/cart/delete-unauth-cookie", {
+    const deleteCookieId = await fetch("/api/cart/cookies/delete-unauth-session-id", {
         method: "DELETE",
         headers: { "Content-Type": "application/json;" },
         body: JSON.stringify({
