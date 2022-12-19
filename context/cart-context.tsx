@@ -1,8 +1,6 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import type { CartItem, CartState } from "./types";
-import { useCartItemsWithAuthSession } from "context/hooks/use-auth-session";
-import { useCartItemsWithUnauthSession } from "context/hooks/use-unauth-session";
-import { useSession } from "next-auth/react";
+import { createContext, useContext } from "react";
+import type { CartState } from "./types";
+
 import { useCartItems } from "./hooks/use-cart-items";
 
 export const CartStateContext = createContext<CartState | null>(null);

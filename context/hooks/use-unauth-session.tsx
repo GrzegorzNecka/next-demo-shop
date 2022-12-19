@@ -1,9 +1,9 @@
 import type { CartItem } from "context/types";
-import { Dispatch, memo, SetStateAction, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 import { useEffect } from "react";
 import { useGetUnauthCartQuery } from "graphQL/generated/graphql";
 import { useQuery } from "@tanstack/react-query";
-import { CookieValueTypes } from "cookies-next";
+
 type useCartItemsProps = {
     setCartItems: Dispatch<SetStateAction<CartItem[]>>;
     setIsLoading: Dispatch<SetStateAction<boolean>>;
