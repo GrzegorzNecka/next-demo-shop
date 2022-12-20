@@ -1,7 +1,7 @@
-import { FieldValues, FormState, Path, UseFormRegister } from "react-hook-form";
+import { FieldValues, FormState, Path, UnPackAsyncDefaultValues, UseFormRegister } from "react-hook-form";
 
 interface FormInputProps<FormData extends FieldValues> {
-    name: Path<FormData>;
+    name: Path<UnPackAsyncDefaultValues<FormData>>;
     type: string;
     id?: string;
     placeholder?: string;
