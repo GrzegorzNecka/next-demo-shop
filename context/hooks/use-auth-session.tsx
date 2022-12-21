@@ -59,8 +59,6 @@ export const useCartItemsWithAuthSession = ({ setCartItems, setIsLoading, status
             return;
         }
 
-        setIsLoading(true);
-
         const { productOptionId, quantity } = product;
 
         const existProduct = data.cart?.cartItems.find((item) => item?.option?.id === productOptionId);
@@ -95,8 +93,12 @@ export const useCartItemsWithAuthSession = ({ setCartItems, setIsLoading, status
             }),
         });
         if (result.status === 200) {
+            setIsLoading(true);
             refetch({ id: cartId });
         }
+
+        //! można spróbować w tym miejscu dodać optimistic update
+        const optimistic = result.json();
     };
 
     // --

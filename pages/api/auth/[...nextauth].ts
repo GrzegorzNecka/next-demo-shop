@@ -205,9 +205,9 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
         ...authOptions,
         callbacks: {
             ...authOptions.callbacks,
-            async signIn({ account }) {
-                return handleSignIn({ account }, cookieCartId);
-            },
+            // async signIn({ account }) {
+            //     return handleSignIn({ account }, cookieCartId);
+            // },
         },
     };
 

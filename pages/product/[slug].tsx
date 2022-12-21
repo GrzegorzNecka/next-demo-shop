@@ -31,7 +31,8 @@ const ProductSingleSlugPage = ({ product }: InferGetStaticPropsType<typeof getSt
                     slug: product.slug,
                     option: product.option,
                     // rating: product.rating.rate,
-                    longDescription: product.longDescription,
+                    // longDescription: product.longDescription,
+
                     price: product.price,
                     priceWithCurrency: changeToCurrency(moveTheComa(product.price)),
                 }}
@@ -87,7 +88,8 @@ export const getStaticProps = async ({ params }: InferGetStaticPathsType<typeof 
 
     const markdown: string = data.product.description;
 
-    const product = { ...data.product, longDescription: await serialize(markdown) };
+    // const product = { ...data.product, longDescription: await serialize(markdown) };
+    const product = { ...data.product };
 
     return {
         props: {

@@ -13,7 +13,7 @@ export default function CartBar() {
     };
 
     return (
-        <div>
+        <div className="flex gap-4 mx-4">
             <button onClick={handleOnClick}>refetch</button>
             <Link legacyBehavior href="/cart">
                 <a>
