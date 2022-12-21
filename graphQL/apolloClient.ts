@@ -1,7 +1,6 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 
-// https://www.apollographql.com/docs/react/caching/cache-configuration/#generating-unique-identifiers
-// https://www.apollographql.com/docs/react/caching/cache-field-behavior/#merging-non-normalized-objects
+const uri = "https://api-eu-central-1.hygraph.com/v2/cl5s794280vvm01tbegxz5w9c/master";
 
 const cache = new InMemoryCache({
     typePolicies: {
@@ -18,16 +17,23 @@ const cache = new InMemoryCache({
 });
 
 const apolloClient = new ApolloClient({
-    uri: process.env.NEXT_PUBLIC_HYGRAPH_CONTENT_API,
+    uri,
     cache,
+    name: "hygraph-client",
+    version: "1.0",
+    connectToDevTools: true,
 });
 
 const authApolloClient = new ApolloClient({
-    uri: process.env.NEXT_PUBLIC_HYGRAPH_CONTENT_API,
+    uri,
     cache,
     headers: {
         Authorization: `Bearer ${process.env.HYGRAPH_TOKEN_AUTH}`,
     },
+    ssrMode: typeof window === "undefined",
+    name: "hygraph-auth-client",
+    version: "1.0",
+    connectToDevTools: true,
 });
 
 export { apolloClient, authApolloClient };

@@ -1,69 +1,56 @@
+import { ApolloQueryResult } from "@apollo/client";
 import type { CartItem } from "context/types";
-import { Dispatch, SetStateAction, useRef } from "react";
+import { GetUnauthCartQuery } from "graphQL/generated/graphql";
+import { Dispatch, SetStateAction } from "react";
 import { useEffect } from "react";
-import { useGetUnauthCartQuery } from "graphQL/generated/graphql";
-import { useQuery } from "@tanstack/react-query";
+import { productToCartItem } from "utils/cart";
 
 type useCartItemsProps = {
     setCartItems: Dispatch<SetStateAction<CartItem[]>>;
     setIsLoading: Dispatch<SetStateAction<boolean>>;
     status: "unauthenticated" | "authenticated" | "loading";
+    cookieCartId: string;
+    cartItems: CartItem[];
 };
 
-export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, status }: useCartItemsProps) => {
+export const useCartItemsWithUnauthSession = ({
+    setCartItems,
+    setIsLoading,
+    status,
+    cookieCartId,
+    cartItems,
+}: useCartItemsProps) => {
     //
-    const cartItems = useRef<CartItem[]>([]);
-    //todo - sprawdź czy codegen może generować typy dla reactQuery
-    const { data: cookie, refetch: refetchCookieId } = useQuery({
-        queryKey: ["cookieCartId"],
-        queryFn: getCookieCartId,
-        enabled: status === "unauthenticated" ? true : false,
-    });
+    async function updateData() {
+        let result = await fetch("/api/cart/unauth-session", {
+            method: "GET",
+            headers: { "Content-Type": "application/json;" },
+        });
 
-    const cookieCartId: string = cookie?.id;
+        if (result.status !== 200) {
+            return;
+        }
 
-    const { data, refetch: refetchCart } = useGetUnauthCartQuery({
-        skip: !Boolean(cookieCartId),
-        variables: {
-            id: cookieCartId,
-        },
-        onCompleted: async (data) => {
-            if (!data.unauthCart && typeof cookieCartId === "string") {
-                // if cookieCartId was remove on hygraf and still exist in cookie memory, then renew cookieCartId
+        const { cartItems } = await result.json();
+        console.log("🚀 ~ file: use-unauth-session.tsx:35 ~ updateData ~ cartItems", cartItems);
 
-                if (!data?.unauthCart && typeof cookieCartId === "string") {
-                    const deleteStatus = await deleteCookieCartId(cookieCartId);
+        // const data: CartItem[] = JSON.parse(cartItems);
+        // console.log("🚀 ~ file: use-unauth-session.tsx:38 ~ updateData ~  data", data);
 
-                    if (deleteStatus === 200) {
-                        refetchCookieId();
-                        refetchCart();
-                    }
-                }
-            }
+        setCartItems(cartItems);
+        setIsLoading(false);
+    }
 
-            setIsLoading(false);
-        },
-        onError(error) {
-            console.log("error", error);
-        },
-    });
-
+    // USE_EFFECT
     useEffect(() => {
-        if (status !== "unauthenticated" || !data) {
+        if (status !== "unauthenticated") {
             return;
         }
 
-        if (!data?.unauthCart?.cartItems) {
-            setCartItems([]);
-            return;
-        }
+        updateData();
+    }, [status]);
 
-        cartItems.current = JSON.parse(data?.unauthCart?.cartItems) || [];
-
-        setCartItems(cartItems.current);
-    }, [data]);
-
-    // -- CONTEXT HANDLERS
+    // CONTEXT HANDLERS
 
     const addItemToCart = async (product: CartItem) => {
         if (status !== "unauthenticated") {
@@ -72,42 +59,37 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
 
         setIsLoading(true);
 
-        const existCartItem = cartItems.current.find((item) => item.productOptionId === product.productOptionId);
+        const existCartItem = cartItems.find((item) => item.productOptionId === product.productOptionId);
+        console.log("🚀 ~  ~ existCartItem", existCartItem);
 
-        // -- create new cartItem
+        // create new cartItem
         if (!existCartItem) {
-            const create = await updateCart(cookieCartId, [...cartItems.current, changeToCartItem(product)]);
+            const create = await updateCart(cookieCartId, [...cartItems, productToCartItem(product)]);
+            console.log("🚀 ~  ~ create", create);
 
             if (create.status === 200) {
-                refetchCart({ id: cookieCartId });
+                updateData();
             }
             return;
         }
 
-        // -- update cartItem (increase quantity)
+        //update existing cartItem (increase quantity)
 
         existCartItem.quantity = existCartItem.quantity + product.quantity;
-
-        const restCartItems = cartItems.current.filter((item) => item.productOptionId !== product.productOptionId);
-
+        const restCartItems = cartItems.filter((item) => item.productOptionId !== product.productOptionId);
         const increase = await updateCart(cookieCartId, [...restCartItems, existCartItem]);
 
         if (increase.status === 200) {
-            refetchCart({ id: cookieCartId });
+            updateData();
         }
-        return;
     };
 
     const removeItemFromCart = async (itemId: CartItem["productOptionId"]) => {
-        if (status !== "unauthenticated") {
+        if (status !== "unauthenticated" || !cartItems) {
             return;
         }
 
-        if (!cartItems.current) {
-            return;
-        }
-
-        const existCartItem = cartItems.current.find((item) => item.itemId === itemId);
+        const existCartItem = cartItems.find((item) => item.itemId === itemId);
 
         if (!existCartItem) {
             return;
@@ -115,10 +97,10 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
 
         setIsLoading(true);
 
-        // --  decrease cartItem quantity
+        // decrease cartItem quantity
 
         if (existCartItem.quantity > 1) {
-            const updateCartItems = cartItems.current.map((item) => {
+            const updateCartItems = cartItems.map((item) => {
                 if (item.itemId === itemId) {
                     item.quantity = item.quantity - 1;
                 }
@@ -129,35 +111,31 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
             const decrease = await updateCart(cookieCartId, updateCartItems);
 
             if (decrease.status === 200) {
-                refetchCart({ id: cookieCartId });
+                updateData();
             }
             return;
         }
 
-        // -- delete cartItem
+        //delete cartItem
 
-        const restCartItems = cartItems.current.filter((item) => item.itemId !== itemId);
+        const restCartItems = cartItems.filter((item) => item.itemId !== itemId);
         const remove = await updateCart(cookieCartId, restCartItems);
 
         if (remove.status === 200) {
-            refetchCart({ id: cookieCartId });
+            updateData();
         }
         return;
     };
 
     const clearCartItems = async () => {
-        if (status !== "unauthenticated") {
-            return;
-        }
-
-        if (!cartItems.current) {
+        if (status !== "unauthenticated" || !cartItems) {
             return;
         }
 
         const clear = await updateCart(cookieCartId, []);
 
         if (clear.status === 200) {
-            refetchCart({ id: cookieCartId });
+            updateData();
         }
         return;
     };
@@ -167,16 +145,19 @@ export const useCartItemsWithUnauthSession = ({ setCartItems, setIsLoading, stat
 
 // HELPERS
 
-async function getCookieCartId() {
-    const res = await fetch("/api/cart/cookies/create-unauth-session-id", {
-        method: "GET",
-        credentials: "same-origin",
+async function updateCart<T, U>(id: T, product: U) {
+    const res = await fetch("/api/cart/unauth-session", {
+        method: "PUT",
         headers: { "Content-Type": "application/json;" },
+        body: JSON.stringify({
+            id,
+            product,
+        }),
     });
-
-    return res.json();
+    return res;
 }
 
+//! do obsłużenia przypadek kiedy w cookies wyczyszczę pamięć podręczną
 async function deleteCookieCartId<T>(id: T) {
     const deleteCookieId = await fetch("/api/cart/cookies/delete-unauth-session-id", {
         method: "DELETE",
@@ -187,28 +168,4 @@ async function deleteCookieCartId<T>(id: T) {
     });
 
     return deleteCookieId.status;
-}
-
-function changeToCartItem(item: CartItem) {
-    return {
-        itemId: `-${Math.random().toString(16).slice(2)}`,
-        quantity: item?.quantity!,
-        price: item?.price!,
-        title: item?.title!,
-        imgUrl: item?.imgUrl!,
-        slug: item?.slug!,
-        productOptionId: item?.productOptionId!,
-    };
-}
-
-async function updateCart<T, U>(id: T, product: U) {
-    const result = await fetch("/api/cart/unauth-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json;" },
-        body: JSON.stringify({
-            id,
-            product,
-        }),
-    });
-    return result;
 }

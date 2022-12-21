@@ -1,7 +1,7 @@
 import { authOptions } from "pages/api/auth/[...nextauth]";
 import { unstable_getServerSession } from "next-auth/next";
 import type { NextApiHandler } from "next/types";
-import { authApolloClient } from "graphQL/apolloClient";
+import { apolloClient, authApolloClient } from "graphQL/apolloClient";
 import {
     AddItemOptionToCartByCartIdDocument,
     AddItemOptionToCartByCartIdMutation,
@@ -9,6 +9,7 @@ import {
     ClearCartItemsDocument,
     ClearCartItemsMutation,
     ClearCartItemsMutationVariables,
+    GetCartItemsByCartIdDocument,
     RemoveItemFromCartByCartIdDocument,
     RemoveItemFromCartByCartIdMutation,
     RemoveItemFromCartByCartIdMutationVariables,
@@ -47,7 +48,22 @@ const handleCartSession: NextApiHandler = async (req, res) => {
                     quantity: payload.quantity,
                     productOptionId: payload.productOptionId,
                 },
+                // fetchPolicy: "no-cache",
+                // awaitRefetchQueries: true,
+                // refetchQueries: [
+                //     {
+                //         query: GetCartItemsByCartIdDocument,
+                //         variables: { id: cartId },
+                //     },
+                // ],
             });
+
+            // await apolloClient.refetchQueries({
+            //     include: "active",
+            // });
+            // await authApolloClient.refetchQueries({
+            //     include: "active",
+            // });
 
             res.status(200).json({ createCartItem });
             return;
@@ -70,7 +86,24 @@ const handleCartSession: NextApiHandler = async (req, res) => {
                     itemId: payload.itemId,
                     quantity: payload.updatedQuantity,
                 },
+
+                // awaitRefetchQueries: true,
+                // refetchQueries: [
+                //     {
+                //         query: GetCartItemsByCartIdDocument,
+                //         variables: { id: cartId },
+                //     },
+                // ],
             });
+
+            // await apolloClient.refetchQueries({
+            //     include: [GetCartItemsByCartIdDocument],
+            // // });
+            // await authApolloClient.refetchQueries({
+            //     include: "active",
+            // });
+
+            // console.log(apolloClient.cache.updateQuery({ query: GetCartItemsByCartIdDocument, variables: { cartId } }));
 
             res.status(200).json({ updateCartItem });
             return;

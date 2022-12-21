@@ -4,6 +4,7 @@ import { CartItem } from "context/types";
 // import { useSession } from "next-auth/react";
 import { useGetCartItemsByCartIdQuery } from "graphQL/generated/graphql";
 import { Session } from "next-auth";
+import { apolloClient } from "graphQL/apolloClient";
 
 type useCartItemsProps = {
     setCartItems: Dispatch<SetStateAction<CartItem[]>>;
@@ -22,8 +23,11 @@ export const useCartItemsWithAuthSession = ({ setCartItems, setIsLoading, status
         variables: {
             id: cartId,
         },
+        // fetchPolicy: "network-only",
+        fetchPolicy: "cache-and-network",
+
         onCompleted: () => {
-            setIsLoading(false);
+            // setIsLoading(false);
         },
         onError(error) {
             console.log("error", error);
@@ -58,7 +62,7 @@ export const useCartItemsWithAuthSession = ({ setCartItems, setIsLoading, status
         if (status === "unauthenticated" || !cartId || !data) {
             return;
         }
-
+        setIsLoading(true);
         const { productOptionId, quantity } = product;
 
         const existProduct = data.cart?.cartItems.find((item) => item?.option?.id === productOptionId);
@@ -77,6 +81,14 @@ export const useCartItemsWithAuthSession = ({ setCartItems, setIsLoading, status
 
             if (result.status === 200) {
                 refetch({ id: cartId });
+                setIsLoading(false);
+
+                // await apolloClient.refetchQueries({
+                //     include: "active",
+                // });
+                //! można spróbować w tym miejscu dodać optimistic update
+                const optimistic = await result.json();
+                console.log("🚀 ~  optimistic", optimistic);
             }
 
             return;
@@ -93,12 +105,20 @@ export const useCartItemsWithAuthSession = ({ setCartItems, setIsLoading, status
             }),
         });
         if (result.status === 200) {
-            setIsLoading(true);
+            setIsLoading(false);
             refetch({ id: cartId });
-        }
 
-        //! można spróbować w tym miejscu dodać optimistic update
-        const optimistic = result.json();
+            // await apolloClient    // refetchQueries: [
+            //     {
+            //         query: GetCartItemsByCartIdDocument,
+            //         variables: { id: cartId },
+            //     },
+            // ],
+
+            //! można spróbować w tym miejscu dodać optimistic update
+            const optimistic = await result.json();
+            console.log("🚀 ~  optimistic", optimistic);
+        }
     };
 
     // --

@@ -1361,7 +1361,6 @@ export type CartItem = Node & {
   /** The unique identifier */
   readonly id: Scalars['ID'];
   readonly option?: Maybe<Option>;
-  readonly product?: Maybe<Product>;
   /** The time the document was published. Null on documents in draft stage. */
   readonly publishedAt?: Maybe<Scalars['DateTime']>;
   /** User that last published this document */
@@ -1404,12 +1403,6 @@ export type CartItemHistoryArgs = {
 
 
 export type CartItemOptionArgs = {
-  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-};
-
-
-export type CartItemProductArgs = {
   forceParentLocale?: InputMaybe<Scalars['Boolean']>;
   locales?: InputMaybe<ReadonlyArray<Locale>>;
 };
@@ -1459,7 +1452,6 @@ export type CartItemCreateInput = {
   readonly cart?: InputMaybe<CartCreateOneInlineInput>;
   readonly createdAt?: InputMaybe<Scalars['DateTime']>;
   readonly option?: InputMaybe<OptionCreateOneInlineInput>;
-  readonly product?: InputMaybe<ProductCreateOneInlineInput>;
   readonly quantity: Scalars['Int'];
   readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
@@ -1537,7 +1529,6 @@ export type CartItemManyWhereInput = {
   /** All values starting with the given string. */
   readonly id_starts_with?: InputMaybe<Scalars['ID']>;
   readonly option?: InputMaybe<OptionWhereInput>;
-  readonly product?: InputMaybe<ProductWhereInput>;
   readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -1606,7 +1597,6 @@ export enum CartItemOrderByInput {
 export type CartItemUpdateInput = {
   readonly cart?: InputMaybe<CartUpdateOneInlineInput>;
   readonly option?: InputMaybe<OptionUpdateOneInlineInput>;
-  readonly product?: InputMaybe<ProductUpdateOneInlineInput>;
   readonly quantity?: InputMaybe<Scalars['Int']>;
 };
 
@@ -1730,7 +1720,6 @@ export type CartItemWhereInput = {
   /** All values starting with the given string. */
   readonly id_starts_with?: InputMaybe<Scalars['ID']>;
   readonly option?: InputMaybe<OptionWhereInput>;
-  readonly product?: InputMaybe<ProductWhereInput>;
   readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -4031,8 +4020,7 @@ export type ImageTransformationInput = {
 /** Locale system enumeration */
 export enum Locale {
   /** System locale */
-  En = 'en',
-  Pl = 'pl'
+  En = 'en'
 }
 
 /** Representing a geolocation point with latitude and longitude */
@@ -4094,6 +4082,8 @@ export type Mutation = {
   readonly createReview?: Maybe<Review>;
   /** Create one scheduledRelease */
   readonly createScheduledRelease?: Maybe<ScheduledRelease>;
+  /** Create one testCache */
+  readonly createTestCache?: Maybe<TestCache>;
   /** Create one unauthCart */
   readonly createUnauthCart?: Maybe<UnauthCart>;
   /** Delete one account from _all_ existing stages. Returns deleted document. */
@@ -4223,6 +4213,13 @@ export type Mutation = {
   /** Delete many Review documents, return deleted documents */
   readonly deleteManyReviewsConnection: ReviewConnection;
   /**
+   * Delete many TestCache documents
+   * @deprecated Please use the new paginated many mutation (deleteManyTestCachesConnection)
+   */
+  readonly deleteManyTestCaches: BatchPayload;
+  /** Delete many TestCache documents, return deleted documents */
+  readonly deleteManyTestCachesConnection: TestCacheConnection;
+  /**
    * Delete many UnauthCart documents
    * @deprecated Please use the new paginated many mutation (deleteManyUnauthCartsConnection)
    */
@@ -4251,6 +4248,8 @@ export type Mutation = {
   readonly deleteScheduledOperation?: Maybe<ScheduledOperation>;
   /** Delete one scheduledRelease from _all_ existing stages. Returns deleted document. */
   readonly deleteScheduledRelease?: Maybe<ScheduledRelease>;
+  /** Delete one testCache from _all_ existing stages. Returns deleted document. */
+  readonly deleteTestCache?: Maybe<TestCache>;
   /** Delete one unauthCart from _all_ existing stages. Returns deleted document. */
   readonly deleteUnauthCart?: Maybe<UnauthCart>;
   /** Publish one account */
@@ -4380,6 +4379,13 @@ export type Mutation = {
   /** Publish many Review documents */
   readonly publishManyReviewsConnection: ReviewConnection;
   /**
+   * Publish many TestCache documents
+   * @deprecated Please use the new paginated many mutation (publishManyTestCachesConnection)
+   */
+  readonly publishManyTestCaches: BatchPayload;
+  /** Publish many TestCache documents */
+  readonly publishManyTestCachesConnection: TestCacheConnection;
+  /**
    * Publish many UnauthCart documents
    * @deprecated Please use the new paginated many mutation (publishManyUnauthCartsConnection)
    */
@@ -4404,6 +4410,8 @@ export type Mutation = {
   readonly publishProductSizeVariant?: Maybe<ProductSizeVariant>;
   /** Publish one review */
   readonly publishReview?: Maybe<Review>;
+  /** Publish one testCache */
+  readonly publishTestCache?: Maybe<TestCache>;
   /** Publish one unauthCart */
   readonly publishUnauthCart?: Maybe<UnauthCart>;
   /** Schedule to publish one account */
@@ -4438,6 +4446,8 @@ export type Mutation = {
   readonly schedulePublishProductSizeVariant?: Maybe<ProductSizeVariant>;
   /** Schedule to publish one review */
   readonly schedulePublishReview?: Maybe<Review>;
+  /** Schedule to publish one testCache */
+  readonly schedulePublishTestCache?: Maybe<TestCache>;
   /** Schedule to publish one unauthCart */
   readonly schedulePublishUnauthCart?: Maybe<UnauthCart>;
   /** Unpublish one account from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
@@ -4472,6 +4482,8 @@ export type Mutation = {
   readonly scheduleUnpublishProductSizeVariant?: Maybe<ProductSizeVariant>;
   /** Unpublish one review from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly scheduleUnpublishReview?: Maybe<Review>;
+  /** Unpublish one testCache from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
+  readonly scheduleUnpublishTestCache?: Maybe<TestCache>;
   /** Unpublish one unauthCart from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly scheduleUnpublishUnauthCart?: Maybe<UnauthCart>;
   /** Unpublish one account from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
@@ -4601,6 +4613,13 @@ export type Mutation = {
   /** Find many Review documents that match criteria in specified stage and unpublish from target stages */
   readonly unpublishManyReviewsConnection: ReviewConnection;
   /**
+   * Unpublish many TestCache documents
+   * @deprecated Please use the new paginated many mutation (unpublishManyTestCachesConnection)
+   */
+  readonly unpublishManyTestCaches: BatchPayload;
+  /** Find many TestCache documents that match criteria in specified stage and unpublish from target stages */
+  readonly unpublishManyTestCachesConnection: TestCacheConnection;
+  /**
    * Unpublish many UnauthCart documents
    * @deprecated Please use the new paginated many mutation (unpublishManyUnauthCartsConnection)
    */
@@ -4625,6 +4644,8 @@ export type Mutation = {
   readonly unpublishProductSizeVariant?: Maybe<ProductSizeVariant>;
   /** Unpublish one review from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly unpublishReview?: Maybe<Review>;
+  /** Unpublish one testCache from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
+  readonly unpublishTestCache?: Maybe<TestCache>;
   /** Unpublish one unauthCart from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly unpublishUnauthCart?: Maybe<UnauthCart>;
   /** Update one account */
@@ -4754,6 +4775,13 @@ export type Mutation = {
   /** Update many Review documents */
   readonly updateManyReviewsConnection: ReviewConnection;
   /**
+   * Update many testCaches
+   * @deprecated Please use the new paginated many mutation (updateManyTestCachesConnection)
+   */
+  readonly updateManyTestCaches: BatchPayload;
+  /** Update many TestCache documents */
+  readonly updateManyTestCachesConnection: TestCacheConnection;
+  /**
    * Update many unauthCarts
    * @deprecated Please use the new paginated many mutation (updateManyUnauthCartsConnection)
    */
@@ -4780,6 +4808,8 @@ export type Mutation = {
   readonly updateReview?: Maybe<Review>;
   /** Update one scheduledRelease */
   readonly updateScheduledRelease?: Maybe<ScheduledRelease>;
+  /** Update one testCache */
+  readonly updateTestCache?: Maybe<TestCache>;
   /** Update one unauthCart */
   readonly updateUnauthCart?: Maybe<UnauthCart>;
   /** Upsert one account */
@@ -4814,6 +4844,8 @@ export type Mutation = {
   readonly upsertProductSizeVariant?: Maybe<ProductSizeVariant>;
   /** Upsert one review */
   readonly upsertReview?: Maybe<Review>;
+  /** Upsert one testCache */
+  readonly upsertTestCache?: Maybe<TestCache>;
   /** Upsert one unauthCart */
   readonly upsertUnauthCart?: Maybe<UnauthCart>;
 };
@@ -4901,6 +4933,11 @@ export type MutationCreateReviewArgs = {
 
 export type MutationCreateScheduledReleaseArgs = {
   data: ScheduledReleaseCreateInput;
+};
+
+
+export type MutationCreateTestCacheArgs = {
+  data: TestCacheCreateInput;
 };
 
 
@@ -5184,6 +5221,21 @@ export type MutationDeleteManyReviewsConnectionArgs = {
 };
 
 
+export type MutationDeleteManyTestCachesArgs = {
+  where?: InputMaybe<TestCacheManyWhereInput>;
+};
+
+
+export type MutationDeleteManyTestCachesConnectionArgs = {
+  after?: InputMaybe<Scalars['ID']>;
+  before?: InputMaybe<Scalars['ID']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<TestCacheManyWhereInput>;
+};
+
+
 export type MutationDeleteManyUnauthCartsArgs = {
   where?: InputMaybe<UnauthCartManyWhereInput>;
 };
@@ -5251,6 +5303,11 @@ export type MutationDeleteScheduledOperationArgs = {
 
 export type MutationDeleteScheduledReleaseArgs = {
   where: ScheduledReleaseWhereUniqueInput;
+};
+
+
+export type MutationDeleteTestCacheArgs = {
+  where: TestCacheWhereUniqueInput;
 };
 
 
@@ -5646,6 +5703,24 @@ export type MutationPublishManyReviewsConnectionArgs = {
 };
 
 
+export type MutationPublishManyTestCachesArgs = {
+  to?: ReadonlyArray<Stage>;
+  where?: InputMaybe<TestCacheManyWhereInput>;
+};
+
+
+export type MutationPublishManyTestCachesConnectionArgs = {
+  after?: InputMaybe<Scalars['ID']>;
+  before?: InputMaybe<Scalars['ID']>;
+  first?: InputMaybe<Scalars['Int']>;
+  from?: InputMaybe<Stage>;
+  last?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  to?: ReadonlyArray<Stage>;
+  where?: InputMaybe<TestCacheManyWhereInput>;
+};
+
+
 export type MutationPublishManyUnauthCartsArgs = {
   to?: ReadonlyArray<Stage>;
   where?: InputMaybe<UnauthCartManyWhereInput>;
@@ -5730,6 +5805,12 @@ export type MutationPublishProductSizeVariantArgs = {
 export type MutationPublishReviewArgs = {
   to?: ReadonlyArray<Stage>;
   where: ReviewWhereUniqueInput;
+};
+
+
+export type MutationPublishTestCacheArgs = {
+  to?: ReadonlyArray<Stage>;
+  where: TestCacheWhereUniqueInput;
 };
 
 
@@ -5891,6 +5972,14 @@ export type MutationSchedulePublishReviewArgs = {
 };
 
 
+export type MutationSchedulePublishTestCacheArgs = {
+  releaseAt?: InputMaybe<Scalars['DateTime']>;
+  releaseId?: InputMaybe<Scalars['String']>;
+  to?: ReadonlyArray<Stage>;
+  where: TestCacheWhereUniqueInput;
+};
+
+
 export type MutationSchedulePublishUnauthCartArgs = {
   releaseAt?: InputMaybe<Scalars['DateTime']>;
   releaseId?: InputMaybe<Scalars['String']>;
@@ -6040,6 +6129,14 @@ export type MutationScheduleUnpublishReviewArgs = {
   releaseAt?: InputMaybe<Scalars['DateTime']>;
   releaseId?: InputMaybe<Scalars['String']>;
   where: ReviewWhereUniqueInput;
+};
+
+
+export type MutationScheduleUnpublishTestCacheArgs = {
+  from?: ReadonlyArray<Stage>;
+  releaseAt?: InputMaybe<Scalars['DateTime']>;
+  releaseId?: InputMaybe<Scalars['String']>;
+  where: TestCacheWhereUniqueInput;
 };
 
 
@@ -6419,6 +6516,24 @@ export type MutationUnpublishManyReviewsConnectionArgs = {
 };
 
 
+export type MutationUnpublishManyTestCachesArgs = {
+  from?: ReadonlyArray<Stage>;
+  where?: InputMaybe<TestCacheManyWhereInput>;
+};
+
+
+export type MutationUnpublishManyTestCachesConnectionArgs = {
+  after?: InputMaybe<Scalars['ID']>;
+  before?: InputMaybe<Scalars['ID']>;
+  first?: InputMaybe<Scalars['Int']>;
+  from?: ReadonlyArray<Stage>;
+  last?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  stage?: InputMaybe<Stage>;
+  where?: InputMaybe<TestCacheManyWhereInput>;
+};
+
+
 export type MutationUnpublishManyUnauthCartsArgs = {
   from?: ReadonlyArray<Stage>;
   where?: InputMaybe<UnauthCartManyWhereInput>;
@@ -6498,6 +6613,12 @@ export type MutationUnpublishProductSizeVariantArgs = {
 export type MutationUnpublishReviewArgs = {
   from?: ReadonlyArray<Stage>;
   where: ReviewWhereUniqueInput;
+};
+
+
+export type MutationUnpublishTestCacheArgs = {
+  from?: ReadonlyArray<Stage>;
+  where: TestCacheWhereUniqueInput;
 };
 
 
@@ -6821,6 +6942,23 @@ export type MutationUpdateManyReviewsConnectionArgs = {
 };
 
 
+export type MutationUpdateManyTestCachesArgs = {
+  data: TestCacheUpdateManyInput;
+  where?: InputMaybe<TestCacheManyWhereInput>;
+};
+
+
+export type MutationUpdateManyTestCachesConnectionArgs = {
+  after?: InputMaybe<Scalars['ID']>;
+  before?: InputMaybe<Scalars['ID']>;
+  data: TestCacheUpdateManyInput;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<TestCacheManyWhereInput>;
+};
+
+
 export type MutationUpdateManyUnauthCartsArgs = {
   data: UnauthCartUpdateManyInput;
   where?: InputMaybe<UnauthCartManyWhereInput>;
@@ -6895,6 +7033,12 @@ export type MutationUpdateReviewArgs = {
 export type MutationUpdateScheduledReleaseArgs = {
   data: ScheduledReleaseUpdateInput;
   where: ScheduledReleaseWhereUniqueInput;
+};
+
+
+export type MutationUpdateTestCacheArgs = {
+  data: TestCacheUpdateInput;
+  where: TestCacheWhereUniqueInput;
 };
 
 
@@ -6997,6 +7141,12 @@ export type MutationUpsertProductSizeVariantArgs = {
 export type MutationUpsertReviewArgs = {
   upsert: ReviewUpsertInput;
   where: ReviewWhereUniqueInput;
+};
+
+
+export type MutationUpsertTestCacheArgs = {
+  upsert: TestCacheUpsertInput;
+  where: TestCacheWhereUniqueInput;
 };
 
 
@@ -9762,7 +9912,6 @@ export type ProductConnection = {
 
 export type ProductCreateInput = {
   readonly categories?: InputMaybe<CategoryCreateManyInlineInput>;
-  readonly cl9ubrrk23f6q01uf0acwcem3?: InputMaybe<CartItemCreateManyInlineInput>;
   readonly collections?: InputMaybe<CollectionCreateManyInlineInput>;
   readonly createdAt?: InputMaybe<Scalars['DateTime']>;
   /** description input for default locale (en) */
@@ -11036,7 +11185,6 @@ export type ProductSizeVariantWhereUniqueInput = {
 
 export type ProductUpdateInput = {
   readonly categories?: InputMaybe<CategoryUpdateManyInlineInput>;
-  readonly cl9ubrrk23f6q01uf0acwcem3?: InputMaybe<CartItemUpdateManyInlineInput>;
   readonly collections?: InputMaybe<CollectionUpdateManyInlineInput>;
   /** description input for default locale (en) */
   readonly description?: InputMaybe<Scalars['String']>;
@@ -11516,6 +11664,14 @@ export type Query = {
   readonly scheduledReleases: ReadonlyArray<ScheduledRelease>;
   /** Retrieve multiple scheduledReleases using the Relay connection interface */
   readonly scheduledReleasesConnection: ScheduledReleaseConnection;
+  /** Retrieve a single testCache */
+  readonly testCache?: Maybe<TestCache>;
+  /** Retrieve document version */
+  readonly testCacheVersion?: Maybe<DocumentVersion>;
+  /** Retrieve multiple testCaches */
+  readonly testCaches: ReadonlyArray<TestCache>;
+  /** Retrieve multiple testCaches using the Relay connection interface */
+  readonly testCachesConnection: TestCacheConnection;
   /** Retrieve a single unauthCart */
   readonly unauthCart?: Maybe<UnauthCart>;
   /** Retrieve document version */
@@ -12211,6 +12367,44 @@ export type QueryScheduledReleasesConnectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   stage?: Stage;
   where?: InputMaybe<ScheduledReleaseWhereInput>;
+};
+
+
+export type QueryTestCacheArgs = {
+  locales?: ReadonlyArray<Locale>;
+  stage?: Stage;
+  where: TestCacheWhereUniqueInput;
+};
+
+
+export type QueryTestCacheVersionArgs = {
+  where: VersionWhereInput;
+};
+
+
+export type QueryTestCachesArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  locales?: ReadonlyArray<Locale>;
+  orderBy?: InputMaybe<TestCacheOrderByInput>;
+  skip?: InputMaybe<Scalars['Int']>;
+  stage?: Stage;
+  where?: InputMaybe<TestCacheWhereInput>;
+};
+
+
+export type QueryTestCachesConnectionArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  locales?: ReadonlyArray<Locale>;
+  orderBy?: InputMaybe<TestCacheOrderByInput>;
+  skip?: InputMaybe<Scalars['Int']>;
+  stage?: Stage;
+  where?: InputMaybe<TestCacheWhereInput>;
 };
 
 
@@ -13005,7 +13199,7 @@ export type ScheduledOperationUpdatedByArgs = {
   locales?: InputMaybe<ReadonlyArray<Locale>>;
 };
 
-export type ScheduledOperationAffectedDocument = Account | Asset | Cart | CartItem | Category | Collection | Currency | Option | Order | OrderItem | Person | Product | ProductColorVariant | ProductSizeColorVariant | ProductSizeVariant | Review | UnauthCart;
+export type ScheduledOperationAffectedDocument = Account | Asset | Cart | CartItem | Category | Collection | Currency | Option | Order | OrderItem | Person | Product | ProductColorVariant | ProductSizeColorVariant | ProductSizeVariant | Review | TestCache | UnauthCart;
 
 export type ScheduledOperationConnectInput = {
   /** Allow to specify document position in list of connected documents, will default to appending at end of list */
@@ -13933,6 +14127,428 @@ export enum SystemDateTimeFieldVariation {
   Combined = 'COMBINED',
   Localization = 'LOCALIZATION'
 }
+
+export type TestCache = Node & {
+  readonly __typename?: 'TestCache';
+  readonly counter?: Maybe<Scalars['Int']>;
+  /** The time the document was created */
+  readonly createdAt: Scalars['DateTime'];
+  /** User that created this document */
+  readonly createdBy?: Maybe<User>;
+  /** Get the document in other stages */
+  readonly documentInStages: ReadonlyArray<TestCache>;
+  /** List of TestCache versions */
+  readonly history: ReadonlyArray<Version>;
+  /** The unique identifier */
+  readonly id: Scalars['ID'];
+  /** The time the document was published. Null on documents in draft stage. */
+  readonly publishedAt?: Maybe<Scalars['DateTime']>;
+  /** User that last published this document */
+  readonly publishedBy?: Maybe<User>;
+  readonly scheduledIn: ReadonlyArray<ScheduledOperation>;
+  /** System stage field */
+  readonly stage: Stage;
+  /** The time the document was updated */
+  readonly updatedAt: Scalars['DateTime'];
+  /** User that last updated this document */
+  readonly updatedBy?: Maybe<User>;
+};
+
+
+export type TestCacheCreatedByArgs = {
+  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+};
+
+
+export type TestCacheDocumentInStagesArgs = {
+  includeCurrent?: Scalars['Boolean'];
+  inheritLocale?: Scalars['Boolean'];
+  stages?: ReadonlyArray<Stage>;
+};
+
+
+export type TestCacheHistoryArgs = {
+  limit?: Scalars['Int'];
+  skip?: Scalars['Int'];
+  stageOverride?: InputMaybe<Stage>;
+};
+
+
+export type TestCachePublishedByArgs = {
+  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+};
+
+
+export type TestCacheScheduledInArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
+  last?: InputMaybe<Scalars['Int']>;
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ScheduledOperationWhereInput>;
+};
+
+
+export type TestCacheUpdatedByArgs = {
+  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
+};
+
+export type TestCacheConnectInput = {
+  /** Allow to specify document position in list of connected documents, will default to appending at end of list */
+  readonly position?: InputMaybe<ConnectPositionInput>;
+  /** Document to connect */
+  readonly where: TestCacheWhereUniqueInput;
+};
+
+/** A connection to a list of items. */
+export type TestCacheConnection = {
+  readonly __typename?: 'TestCacheConnection';
+  readonly aggregate: Aggregate;
+  /** A list of edges. */
+  readonly edges: ReadonlyArray<TestCacheEdge>;
+  /** Information to aid in pagination. */
+  readonly pageInfo: PageInfo;
+};
+
+export type TestCacheCreateInput = {
+  readonly counter?: InputMaybe<Scalars['Int']>;
+  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
+  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type TestCacheCreateManyInlineInput = {
+  /** Connect multiple existing TestCache documents */
+  readonly connect?: InputMaybe<ReadonlyArray<TestCacheWhereUniqueInput>>;
+  /** Create and connect multiple existing TestCache documents */
+  readonly create?: InputMaybe<ReadonlyArray<TestCacheCreateInput>>;
+};
+
+export type TestCacheCreateOneInlineInput = {
+  /** Connect one existing TestCache document */
+  readonly connect?: InputMaybe<TestCacheWhereUniqueInput>;
+  /** Create and connect one TestCache document */
+  readonly create?: InputMaybe<TestCacheCreateInput>;
+};
+
+/** An edge in a connection. */
+export type TestCacheEdge = {
+  readonly __typename?: 'TestCacheEdge';
+  /** A cursor for use in pagination. */
+  readonly cursor: Scalars['String'];
+  /** The item at the end of the edge. */
+  readonly node: TestCache;
+};
+
+/** Identifies documents */
+export type TestCacheManyWhereInput = {
+  /** Logical AND on all given filters. */
+  readonly AND?: InputMaybe<ReadonlyArray<TestCacheWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  readonly NOT?: InputMaybe<ReadonlyArray<TestCacheWhereInput>>;
+  /** Logical OR on all given filters. */
+  readonly OR?: InputMaybe<ReadonlyArray<TestCacheWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  readonly _search?: InputMaybe<Scalars['String']>;
+  readonly counter?: InputMaybe<Scalars['Int']>;
+  /** All values greater than the given value. */
+  readonly counter_gt?: InputMaybe<Scalars['Int']>;
+  /** All values greater than or equal the given value. */
+  readonly counter_gte?: InputMaybe<Scalars['Int']>;
+  /** All values that are contained in given list. */
+  readonly counter_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
+  /** All values less than the given value. */
+  readonly counter_lt?: InputMaybe<Scalars['Int']>;
+  /** All values less than or equal the given value. */
+  readonly counter_lte?: InputMaybe<Scalars['Int']>;
+  /** All values that are not equal to given value. */
+  readonly counter_not?: InputMaybe<Scalars['Int']>;
+  /** All values that are not contained in given list. */
+  readonly counter_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
+  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  readonly createdAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  readonly createdAt_gte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  readonly createdAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  /** All values less than the given value. */
+  readonly createdAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  readonly createdAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  readonly createdAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not contained in given list. */
+  readonly createdAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  readonly createdBy?: InputMaybe<UserWhereInput>;
+  readonly documentInStages_every?: InputMaybe<TestCacheWhereStageInput>;
+  readonly documentInStages_none?: InputMaybe<TestCacheWhereStageInput>;
+  readonly documentInStages_some?: InputMaybe<TestCacheWhereStageInput>;
+  readonly id?: InputMaybe<Scalars['ID']>;
+  /** All values containing the given string. */
+  readonly id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  readonly id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  readonly id_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
+  /** All values that are not equal to given value. */
+  readonly id_not?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  readonly id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  readonly id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are not contained in given list. */
+  readonly id_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
+  /** All values not starting with the given string. */
+  readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  readonly id_starts_with?: InputMaybe<Scalars['ID']>;
+  readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  readonly publishedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  readonly publishedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  /** All values less than the given value. */
+  readonly publishedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  readonly publishedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  readonly publishedAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not contained in given list. */
+  readonly publishedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  readonly publishedBy?: InputMaybe<UserWhereInput>;
+  readonly scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
+  readonly scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
+  readonly scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
+  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  readonly updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  readonly updatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  readonly updatedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  /** All values less than the given value. */
+  readonly updatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  readonly updatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  readonly updatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not contained in given list. */
+  readonly updatedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  readonly updatedBy?: InputMaybe<UserWhereInput>;
+};
+
+export enum TestCacheOrderByInput {
+  CounterAsc = 'counter_ASC',
+  CounterDesc = 'counter_DESC',
+  CreatedAtAsc = 'createdAt_ASC',
+  CreatedAtDesc = 'createdAt_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  PublishedAtAsc = 'publishedAt_ASC',
+  PublishedAtDesc = 'publishedAt_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC'
+}
+
+export type TestCacheUpdateInput = {
+  readonly counter?: InputMaybe<Scalars['Int']>;
+};
+
+export type TestCacheUpdateManyInlineInput = {
+  /** Connect multiple existing TestCache documents */
+  readonly connect?: InputMaybe<ReadonlyArray<TestCacheConnectInput>>;
+  /** Create and connect multiple TestCache documents */
+  readonly create?: InputMaybe<ReadonlyArray<TestCacheCreateInput>>;
+  /** Delete multiple TestCache documents */
+  readonly delete?: InputMaybe<ReadonlyArray<TestCacheWhereUniqueInput>>;
+  /** Disconnect multiple TestCache documents */
+  readonly disconnect?: InputMaybe<ReadonlyArray<TestCacheWhereUniqueInput>>;
+  /** Override currently-connected documents with multiple existing TestCache documents */
+  readonly set?: InputMaybe<ReadonlyArray<TestCacheWhereUniqueInput>>;
+  /** Update multiple TestCache documents */
+  readonly update?: InputMaybe<ReadonlyArray<TestCacheUpdateWithNestedWhereUniqueInput>>;
+  /** Upsert multiple TestCache documents */
+  readonly upsert?: InputMaybe<ReadonlyArray<TestCacheUpsertWithNestedWhereUniqueInput>>;
+};
+
+export type TestCacheUpdateManyInput = {
+  readonly counter?: InputMaybe<Scalars['Int']>;
+};
+
+export type TestCacheUpdateManyWithNestedWhereInput = {
+  /** Update many input */
+  readonly data: TestCacheUpdateManyInput;
+  /** Document search */
+  readonly where: TestCacheWhereInput;
+};
+
+export type TestCacheUpdateOneInlineInput = {
+  /** Connect existing TestCache document */
+  readonly connect?: InputMaybe<TestCacheWhereUniqueInput>;
+  /** Create and connect one TestCache document */
+  readonly create?: InputMaybe<TestCacheCreateInput>;
+  /** Delete currently connected TestCache document */
+  readonly delete?: InputMaybe<Scalars['Boolean']>;
+  /** Disconnect currently connected TestCache document */
+  readonly disconnect?: InputMaybe<Scalars['Boolean']>;
+  /** Update single TestCache document */
+  readonly update?: InputMaybe<TestCacheUpdateWithNestedWhereUniqueInput>;
+  /** Upsert single TestCache document */
+  readonly upsert?: InputMaybe<TestCacheUpsertWithNestedWhereUniqueInput>;
+};
+
+export type TestCacheUpdateWithNestedWhereUniqueInput = {
+  /** Document to update */
+  readonly data: TestCacheUpdateInput;
+  /** Unique document search */
+  readonly where: TestCacheWhereUniqueInput;
+};
+
+export type TestCacheUpsertInput = {
+  /** Create document if it didn't exist */
+  readonly create: TestCacheCreateInput;
+  /** Update document if it exists */
+  readonly update: TestCacheUpdateInput;
+};
+
+export type TestCacheUpsertWithNestedWhereUniqueInput = {
+  /** Upsert data */
+  readonly data: TestCacheUpsertInput;
+  /** Unique document search */
+  readonly where: TestCacheWhereUniqueInput;
+};
+
+/** This contains a set of filters that can be used to compare values internally */
+export type TestCacheWhereComparatorInput = {
+  /** This field can be used to request to check if the entry is outdated by internal comparison */
+  readonly outdated_to?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** Identifies documents */
+export type TestCacheWhereInput = {
+  /** Logical AND on all given filters. */
+  readonly AND?: InputMaybe<ReadonlyArray<TestCacheWhereInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  readonly NOT?: InputMaybe<ReadonlyArray<TestCacheWhereInput>>;
+  /** Logical OR on all given filters. */
+  readonly OR?: InputMaybe<ReadonlyArray<TestCacheWhereInput>>;
+  /** Contains search across all appropriate fields. */
+  readonly _search?: InputMaybe<Scalars['String']>;
+  readonly counter?: InputMaybe<Scalars['Int']>;
+  /** All values greater than the given value. */
+  readonly counter_gt?: InputMaybe<Scalars['Int']>;
+  /** All values greater than or equal the given value. */
+  readonly counter_gte?: InputMaybe<Scalars['Int']>;
+  /** All values that are contained in given list. */
+  readonly counter_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
+  /** All values less than the given value. */
+  readonly counter_lt?: InputMaybe<Scalars['Int']>;
+  /** All values less than or equal the given value. */
+  readonly counter_lte?: InputMaybe<Scalars['Int']>;
+  /** All values that are not equal to given value. */
+  readonly counter_not?: InputMaybe<Scalars['Int']>;
+  /** All values that are not contained in given list. */
+  readonly counter_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
+  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  readonly createdAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  readonly createdAt_gte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  readonly createdAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  /** All values less than the given value. */
+  readonly createdAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  readonly createdAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  readonly createdAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not contained in given list. */
+  readonly createdAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  readonly createdBy?: InputMaybe<UserWhereInput>;
+  readonly documentInStages_every?: InputMaybe<TestCacheWhereStageInput>;
+  readonly documentInStages_none?: InputMaybe<TestCacheWhereStageInput>;
+  readonly documentInStages_some?: InputMaybe<TestCacheWhereStageInput>;
+  readonly id?: InputMaybe<Scalars['ID']>;
+  /** All values containing the given string. */
+  readonly id_contains?: InputMaybe<Scalars['ID']>;
+  /** All values ending with the given string. */
+  readonly id_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are contained in given list. */
+  readonly id_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
+  /** All values that are not equal to given value. */
+  readonly id_not?: InputMaybe<Scalars['ID']>;
+  /** All values not containing the given string. */
+  readonly id_not_contains?: InputMaybe<Scalars['ID']>;
+  /** All values not ending with the given string */
+  readonly id_not_ends_with?: InputMaybe<Scalars['ID']>;
+  /** All values that are not contained in given list. */
+  readonly id_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
+  /** All values not starting with the given string. */
+  readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
+  /** All values starting with the given string. */
+  readonly id_starts_with?: InputMaybe<Scalars['ID']>;
+  readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  readonly publishedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  readonly publishedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  /** All values less than the given value. */
+  readonly publishedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  readonly publishedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  readonly publishedAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not contained in given list. */
+  readonly publishedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  readonly publishedBy?: InputMaybe<UserWhereInput>;
+  readonly scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
+  readonly scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
+  readonly scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
+  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than the given value. */
+  readonly updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
+  /** All values greater than or equal the given value. */
+  readonly updatedAt_gte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are contained in given list. */
+  readonly updatedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  /** All values less than the given value. */
+  readonly updatedAt_lt?: InputMaybe<Scalars['DateTime']>;
+  /** All values less than or equal the given value. */
+  readonly updatedAt_lte?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not equal to given value. */
+  readonly updatedAt_not?: InputMaybe<Scalars['DateTime']>;
+  /** All values that are not contained in given list. */
+  readonly updatedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
+  readonly updatedBy?: InputMaybe<UserWhereInput>;
+};
+
+/** The document in stages filter allows specifying a stage entry to cross compare the same document between different stages */
+export type TestCacheWhereStageInput = {
+  /** Logical AND on all given filters. */
+  readonly AND?: InputMaybe<ReadonlyArray<TestCacheWhereStageInput>>;
+  /** Logical NOT on all given filters combined by AND. */
+  readonly NOT?: InputMaybe<ReadonlyArray<TestCacheWhereStageInput>>;
+  /** Logical OR on all given filters. */
+  readonly OR?: InputMaybe<ReadonlyArray<TestCacheWhereStageInput>>;
+  /** This field contains fields which can be set as true or false to specify an internal comparison */
+  readonly compareWithParent?: InputMaybe<TestCacheWhereComparatorInput>;
+  /** Specify the stage to compare with */
+  readonly stage?: InputMaybe<Stage>;
+};
+
+/** References TestCache record uniquely */
+export type TestCacheWhereUniqueInput = {
+  readonly id?: InputMaybe<Scalars['ID']>;
+};
 
 export type UnauthCart = Node & {
   readonly __typename?: 'UnauthCart';
@@ -15189,6 +15805,20 @@ export type DeleteUnauthCartMutationVariables = Exact<{
 
 export type DeleteUnauthCartMutation = { readonly __typename?: 'Mutation', readonly deleteUnauthCart?: { readonly __typename?: 'UnauthCart', readonly id: string } | null };
 
+export type CounterContentFragment = { readonly __typename?: 'TestCache', readonly id: string, readonly counter?: number | null };
+
+export type GetCounterQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCounterQuery = { readonly __typename?: 'Query', readonly testCache?: { readonly __typename?: 'TestCache', readonly id: string, readonly counter?: number | null } | null };
+
+export type UpdateCounterMutationVariables = Exact<{
+  counter: Scalars['Int'];
+}>;
+
+
+export type UpdateCounterMutation = { readonly __typename?: 'Mutation', readonly updateTestCache?: { readonly __typename?: 'TestCache', readonly id: string, readonly counter?: number | null } | null };
+
 export const CartContentQueryWithOptionFragmentDoc = gql`
     fragment cartContentQueryWithOption on Cart {
   id
@@ -15217,6 +15847,12 @@ export const UnAuthCartContentFragmentDoc = gql`
     fragment unAuthCartContent on UnauthCart {
   id
   cartItems
+}
+    `;
+export const CounterContentFragmentDoc = gql`
+    fragment counterContent on TestCache {
+  id
+  counter
 }
     `;
 export const CreateAccountDocument = gql`
@@ -15918,3 +16554,73 @@ export function useDeleteUnauthCartMutation(baseOptions?: Apollo.MutationHookOpt
 export type DeleteUnauthCartMutationHookResult = ReturnType<typeof useDeleteUnauthCartMutation>;
 export type DeleteUnauthCartMutationResult = Apollo.MutationResult<DeleteUnauthCartMutation>;
 export type DeleteUnauthCartMutationOptions = Apollo.BaseMutationOptions<DeleteUnauthCartMutation, DeleteUnauthCartMutationVariables>;
+export const GetCounterDocument = gql`
+    query GetCounter {
+  testCache(where: {id: "clby3x1j72z500augjib02ztr"}, stage: DRAFT) {
+    ...counterContent
+  }
+}
+    ${CounterContentFragmentDoc}`;
+
+/**
+ * __useGetCounterQuery__
+ *
+ * To run a query within a React component, call `useGetCounterQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCounterQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCounterQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCounterQuery(baseOptions?: Apollo.QueryHookOptions<GetCounterQuery, GetCounterQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCounterQuery, GetCounterQueryVariables>(GetCounterDocument, options);
+      }
+export function useGetCounterLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCounterQuery, GetCounterQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCounterQuery, GetCounterQueryVariables>(GetCounterDocument, options);
+        }
+export type GetCounterQueryHookResult = ReturnType<typeof useGetCounterQuery>;
+export type GetCounterLazyQueryHookResult = ReturnType<typeof useGetCounterLazyQuery>;
+export type GetCounterQueryResult = Apollo.QueryResult<GetCounterQuery, GetCounterQueryVariables>;
+export const UpdateCounterDocument = gql`
+    mutation UpdateCounter($counter: Int!) {
+  updateTestCache(
+    where: {id: "clby3x1j72z500augjib02ztr"}
+    data: {counter: $counter}
+  ) {
+    ...counterContent
+  }
+}
+    ${CounterContentFragmentDoc}`;
+export type UpdateCounterMutationFn = Apollo.MutationFunction<UpdateCounterMutation, UpdateCounterMutationVariables>;
+
+/**
+ * __useUpdateCounterMutation__
+ *
+ * To run a mutation, you first call `useUpdateCounterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCounterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCounterMutation, { data, loading, error }] = useUpdateCounterMutation({
+ *   variables: {
+ *      counter: // value for 'counter'
+ *   },
+ * });
+ */
+export function useUpdateCounterMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCounterMutation, UpdateCounterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCounterMutation, UpdateCounterMutationVariables>(UpdateCounterDocument, options);
+      }
+export type UpdateCounterMutationHookResult = ReturnType<typeof useUpdateCounterMutation>;
+export type UpdateCounterMutationResult = Apollo.MutationResult<UpdateCounterMutation>;
+export type UpdateCounterMutationOptions = Apollo.BaseMutationOptions<UpdateCounterMutation, UpdateCounterMutationVariables>;
