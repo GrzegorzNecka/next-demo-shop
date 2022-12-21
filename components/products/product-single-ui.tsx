@@ -151,9 +151,7 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
 
                         {/* <Print data={data.option} /> */}
 
-                        <article className="">
-                            <Markdown>{data.longDescription}</Markdown>
-                        </article>
+                        <article className="">{/* <Markdown>{data.longDescription}</Markdown> */}</article>
                     </div>
                 </div>
                 <hr />

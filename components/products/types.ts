@@ -16,7 +16,7 @@ export interface ProductProps {
 }
 
 export interface ProductDetails extends ProductProps {
-    readonly longDescription: MarkdownResult;
+    // readonly longDescription: MarkdownResult;
     readonly option: readonly ProductOption[];
     readonly description: string;
 }
