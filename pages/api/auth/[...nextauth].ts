@@ -14,6 +14,7 @@ import {
   GetAccountByEmailQuery,
   GetAccountByEmailQueryVariables,
   GetCartIdByAccountIdDocument,
+  CartItem as CartItemFromApollo,
   GetCartIdByAccountIdQuery,
   GetCartIdByAccountIdQueryVariables,
   GetCartItemsByCartIdDocument,
@@ -29,6 +30,18 @@ import {
 import { NextApiRequest, NextApiResponse } from 'next';
 import { CookieValueTypes, getCookie } from 'cookies-next';
 import { CartItem } from 'context/types';
+import {
+  accountByEmailQuery,
+  getCartIdByAccountIdQuery,
+  getCartItemsByAccount,
+  getCartItemsByCookieId,
+} from 'services/cart/nextauth';
+import { ApolloQueryResult } from '@apollo/client';
+import {
+  addItemOptionToCartByCartIdMutation,
+  updateItemQuantityByCartIdMutation,
+} from 'services/cart/cart-by-account';
+import { clearUnauthCartByIdMutation } from 'services/cart/cart-by-cookie-id';
 
 // -- INIT AUTH_OPTIONS
 
@@ -45,16 +58,13 @@ export const authOptions: NextAuthOptions = {
         if (!credentials) {
           return null;
         }
-        const userByEmail = await authApolloClient.query<
-          GetAccountByEmailQuery,
-          GetAccountByEmailQueryVariables
-        >({
-          query: GetAccountByEmailDocument,
-          variables: { email: credentials?.username },
-        });
+
+        const userByEmail = await accountByEmailQuery(credentials?.username);
+
         if (!userByEmail.data.account?.password) {
           return null;
         }
+
         const arePasswordsEqual = await bcrypt.compare(
           credentials.password,
           userByEmail.data.account?.password,
@@ -73,18 +83,15 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, user, token }) {
       if (typeof token.sub == 'string') {
-        const cart = await authApolloClient.query<
-          GetCartIdByAccountIdQuery,
-          GetCartIdByAccountIdQueryVariables
-        >({
-          query: GetCartIdByAccountIdDocument,
-          variables: { id: token.sub },
-        });
-        const cartId = cart.data?.account?.cart?.id;
+        //
+
+        const { cartId } = await getCartIdByAccountIdQuery(token.sub);
+
         if (cartId) {
           session.user.cartId = cartId;
         }
       }
+
       session.user.id = token.sub!;
       return session;
     },
@@ -102,106 +109,52 @@ const handleSignIn = async ({ account }: handleSignInProps, cookieCartId: Cookie
     return true;
   }
 
-  // - cart and cartItems for unauth session
-
-  const unauthCart = await apolloClient.query<GetUnauthCartQuery, GetUnauthCartQueryVariables>({
-    query: GetUnauthCartDocument,
-    variables: { id: cookieCartId },
-  });
-
-  const unauthCartItems: CartItem[] | undefined = JSON.parse(unauthCart.data.unauthCart?.cartItems);
+  const unauthCartItems = await getCartItemsByCookieId(cookieCartId);
 
   if (!unauthCartItems || !unauthCartItems.length) {
     return true;
   }
 
-  // - cart and cartItems for auth session
+  const { authCartItems, cartId } = await getCartItemsByAccount(account?.providerAccountId!);
 
-  const authCartId = await authApolloClient.query<
-    GetCartIdByAccountIdQuery,
-    GetCartIdByAccountIdQueryVariables
-  >({
-    query: GetCartIdByAccountIdDocument,
-    variables: { id: account?.providerAccountId! },
-  });
-
-  const { id } = authCartId.data?.account?.cart!;
-
-  const authCart = await apolloClient.query<
-    GetCartItemsByCartIdQuery,
-    GetCartItemsByCartIdQueryVariables
-  >({
-    query: GetCartItemsByCartIdDocument,
-    variables: {
-      id: id!,
-    },
-  });
-
-  const authCartItems = authCart.data.cart?.cartItems;
-
-  // - compare datas from sessions
-
+  // compare and join data from server and local state
   if (unauthCartItems.length > 0 && authCartItems) {
+    //loop
     unauthCartItems.forEach(async (item) => {
-      //
-      const repeatedItem = authCartItems.find(
-        (s_item) => s_item.option?.id === item.productOptionId,
-      );
+      const repeatedItem = authCartItems.find((i) => i.option?.id === item.productOptionId);
 
       if (!repeatedItem) {
-        //createAuthCartItems
-        await authApolloClient.mutate<
-          AddItemOptionToCartByCartIdMutation,
-          AddItemOptionToCartByCartIdMutationVariables
-        >({
-          mutation: AddItemOptionToCartByCartIdDocument,
-          variables: {
-            cartId: id,
-            quantity: item.quantity,
-            productOptionId: item.productOptionId,
-          },
+        const createAuthCartItems = await addItemOptionToCartByCartIdMutation({
+          cartId,
+          quantity: item.quantity,
+          productOptionId: item.productOptionId,
         });
       }
 
-      if (repeatedItem) {
-        // condition -> quantity must by less or equal than total
+      if (!!repeatedItem) {
+        type RepeatedItem = typeof repeatedItem;
 
-        const total = repeatedItem.option?.total;
-
-        let quantity = repeatedItem.quantity + item.quantity;
-        if (total) {
-          quantity = quantity >= total ? total : quantity;
+        function countQuantity(repeatedItem: RepeatedItem) {
+          // check total quantity of store
+          // if quatnity >= total return total
+          const total = repeatedItem.option?.total;
+          let quantity = repeatedItem.quantity + item.quantity;
+          if (total) {
+            quantity = quantity >= total ? total : quantity;
+          }
+          return quantity;
         }
 
-        // increaseAuthCartItems
-
-        await authApolloClient.mutate<
-          UpdateItemQuantityByCartIdMutation,
-          UpdateItemQuantityByCartIdMutationVariables
-        >({
-          mutation: UpdateItemQuantityByCartIdDocument,
-          variables: {
-            cartId: id,
-            itemId: repeatedItem.id,
-            quantity,
-          },
+        const increaseAuthCartItems = await updateItemQuantityByCartIdMutation({
+          cartId,
+          itemId: repeatedItem.id,
+          quantity: countQuantity(repeatedItem),
         });
       }
     });
   }
 
-  //clearUnauthCart
-
-  await authApolloClient.mutate<
-    UpdateUnauthCartByIdMutation,
-    UpdateUnauthCartByIdMutationVariables
-  >({
-    mutation: UpdateUnauthCartByIdDocument,
-    variables: {
-      id: cookieCartId,
-      cartItems: `[]`,
-    },
-  });
+  const clearUnauthCart = await clearUnauthCartByIdMutation({ id: cookieCartId });
 
   return true;
 };
@@ -215,7 +168,7 @@ export default async function NextAuthHandler(req: NextApiRequest, res: NextApiR
     ...authOptions,
     callbacks: {
       ...authOptions.callbacks,
-      async signIn({ account }) {
+      async signIn({ account }: handleSignInProps) {
         return handleSignIn({ account }, cookieCartId);
       },
     },
