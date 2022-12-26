@@ -1,173 +1,142 @@
-import type { Dispatch, SetStateAction } from "react";
-import { useEffect } from "react";
-import { CartItem } from "context/types";
-// import { useSession } from "next-auth/react";
-import { useGetCartItemsByCartIdQuery } from "graphQL/generated/graphql";
-import { Session } from "next-auth";
-import { apolloClient } from "graphQL/apolloClient";
+import type { Dispatch, SetStateAction } from 'react';
+import { useEffect } from 'react';
+import { CartItem } from 'context/types';
+import { Session } from 'next-auth';
+import { fetchDataToCartItem } from 'utils/cart';
 
 type useCartItemsProps = {
-    setCartItems: Dispatch<SetStateAction<CartItem[]>>;
-    setIsLoading: Dispatch<SetStateAction<boolean>>;
-    status: "unauthenticated" | "authenticated" | "loading";
-    session: Session | null;
+  setCartItems: Dispatch<SetStateAction<CartItem[]>>;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
+  status: 'unauthenticated' | 'authenticated' | 'loading';
+  session: Session | null;
+  cartItems: CartItem[];
 };
 
-export const useCartItemsWithAuthSession = ({ setCartItems, setIsLoading, status, session }: useCartItemsProps) => {
-    const cartId = session?.user?.cartId!;
+export const useCartItemsWithAuthSession = ({
+  setCartItems,
+  setIsLoading,
+  status,
+  session,
+  cartItems,
+}: useCartItemsProps) => {
+  const cartId = session?.user?.cartId!;
 
-    // --
-
-    const { data, refetch } = useGetCartItemsByCartIdQuery({
-        skip: !Boolean(cartId),
-        variables: {
-            id: cartId,
-        },
-        // fetchPolicy: "network-only",
-        fetchPolicy: "cache-and-network",
-
-        onCompleted: () => {
-            // setIsLoading(false);
-        },
-        onError(error) {
-            console.log("error", error);
-        },
+  async function updateData() {
+    const cart = await fetch('/api/cart/auth-session', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json;' },
     });
 
-    // --
+    if (cart.status === 200) {
+      const getCartItems = await cart.json();
 
-    useEffect(() => {
-        if (status !== "authenticated" || !data || !data.cart) {
-            return;
-        }
+      setCartItems(fetchDataToCartItem(getCartItems)!);
+      setIsLoading(false);
+    }
+    return;
+  }
 
-        const cartItems = data.cart.cartItems.map((item) => {
-            return {
-                itemId: item.id,
-                quantity: item?.quantity!,
-                price: item?.option?.product?.price!,
-                title: item?.option?.product?.name!,
-                imgUrl: item?.option?.product?.images.at(0)?.url!,
-                slug: item?.option?.product?.slug!,
-                productOptionId: item?.option?.id!,
-            };
-        });
+  useEffect(() => {
+    if (status !== 'authenticated' || !cartId) {
+      return;
+    }
 
-        setCartItems(cartItems);
-    }, [status, data]);
+    updateData();
+  }, [status]);
 
-    // -- CONTEXT HANDLERS
+  //CONTEXT HANDLERS
 
-    const addItemToCart = async (product: CartItem) => {
-        if (status === "unauthenticated" || !cartId || !data) {
-            return;
-        }
-        setIsLoading(true);
-        const { productOptionId, quantity } = product;
+  //
+  const addItemToCart = async (product: CartItem) => {
+    setIsLoading(true);
 
-        const existProduct = data.cart?.cartItems.find((item) => item?.option?.id === productOptionId);
+    const { productOptionId, quantity } = product;
 
-        // -- add new product to cart items
+    const existProduct = cartItems.find((item) => item.productOptionId === productOptionId);
 
-        if (!existProduct) {
-            const result = await fetch("/api/cart/auth-session", {
-                method: "POST",
-                headers: { "Content-Type": "application/json;" },
-                body: JSON.stringify({
-                    productOptionId,
-                    quantity,
-                }),
-            });
+    if (!existProduct) {
+      const create = await fetch('/api/cart/auth-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json;' },
+        body: JSON.stringify({
+          productOptionId,
+          quantity,
+        }),
+      });
 
-            if (result.status === 200) {
-                refetch({ id: cartId });
-                setIsLoading(false);
+      if (create.status === 200) {
+        const updateCartItems = await create.json();
 
-                // await apolloClient.refetchQueries({
-                //     include: "active",
-                // });
-                //! można spróbować w tym miejscu dodać optimistic update
-                const optimistic = await result.json();
-                console.log("🚀 ~  optimistic", optimistic);
-            }
+        setCartItems(fetchDataToCartItem(updateCartItems)!);
+        setIsLoading(false);
+      }
 
-            return;
-        }
+      return;
+    }
 
-        // -- update cart items
+    const update = await fetch('/api/cart/auth-session', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json;' },
+      body: JSON.stringify({
+        itemId: existProduct.itemId,
+        updatedQuantity: existProduct?.quantity! + quantity,
+      }),
+    });
 
-        const result = await fetch("/api/cart/auth-session", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json;" },
-            body: JSON.stringify({
-                itemId: existProduct?.id!,
-                updatedQuantity: existProduct?.quantity! + quantity,
-            }),
-        });
-        if (result.status === 200) {
-            setIsLoading(false);
-            refetch({ id: cartId });
+    if (update.status === 200) {
+      const updateCartItems = await update.json();
 
-            // await apolloClient    // refetchQueries: [
-            //     {
-            //         query: GetCartItemsByCartIdDocument,
-            //         variables: { id: cartId },
-            //     },
-            // ],
+      setCartItems(fetchDataToCartItem(updateCartItems)!);
+      setIsLoading(false);
+    }
+  };
 
-            //! można spróbować w tym miejscu dodać optimistic update
-            const optimistic = await result.json();
-            console.log("🚀 ~  optimistic", optimistic);
-        }
-    };
+  //
 
-    // --
+  const removeItemFromCart = async (itemId: CartItem['productOptionId']) => {
+    const existItem = cartItems.find((item) => item.itemId === itemId);
 
-    const removeItemFromCart = async (itemId: CartItem["productOptionId"]) => {
-        if (!cartId || !data) {
-            return;
-        }
+    if (!existItem) {
+      return;
+    }
 
-        setIsLoading(true);
+    setIsLoading(true);
 
-        const existItem = data.cart?.cartItems.find((item) => item.id === itemId);
-        if (!existItem) {
-            return;
-        }
+    const remove = await fetch('/api/cart/auth-session', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json;' },
+      body: JSON.stringify({
+        itemId,
+        quantity: existItem.quantity,
+      }),
+    });
 
-        const result = await fetch("/api/cart/auth-session", {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json;" },
-            body: JSON.stringify({
-                itemId,
-                quantity: existItem.quantity,
-            }),
-        });
+    if (remove.status === 200) {
+      const updateCartItems = await remove.json();
 
-        if (result.status === 200) {
-            refetch({ id: cartId });
-        }
-    };
+      setCartItems(fetchDataToCartItem(updateCartItems)!);
+      setIsLoading(false);
+    }
+  };
 
-    // --
+  //
 
-    const clearCartItems = async () => {
-        if (!cartId || !data) {
-            return;
-        }
+  const clearCartItems = async () => {
+    setIsLoading(true);
 
-        const result = await fetch("/api/cart/auth-session", {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json;" },
-            body: JSON.stringify({
-                setEmpty: true,
-            }),
-        });
+    const clear = await fetch('/api/cart/auth-session', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json;' },
+      body: JSON.stringify({
+        setEmpty: true,
+      }),
+    });
 
-        if (result.status === 200) {
-            refetch({ id: cartId });
-        }
-    };
+    if (clear.status === 200) {
+      setCartItems([]);
+      setIsLoading(false);
+    }
+  };
 
-    return { addItemToCart, removeItemFromCart, clearCartItems } as const;
+  return { addItemToCart, removeItemFromCart, clearCartItems } as const;
 };

@@ -1,56 +1,58 @@
-import type { CartItem } from "context/types";
-import { useSession } from "next-auth/react";
-import { useState } from "react";
-import { useCartItemsWithAuthSession } from "./use-auth-session";
-import { useCartItemsWithUnauthSession } from "./use-unauth-session";
-import { useGetUnauthCartQuery } from "graphQL/generated/graphql";
-import { useQuery } from "@tanstack/react-query";
+import type { CartItem } from 'context/types';
+import { useSession } from 'next-auth/react';
+import { useState } from 'react';
+import { useCartItemsWithAuthSession } from './use-auth-session';
+import { useCartItemsWithUnauthSession } from './use-unauth-session';
+import { useGetUnauthCartQuery } from 'graphQL/generated/graphql';
+import { useQuery } from '@tanstack/react-query';
+
+async function getCookieCartId() {
+  const res = await fetch('/api/cart/cookies/create-unauth-session-id', {
+    method: 'GET',
+    credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json;' },
+  });
+
+  return res.json();
+}
 
 export const useCartItems = () => {
-    const [cartItems, setCartItems] = useState<CartItem[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const { status, data: session } = useSession();
+  //
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { status, data: session } = useSession();
 
-    async function getCookieCartId() {
-        const res = await fetch("/api/cart/cookies/create-unauth-session-id", {
-            method: "GET",
-            credentials: "same-origin",
-            headers: { "Content-Type": "application/json;" },
-        });
+  const { data: cookie } = useQuery({
+    queryKey: ['cookieCartId'],
+    queryFn: getCookieCartId,
+    enabled: status === 'unauthenticated' ? true : false,
+  });
 
-        return res.json();
-    }
+  const cookieCartId: string = cookie?.id;
 
-    const { data: cookie, refetch: refetchCookieId } = useQuery({
-        queryKey: ["cookieCartId"],
-        queryFn: getCookieCartId,
-        enabled: status === "unauthenticated" ? true : false,
-    });
+  const authSession = useCartItemsWithAuthSession({
+    setCartItems,
+    setIsLoading,
+    status,
+    session,
+    cartItems,
+  });
 
-    const cookieCartId: string = cookie?.id;
+  const unauthSession = useCartItemsWithUnauthSession({
+    setCartItems,
+    setIsLoading,
+    status,
+    cookieCartId,
+    cartItems,
+  });
 
-    const authSession = useCartItemsWithAuthSession({
-        setCartItems,
-        setIsLoading,
-        status,
-        session,
-    });
+  const methods = status === 'authenticated' ? authSession : unauthSession;
 
-    const unauthSession = useCartItemsWithUnauthSession({
-        setCartItems,
-        setIsLoading,
-        status,
-        cookieCartId,
-        cartItems,
-    });
-
-    const methods = status === "authenticated" ? authSession : unauthSession;
-
-    return {
-        cartItems,
-        isLoading,
-        addItemToCart: methods.addItemToCart,
-        removeItemFromCart: methods.removeItemFromCart,
-        clearCartItems: methods.clearCartItems,
-    } as const;
+  return {
+    cartItems,
+    isLoading,
+    addItemToCart: methods.addItemToCart,
+    removeItemFromCart: methods.removeItemFromCart,
+    clearCartItems: methods.clearCartItems,
+  } as const;
 };

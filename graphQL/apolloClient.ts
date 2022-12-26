@@ -20,7 +20,6 @@ const apolloClient = new ApolloClient({
     uri,
     cache,
     name: "hygraph-client",
-    version: "1.0",
     connectToDevTools: true,
 });
 
@@ -32,8 +31,7 @@ const authApolloClient = new ApolloClient({
     },
     ssrMode: typeof window === "undefined",
     name: "hygraph-auth-client",
-    version: "1.0",
-    connectToDevTools: true,
+    // connectToDevTools: true,
 });
 
 export { apolloClient, authApolloClient };
