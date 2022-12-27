@@ -1,13 +1,13 @@
 import type { CartItem } from 'context/types';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
-import { useCartItemsWithAuthSession } from './use-auth-session';
-import { useCartItemsWithUnauthSession } from './use-unauth-session';
+import { useCartItemsWithAuthSession } from './use-cart-items-by-account';
+import { useCartItemsWithUnauthSession } from './use-cart-items-by-cookie-id';
 import { useGetUnauthCartQuery } from 'graphQL/generated/graphql';
 import { useQuery } from '@tanstack/react-query';
 
 async function getCookieCartId() {
-  const res = await fetch('/api/cart/cookies/create-unauth-session-id', {
+  const res = await fetch('/api/cart/cookies/create-id', {
     method: 'GET',
     credentials: 'same-origin',
     headers: { 'Content-Type': 'application/json;' },

@@ -22,7 +22,7 @@ export const useCartItemsWithUnauthSession = ({
 }: useCartItemsProps) => {
   //
   async function updateData() {
-    let result = await fetch('/api/cart/unauth-session', {
+    let result = await fetch('/api/cart/cart-items-by-cookie-id', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json;' },
     });
@@ -151,7 +151,7 @@ export const useCartItemsWithUnauthSession = ({
 // HELPERS
 
 async function updateCart<T, U>(id: T, product: U) {
-  const res = await fetch('/api/cart/unauth-session', {
+  const res = await fetch('/api/cart/cart-items-by-cookie-id', {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json;' },
     body: JSON.stringify({
@@ -165,7 +165,7 @@ async function updateCart<T, U>(id: T, product: U) {
 //! do obsłużenia przypadek kiedy w cookies wyczyszczę pamięć podręczną
 //! te problem z aktualizacja są przez to właśnie
 // async function deleteCookieCartId<T>(id: T) {
-//   const deleteCookieId = await fetch('/api/cart/cookies/delete-unauth-session-id', {
+//   const deleteCookieId = await fetch('/api/cart/cookies/delete-cart-items-by-cookie-id-id', {
 //     method: 'DELETE',
 //     headers: { 'Content-Type': 'application/json;' },
 //     body: JSON.stringify({

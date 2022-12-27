@@ -40,8 +40,8 @@ import { ApolloQueryResult } from '@apollo/client';
 import {
   addItemOptionToCartByCartIdMutation,
   updateItemQuantityByCartIdMutation,
-} from 'services/cart/cart-by-account';
-import { clearUnauthCartByIdMutation } from 'services/cart/cart-by-cookie-id';
+} from 'services/cart/cart-items-by-account';
+import { clearUnauthCartByIdMutation } from 'services/cart/cart-items-by-cookie-id';
 
 // -- INIT AUTH_OPTIONS
 

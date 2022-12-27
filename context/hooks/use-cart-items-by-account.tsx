@@ -22,7 +22,7 @@ export const useCartItemsWithAuthSession = ({
   const cartId = session?.user?.cartId!;
 
   async function updateData() {
-    const cart = await fetch('/api/cart/auth-session', {
+    const cart = await fetch('/api/cart/cart-items-by-account', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json;' },
     });
@@ -55,7 +55,7 @@ export const useCartItemsWithAuthSession = ({
     const existProduct = cartItems.find((item) => item.productOptionId === productOptionId);
 
     if (!existProduct) {
-      const create = await fetch('/api/cart/auth-session', {
+      const create = await fetch('/api/cart/cart-items-by-account', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json;' },
         body: JSON.stringify({
@@ -74,7 +74,7 @@ export const useCartItemsWithAuthSession = ({
       return;
     }
 
-    const update = await fetch('/api/cart/auth-session', {
+    const update = await fetch('/api/cart/cart-items-by-account', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json;' },
       body: JSON.stringify({
@@ -102,7 +102,7 @@ export const useCartItemsWithAuthSession = ({
 
     setIsLoading(true);
 
-    const remove = await fetch('/api/cart/auth-session', {
+    const remove = await fetch('/api/cart/cart-items-by-account', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json;' },
       body: JSON.stringify({
@@ -124,7 +124,7 @@ export const useCartItemsWithAuthSession = ({
   const clearCartItems = async () => {
     setIsLoading(true);
 
-    const clear = await fetch('/api/cart/auth-session', {
+    const clear = await fetch('/api/cart/cart-items-by-account', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json;' },
       body: JSON.stringify({
