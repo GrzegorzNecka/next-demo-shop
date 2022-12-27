@@ -8,6 +8,8 @@ import {
   UpdateItemQuantityByCartIdMutationVariables,
 } from 'graphQL/generated/graphql';
 
+//
+
 type AddItemOptionToCartByCartIdMutationProps = {
   cartId: string;
   quantity: number;
@@ -29,10 +31,13 @@ export async function addItemOptionToCartByCartIdMutation({
       quantity,
       productOptionId,
     },
+    fetchPolicy: 'no-cache',
   });
 
   return createAuthCartItems;
 }
+
+//
 
 type UpdateItemQuantityByCartIdMutationProps = {
   cartId: string;
@@ -55,6 +60,7 @@ export async function updateItemQuantityByCartIdMutation({
       itemId,
       quantity,
     },
+    fetchPolicy: 'no-cache',
   });
   return increaseAuthCartItems;
 }

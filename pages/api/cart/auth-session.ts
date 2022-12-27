@@ -39,6 +39,7 @@ const handleCartSession: NextApiHandler = async (req, res) => {
       variables: {
         id: cartId,
       },
+      fetchPolicy: 'no-cache',
     });
 
     if (getCartItem.networkStatus !== 7) {
@@ -68,6 +69,7 @@ const handleCartSession: NextApiHandler = async (req, res) => {
         quantity,
         productOptionId,
       },
+      fetchPolicy: 'no-cache',
     });
 
     res.status(200).json({ cart: createCartItem.data?.updateCart });
@@ -92,6 +94,7 @@ const handleCartSession: NextApiHandler = async (req, res) => {
         itemId,
         quantity,
       },
+      fetchPolicy: 'no-cache',
     });
 
     res.status(200).json({ cart: updateCartItem.data?.updateCart });
@@ -114,6 +117,7 @@ const handleCartSession: NextApiHandler = async (req, res) => {
             itemId,
             quantity: quantity - 1,
           },
+          fetchPolicy: 'no-cache',
         });
 
         res.status(200).json({ cart: increseCartItem.data?.updateCart });
@@ -129,6 +133,7 @@ const handleCartSession: NextApiHandler = async (req, res) => {
           cartId,
           itemId,
         },
+        fetchPolicy: 'no-cache',
       });
 
       res.status(200).json({ cart: removeCartItem.data?.updateCart });
@@ -144,6 +149,7 @@ const handleCartSession: NextApiHandler = async (req, res) => {
         variables: {
           cartId,
         },
+        fetchPolicy: 'no-cache',
       });
 
       res.status(200).json({ cart: removeAllCartItems.data?.updateCart });

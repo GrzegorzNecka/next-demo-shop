@@ -5,6 +5,8 @@ import {
   UpdateUnauthCartByIdDocument,
 } from 'graphQL/generated/graphql';
 
+//
+
 export async function clearUnauthCartByIdMutation({ id }: { id: string }) {
   const clearUnauthCart = await authApolloClient.mutate<
     UpdateUnauthCartByIdMutation,
@@ -19,3 +21,5 @@ export async function clearUnauthCartByIdMutation({ id }: { id: string }) {
 
   return clearUnauthCart;
 }
+
+//

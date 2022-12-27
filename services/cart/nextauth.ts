@@ -25,6 +25,7 @@ export async function getCartItemsByAccount(providerAccountId: string) {
   >({
     query: GetCartIdByAccountIdDocument,
     variables: { id: providerAccountId },
+    fetchPolicy: 'no-cache',
   });
 
   const { id } = authCartId.data?.account?.cart!;
@@ -37,6 +38,7 @@ export async function getCartItemsByAccount(providerAccountId: string) {
     variables: {
       id: id!,
     },
+    fetchPolicy: 'no-cache',
   });
 
   return { authCartItems: authCart.data.cart?.cartItems, cartId: id };
@@ -48,6 +50,7 @@ export async function getCartItemsByCookieId(cookieCartId: string) {
   const unauthCart = await apolloClient.query<GetUnauthCartQuery, GetUnauthCartQueryVariables>({
     query: GetUnauthCartDocument,
     variables: { id: cookieCartId },
+    fetchPolicy: 'no-cache',
   });
 
   const unauthCartItems: CartItem[] = JSON.parse(unauthCart.data.unauthCart?.cartItems);
@@ -63,6 +66,7 @@ export async function getCartIdByAccountIdQuery(id: string) {
   >({
     query: GetCartIdByAccountIdDocument,
     variables: { id },
+    fetchPolicy: 'no-cache',
   });
 
   return { cart, cartId: cart.data?.account?.cart?.id };
