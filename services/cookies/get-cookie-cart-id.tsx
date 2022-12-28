@@ -1,4 +1,3 @@
-import type { NextApiHandler } from "next/types";
 import { CookieValueTypes, getCookie, hasCookie, setCookie } from "cookies-next";
 import { authApolloClient } from "graphQL/apolloClient";
 import {
@@ -7,17 +6,14 @@ import {
     CreateUnAuthCartMutationVariables,
 } from "graphQL/generated/graphql";
 
+import type { NextApiRequest, NextApiResponse } from "next";
+
 interface Response {
     readonly message?: string;
     readonly id?: CookieValueTypes;
 }
 
-const handler: NextApiHandler<Response> = async (req, res) => {
-    if (req.method !== "GET") {
-        res.status(400).json({ message: "bad request method" });
-        return;
-    }
-
+async function getCookieCartId(req: NextApiRequest, res: NextApiResponse<Response>) {
     const isCookie = hasCookie(`${process.env.NEXT_PUBLIC_COOKIE_CART_ID}`, { req, res });
 
     if (!isCookie) {
@@ -46,12 +42,7 @@ const handler: NextApiHandler<Response> = async (req, res) => {
 
     const cookieCartId = getCookie(`${process.env.NEXT_PUBLIC_COOKIE_CART_ID}`, { req, res });
 
-    if (!cookieCartId) {
-        res.status(400).json({ message: "not found cookie" });
-        return;
-    }
+    return cookieCartId;
+}
 
-    res.status(200).json({ id: cookieCartId });
-};
-
-export default handler;
+export { getCookieCartId };

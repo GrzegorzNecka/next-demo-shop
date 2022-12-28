@@ -10,7 +10,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
 
-function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
+function MyApp({ Component, pageProps }: AppProps<{ session: Session; initialApolloState: unknown }>) {
+    console.log(pageProps.initialApolloState);
+
     return (
         <>
             <QueryClientProvider client={queryClient}>

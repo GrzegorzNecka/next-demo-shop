@@ -1,33 +1,26 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 
-// https://www.apollographql.com/docs/react/caching/cache-configuration/#generating-unique-identifiers
-// https://www.apollographql.com/docs/react/caching/cache-field-behavior/#merging-non-normalized-objects
-
-const cache = new InMemoryCache({
-    typePolicies: {
-        Cart: {
-            fields: {
-                cartItems: {
-                    merge(existing = [], incoming: unknown[]) {
-                        return [...existing, ...incoming];
-                    },
-                },
-            },
-        },
-    },
-});
+const uri = 'https://api-eu-central-1.hygraph.com/v2/cl5s794280vvm01tbegxz5w9c/master';
 
 const apolloClient = new ApolloClient({
-    uri: process.env.NEXT_PUBLIC_HYGRAPH_CONTENT_API,
-    cache,
+  uri,
+  // cache,
+  cache: new InMemoryCache(),
+  name: 'hygraph-client',
+  connectToDevTools: true,
 });
 
 const authApolloClient = new ApolloClient({
-    uri: process.env.NEXT_PUBLIC_HYGRAPH_CONTENT_API,
-    cache,
-    headers: {
-        Authorization: `Bearer ${process.env.HYGRAPH_TOKEN_AUTH}`,
-    },
+  uri,
+  // cache,
+  cache: new InMemoryCache(),
+  headers: {
+    Authorization: `Bearer ${process.env.HYGRAPH_TOKEN_AUTH}`,
+  },
+  ssrMode: typeof window === 'undefined',
+  name: 'hygraph-auth-client',
+
+  // connectToDevTools: true,
 });
 
 export { apolloClient, authApolloClient };

@@ -189,3 +189,20 @@ mutation DeleteUnauthCart($id: ID!) {
         id
     }
 }
+
+fragment counterContent on TestCache {
+    id
+    counter
+}
+
+query GetCounter {
+    testCache(where: { id: "clby3x1j72z500augjib02ztr" }, stage: DRAFT) {
+        ...counterContent
+    }
+}
+
+mutation UpdateCounter($counter: Int!) {
+    updateTestCache(where: { id: "clby3x1j72z500augjib02ztr" }, data: { counter: $counter }) {
+        ...counterContent
+    }
+}

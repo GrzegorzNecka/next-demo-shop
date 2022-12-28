@@ -1,34 +1,54 @@
-import type { CartItem } from "context/types";
-import { useSession } from "next-auth/react";
-import { useState } from "react";
-import { useCartItemsWithAuthSession } from "./use-auth-session";
-import { useCartItemsWithUnauthSession } from "./use-unauth-session";
+import type { CartItem } from 'context/types';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import { cartItemsByAccount } from './cart-items-by-account';
+import { cartItemsByCookieId } from './cart-items-by-cookie-id';
+import { useQuery } from '@tanstack/react-query';
 
 export const useCartItems = () => {
-    const [cartItems, setCartItems] = useState<CartItem[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const { status, data: session } = useSession();
+  //
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { status } = useSession();
 
-    const authSession = useCartItemsWithAuthSession({
-        setCartItems,
-        setIsLoading,
-        status,
-        session,
-    });
+  const { data: cookie } = useQuery({
+    queryKey: ['cookieCartId'],
+    queryFn: async () => {
+      const res = await fetch('/api/cart/cookies/create-id', {
+        method: 'GET',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json;' },
+      });
 
-    const unauthSession = useCartItemsWithUnauthSession({
-        setCartItems,
-        setIsLoading,
-        status,
-    });
+      return res.json();
+    },
+    enabled: status === 'unauthenticated' ? true : false,
+  });
 
-    const methods = status === "authenticated" ? authSession : unauthSession;
+  const auth = cartItemsByAccount({
+    setCartItems,
+    setIsLoading,
+    cartItems,
+  });
 
-    return {
-        cartItems,
-        isLoading,
-        addItemToCart: methods.addItemToCart,
-        removeItemFromCart: methods.removeItemFromCart,
-        clearCartItems: methods.clearCartItems,
-    } as const;
+  const unauth = cartItemsByCookieId({
+    setCartItems,
+    setIsLoading,
+    cookieCartId: cookie?.id,
+    cartItems,
+  });
+
+  const methods = status === 'authenticated' ? auth : unauth;
+
+  useEffect(() => {
+    methods.updateCartItems();
+  }, [status]);
+
+  return {
+    cartItems,
+    isLoading,
+    addItemToCart: methods.addItemToCart,
+    removeItemFromCart: methods.removeItemFromCart,
+    clearCartItems: methods.clearCartItems,
+  } as const;
 };
