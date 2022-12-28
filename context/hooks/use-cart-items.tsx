@@ -1,52 +1,48 @@
 import type { CartItem } from 'context/types';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
-import { useCartItemsWithAuthSession } from './use-cart-items-by-account';
-import { useCartItemsWithUnauthSession } from './use-cart-items-by-cookie-id';
-import { useGetUnauthCartQuery } from 'graphQL/generated/graphql';
+import { useEffect, useState } from 'react';
+import { cartItemsByAccount } from './cart-items-by-account';
+import { cartItemsByCookieId } from './cart-items-by-cookie-id';
 import { useQuery } from '@tanstack/react-query';
-
-async function getCookieCartId() {
-  const res = await fetch('/api/cart/cookies/create-id', {
-    method: 'GET',
-    credentials: 'same-origin',
-    headers: { 'Content-Type': 'application/json;' },
-  });
-
-  return res.json();
-}
 
 export const useCartItems = () => {
   //
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { status, data: session } = useSession();
+  const { status } = useSession();
 
   const { data: cookie } = useQuery({
     queryKey: ['cookieCartId'],
-    queryFn: getCookieCartId,
+    queryFn: async () => {
+      const res = await fetch('/api/cart/cookies/create-id', {
+        method: 'GET',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json;' },
+      });
+
+      return res.json();
+    },
     enabled: status === 'unauthenticated' ? true : false,
   });
 
-  const cookieCartId: string = cookie?.id;
-
-  const authSession = useCartItemsWithAuthSession({
+  const auth = cartItemsByAccount({
     setCartItems,
     setIsLoading,
-    status,
-    session,
     cartItems,
   });
 
-  const unauthSession = useCartItemsWithUnauthSession({
+  const unauth = cartItemsByCookieId({
     setCartItems,
     setIsLoading,
-    status,
-    cookieCartId,
+    cookieCartId: cookie?.id,
     cartItems,
   });
 
-  const methods = status === 'authenticated' ? authSession : unauthSession;
+  const methods = status === 'authenticated' ? auth : unauth;
+
+  useEffect(() => {
+    methods.updateCartItems();
+  }, [status]);
 
   return {
     cartItems,

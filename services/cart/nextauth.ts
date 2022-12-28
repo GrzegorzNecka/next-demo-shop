@@ -6,7 +6,6 @@ import {
   GetCartItemsByCartIdQuery,
   GetCartItemsByCartIdQueryVariables,
   GetCartItemsByCartIdDocument,
-  CartItem as CartItemFromApollo,
   GetUnauthCartDocument,
   GetUnauthCartQuery,
   GetUnauthCartQueryVariables,
@@ -19,6 +18,7 @@ import { CartItem } from 'context/types';
 //
 
 export async function getCartItemsByAccount(providerAccountId: string) {
+  //
   const authCartId = await authApolloClient.query<
     GetCartIdByAccountIdQuery,
     GetCartIdByAccountIdQueryVariables
@@ -41,7 +41,7 @@ export async function getCartItemsByAccount(providerAccountId: string) {
     fetchPolicy: 'no-cache',
   });
 
-  return { authCartItems: authCart.data.cart?.cartItems, cartId: id };
+  return { cartItemsByAccount: authCart.data.cart?.cartItems, cartId: id };
 }
 
 //

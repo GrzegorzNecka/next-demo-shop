@@ -6,21 +6,41 @@ import {
   UpdateItemQuantityByCartIdDocument,
   UpdateItemQuantityByCartIdMutation,
   UpdateItemQuantityByCartIdMutationVariables,
+  GetCartItemsByCartIdDocument,
+  GetCartItemsByCartIdQuery,
+  GetCartItemsByCartIdQueryVariables,
+  RemoveItemFromCartByCartIdDocument,
+  RemoveItemFromCartByCartIdMutation,
+  RemoveItemFromCartByCartIdMutationVariables,
+  ClearCartItemsMutationVariables,
+  ClearCartItemsDocument,
+  ClearCartItemsMutation,
 } from 'graphQL/generated/graphql';
 
-//
+// -- GET
 
-type AddItemOptionToCartByCartIdMutationProps = {
-  cartId: string;
-  quantity: number;
-  productOptionId: string;
-};
+export async function getCartItemsByCartIdQuery({ id }: GetCartItemsByCartIdQueryVariables) {
+  //
+  const getCartItem = await authApolloClient.query<
+    GetCartItemsByCartIdQuery,
+    GetCartItemsByCartIdQueryVariables
+  >({
+    query: GetCartItemsByCartIdDocument,
+    variables: {
+      id,
+    },
+    fetchPolicy: 'no-cache',
+  });
+  return getCartItem;
+}
+
+// -- CREATE
 
 export async function addItemOptionToCartByCartIdMutation({
   cartId,
   quantity,
   productOptionId,
-}: AddItemOptionToCartByCartIdMutationProps) {
+}: AddItemOptionToCartByCartIdMutationVariables) {
   const createAuthCartItems = await authApolloClient.mutate<
     AddItemOptionToCartByCartIdMutation,
     AddItemOptionToCartByCartIdMutationVariables
@@ -37,19 +57,14 @@ export async function addItemOptionToCartByCartIdMutation({
   return createAuthCartItems;
 }
 
-//
-
-type UpdateItemQuantityByCartIdMutationProps = {
-  cartId: string;
-  quantity: number;
-  itemId: string;
-};
+// -- UPDATE
 
 export async function updateItemQuantityByCartIdMutation({
   cartId,
   quantity,
   itemId,
-}: UpdateItemQuantityByCartIdMutationProps) {
+}: UpdateItemQuantityByCartIdMutationVariables) {
+  //
   const increaseAuthCartItems = await authApolloClient.mutate<
     UpdateItemQuantityByCartIdMutation,
     UpdateItemQuantityByCartIdMutationVariables
@@ -62,5 +77,46 @@ export async function updateItemQuantityByCartIdMutation({
     },
     fetchPolicy: 'no-cache',
   });
+
   return increaseAuthCartItems;
+}
+
+// -- DELETE
+
+export async function removeItemFromCartByCartIdMutation({
+  cartId,
+  itemId,
+}: RemoveItemFromCartByCartIdMutationVariables) {
+  //
+  const removeCartItem = await authApolloClient.mutate<
+    RemoveItemFromCartByCartIdMutation,
+    RemoveItemFromCartByCartIdMutationVariables
+  >({
+    mutation: RemoveItemFromCartByCartIdDocument,
+    variables: {
+      cartId,
+      itemId,
+    },
+    fetchPolicy: 'no-cache',
+  });
+
+  return removeCartItem;
+}
+
+// -- DELETE ALL
+
+export async function clearCartItemsMutation({ cartId }: ClearCartItemsMutationVariables) {
+  //
+  const removeAllCartItems = await authApolloClient.mutate<
+    ClearCartItemsMutation,
+    ClearCartItemsMutationVariables
+  >({
+    mutation: ClearCartItemsDocument,
+    variables: {
+      cartId,
+    },
+    fetchPolicy: 'no-cache',
+  });
+
+  return removeAllCartItems;
 }

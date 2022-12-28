@@ -1,24 +1,14 @@
 import { authOptions } from 'pages/api/auth/[...nextauth]';
 import { unstable_getServerSession } from 'next-auth/next';
 import type { NextApiHandler } from 'next/types';
-import { authApolloClient } from 'graphQL/apolloClient';
+
 import {
-  AddItemOptionToCartByCartIdDocument,
-  AddItemOptionToCartByCartIdMutation,
-  AddItemOptionToCartByCartIdMutationVariables,
-  ClearCartItemsDocument,
-  ClearCartItemsMutation,
-  ClearCartItemsMutationVariables,
-  GetCartItemsByCartIdDocument,
-  GetCartItemsByCartIdQuery,
-  GetCartItemsByCartIdQueryVariables,
-  RemoveItemFromCartByCartIdDocument,
-  RemoveItemFromCartByCartIdMutation,
-  RemoveItemFromCartByCartIdMutationVariables,
-  UpdateItemQuantityByCartIdDocument,
-  UpdateItemQuantityByCartIdMutation,
-  UpdateItemQuantityByCartIdMutationVariables,
-} from 'graphQL/generated/graphql';
+  addItemOptionToCartByCartIdMutation,
+  clearCartItemsMutation,
+  getCartItemsByCartIdQuery,
+  removeItemFromCartByCartIdMutation,
+  updateItemQuantityByCartIdMutation,
+} from 'services/cart/cart-items-by-account';
 
 const handleCartSession: NextApiHandler = async (req, res) => {
   const session = await unstable_getServerSession(req, res, authOptions);
@@ -31,15 +21,8 @@ const handleCartSession: NextApiHandler = async (req, res) => {
   const cartId = session.user.cartId;
 
   if (req.method === 'GET') {
-    const getCartItem = await authApolloClient.query<
-      GetCartItemsByCartIdQuery,
-      GetCartItemsByCartIdQueryVariables
-    >({
-      query: GetCartItemsByCartIdDocument,
-      variables: {
-        id: cartId,
-      },
-      fetchPolicy: 'no-cache',
+    const getCartItem = await getCartItemsByCartIdQuery({
+      id: cartId,
     });
 
     if (getCartItem.networkStatus !== 7) {
@@ -59,17 +42,10 @@ const handleCartSession: NextApiHandler = async (req, res) => {
       return;
     }
 
-    const createCartItem = await authApolloClient.mutate<
-      AddItemOptionToCartByCartIdMutation,
-      AddItemOptionToCartByCartIdMutationVariables
-    >({
-      mutation: AddItemOptionToCartByCartIdDocument,
-      variables: {
-        cartId,
-        quantity,
-        productOptionId,
-      },
-      fetchPolicy: 'no-cache',
+    const createCartItem = await addItemOptionToCartByCartIdMutation({
+      cartId,
+      quantity,
+      productOptionId,
     });
 
     res.status(200).json({ cart: createCartItem.data?.updateCart });
@@ -84,17 +60,10 @@ const handleCartSession: NextApiHandler = async (req, res) => {
       return;
     }
 
-    const updateCartItem = await authApolloClient.mutate<
-      UpdateItemQuantityByCartIdMutation,
-      UpdateItemQuantityByCartIdMutationVariables
-    >({
-      mutation: UpdateItemQuantityByCartIdDocument,
-      variables: {
-        cartId,
-        itemId,
-        quantity,
-      },
-      fetchPolicy: 'no-cache',
+    const updateCartItem = await updateItemQuantityByCartIdMutation({
+      cartId,
+      itemId,
+      quantity,
     });
 
     res.status(200).json({ cart: updateCartItem.data?.updateCart });
@@ -107,33 +76,21 @@ const handleCartSession: NextApiHandler = async (req, res) => {
 
     if (itemId && quantity) {
       if (quantity > 1) {
-        const increseCartItem = await authApolloClient.mutate<
-          UpdateItemQuantityByCartIdMutation,
-          UpdateItemQuantityByCartIdMutationVariables
-        >({
-          mutation: UpdateItemQuantityByCartIdDocument,
-          variables: {
-            cartId,
-            itemId,
-            quantity: quantity - 1,
-          },
-          fetchPolicy: 'no-cache',
+        //
+
+        const increseCartItem = await updateItemQuantityByCartIdMutation({
+          cartId,
+          itemId,
+          quantity: quantity - 1,
         });
 
         res.status(200).json({ cart: increseCartItem.data?.updateCart });
         return;
       }
 
-      const removeCartItem = await authApolloClient.mutate<
-        RemoveItemFromCartByCartIdMutation,
-        RemoveItemFromCartByCartIdMutationVariables
-      >({
-        mutation: RemoveItemFromCartByCartIdDocument,
-        variables: {
-          cartId,
-          itemId,
-        },
-        fetchPolicy: 'no-cache',
+      const removeCartItem = await removeItemFromCartByCartIdMutation({
+        cartId,
+        itemId,
       });
 
       res.status(200).json({ cart: removeCartItem.data?.updateCart });
@@ -141,16 +98,8 @@ const handleCartSession: NextApiHandler = async (req, res) => {
     }
 
     if (setEmpty) {
-      const removeAllCartItems = await authApolloClient.mutate<
-        ClearCartItemsMutation,
-        ClearCartItemsMutationVariables
-      >({
-        mutation: ClearCartItemsDocument,
-        variables: {
-          cartId,
-        },
-        fetchPolicy: 'no-cache',
-      });
+      //
+      const removeAllCartItems = await clearCartItemsMutation({ cartId });
 
       res.status(200).json({ cart: removeAllCartItems.data?.updateCart });
       return;

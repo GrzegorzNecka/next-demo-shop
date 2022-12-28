@@ -2,41 +2,14 @@ import NextAuth, { Account } from 'next-auth';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import * as bcrypt from 'bcrypt';
-import { apolloClient, authApolloClient } from 'graphQL/apolloClient';
-import {
-  AddItemOptionToCartByCartIdDocument,
-  AddItemOptionToCartByCartIdMutation,
-  AddItemOptionToCartByCartIdMutationVariables,
-  UpdateUnauthCartByIdDocument,
-  UpdateUnauthCartByIdMutation,
-  UpdateUnauthCartByIdMutationVariables,
-  GetAccountByEmailDocument,
-  GetAccountByEmailQuery,
-  GetAccountByEmailQueryVariables,
-  GetCartIdByAccountIdDocument,
-  CartItem as CartItemFromApollo,
-  GetCartIdByAccountIdQuery,
-  GetCartIdByAccountIdQueryVariables,
-  GetCartItemsByCartIdDocument,
-  GetCartItemsByCartIdQuery,
-  GetCartItemsByCartIdQueryVariables,
-  GetUnauthCartDocument,
-  GetUnauthCartQuery,
-  GetUnauthCartQueryVariables,
-  UpdateItemQuantityByCartIdDocument,
-  UpdateItemQuantityByCartIdMutation,
-  UpdateItemQuantityByCartIdMutationVariables,
-} from 'graphQL/generated/graphql';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { CookieValueTypes, getCookie } from 'cookies-next';
-import { CartItem } from 'context/types';
 import {
   accountByEmailQuery,
   getCartIdByAccountIdQuery,
   getCartItemsByAccount,
   getCartItemsByCookieId,
 } from 'services/cart/nextauth';
-import { ApolloQueryResult } from '@apollo/client';
 import {
   addItemOptionToCartByCartIdMutation,
   updateItemQuantityByCartIdMutation,
@@ -98,7 +71,7 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-// -- EXTEND CALLBACK to  async signIn()
+// -- EXTEND CALLBACK to async signIn()
 
 interface handleSignInProps {
   account: Account | null;
@@ -109,19 +82,19 @@ const handleSignIn = async ({ account }: handleSignInProps, cookieCartId: Cookie
     return true;
   }
 
-  const unauthCartItems = await getCartItemsByCookieId(cookieCartId);
+  const cartItemsByCookieId = await getCartItemsByCookieId(cookieCartId);
 
-  if (!unauthCartItems || !unauthCartItems.length) {
+  if (!cartItemsByCookieId || !cartItemsByCookieId.length) {
     return true;
   }
 
-  const { authCartItems, cartId } = await getCartItemsByAccount(account?.providerAccountId!);
+  const { cartItemsByAccount, cartId } = await getCartItemsByAccount(account?.providerAccountId!);
 
   // compare and join data from server and local state
-  if (unauthCartItems.length > 0 && authCartItems) {
-    //loop
-    unauthCartItems.forEach(async (item) => {
-      const repeatedItem = authCartItems.find((i) => i.option?.id === item.productOptionId);
+  if (cartItemsByCookieId.length > 0 && cartItemsByAccount) {
+    // loop
+    cartItemsByCookieId.forEach(async (item) => {
+      const repeatedItem = cartItemsByAccount.find((i) => i.option?.id === item.productOptionId);
 
       if (!repeatedItem) {
         const createAuthCartItems = await addItemOptionToCartByCartIdMutation({
@@ -145,7 +118,7 @@ const handleSignIn = async ({ account }: handleSignInProps, cookieCartId: Cookie
           return quantity;
         }
 
-        const increaseAuthCartItems = await updateItemQuantityByCartIdMutation({
+        const increaseCartItemsByAccount = await updateItemQuantityByCartIdMutation({
           cartId,
           itemId: repeatedItem.id,
           quantity: countQuantity(repeatedItem),
@@ -154,14 +127,15 @@ const handleSignIn = async ({ account }: handleSignInProps, cookieCartId: Cookie
     });
   }
 
-  const clearUnauthCart = await clearUnauthCartByIdMutation({ id: cookieCartId });
+  const clearCartItemsByCookieId = await clearUnauthCartByIdMutation({ id: cookieCartId });
 
   return true;
 };
 
-// NEXT_AUTH HANDLER
+// -- NEXT_AUTH HANDLER
 
 export default async function NextAuthHandler(req: NextApiRequest, res: NextApiResponse) {
+  //
   const cookieCartId = getCookie(`${process.env.NEXT_PUBLIC_COOKIE_CART_ID}`, { req, res });
 
   const options: NextAuthOptions = {

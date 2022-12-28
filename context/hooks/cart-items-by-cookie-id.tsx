@@ -1,28 +1,28 @@
-import { ApolloQueryResult } from '@apollo/client';
 import type { CartItem } from 'context/types';
-import { GetUnauthCartQuery } from 'graphQL/generated/graphql';
 import { Dispatch, SetStateAction } from 'react';
-import { useEffect } from 'react';
 import { productToCartItem } from 'utils/cart';
 
-type useCartItemsProps = {
+type cartItemsByCookieIdProps = {
   setCartItems: Dispatch<SetStateAction<CartItem[]>>;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
-  status: 'unauthenticated' | 'authenticated' | 'loading';
   cookieCartId: string;
   cartItems: CartItem[];
 };
 
-export const useCartItemsWithUnauthSession = ({
+export const cartItemsByCookieId = ({
   setCartItems,
   setIsLoading,
-  status,
   cookieCartId,
   cartItems,
-}: useCartItemsProps) => {
+}: cartItemsByCookieIdProps) => {
   //
-  async function updateData() {
-    let result = await fetch('/api/cart/cart-items-by-cookie-id', {
+
+  const API_CART_PATH = '/api/cart/cart-items-by-cookie-id';
+
+  // -- CONTEXT HANDLERS
+
+  const updateCartItems = async () => {
+    let result = await fetch(API_CART_PATH, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json;' },
     });
@@ -35,18 +35,7 @@ export const useCartItemsWithUnauthSession = ({
 
     setCartItems(cartItems);
     setIsLoading(false);
-  }
-
-  // USE_EFFECT
-  useEffect(() => {
-    if (status !== 'unauthenticated') {
-      return;
-    }
-
-    updateData();
-  }, [status]);
-
-  // CONTEXT HANDLERS
+  };
 
   const addItemToCart = async (product: CartItem) => {
     setIsLoading(true);
@@ -55,7 +44,8 @@ export const useCartItemsWithUnauthSession = ({
       (item) => item.productOptionId === product.productOptionId,
     );
 
-    // create new cartItem
+    // -- create new cartItem
+
     if (!existCartItem) {
       const create = await updateCart(cookieCartId, [...cartItems, productToCartItem(product)]);
 
@@ -68,7 +58,7 @@ export const useCartItemsWithUnauthSession = ({
       return;
     }
 
-    //update existing cartItem (increase quantity)
+    // -- update existing cartItem (increase quantity)
 
     existCartItem.quantity = existCartItem.quantity + product.quantity;
     const restCartItems = cartItems.filter(
@@ -84,7 +74,7 @@ export const useCartItemsWithUnauthSession = ({
   };
 
   const removeItemFromCart = async (itemId: CartItem['productOptionId']) => {
-    if (status !== 'unauthenticated' || !cartItems) {
+    if (!cartItems) {
       return;
     }
 
@@ -96,7 +86,7 @@ export const useCartItemsWithUnauthSession = ({
 
     setIsLoading(true);
 
-    // decrease cartItem quantity
+    // -- decrease cartItem quantity
 
     if (existCartItem.quantity > 1) {
       const updateCartItems = cartItems.map((item) => {
@@ -117,7 +107,7 @@ export const useCartItemsWithUnauthSession = ({
       return;
     }
 
-    //delete cartItem
+    // -- delete cartItem
 
     const restCartItems = cartItems.filter((item) => item.itemId !== itemId);
     const remove = await updateCart(cookieCartId, restCartItems);
@@ -131,7 +121,7 @@ export const useCartItemsWithUnauthSession = ({
   };
 
   const clearCartItems = async () => {
-    if (status !== 'unauthenticated' || !cartItems) {
+    if (!cartItems) {
       return;
     }
 
@@ -145,10 +135,15 @@ export const useCartItemsWithUnauthSession = ({
     return;
   };
 
-  return { addItemToCart, removeItemFromCart, clearCartItems } as const;
+  return {
+    updateCartItems,
+    addItemToCart,
+    removeItemFromCart,
+    clearCartItems,
+  } as const;
 };
 
-// HELPERS
+// -- HELPERS
 
 async function updateCart<T, U>(id: T, product: U) {
   const res = await fetch('/api/cart/cart-items-by-cookie-id', {
@@ -161,17 +156,3 @@ async function updateCart<T, U>(id: T, product: U) {
   });
   return res;
 }
-
-//! do obsłużenia przypadek kiedy w cookies wyczyszczę pamięć podręczną
-//! te problem z aktualizacja są przez to właśnie
-// async function deleteCookieCartId<T>(id: T) {
-//   const deleteCookieId = await fetch('/api/cart/cookies/delete-cart-items-by-cookie-id-id', {
-//     method: 'DELETE',
-//     headers: { 'Content-Type': 'application/json;' },
-//     body: JSON.stringify({
-//       id,
-//     }),
-//   });
-
-//   return deleteCookieId.status;
-// }

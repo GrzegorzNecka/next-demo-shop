@@ -1,28 +1,27 @@
 import type { Dispatch, SetStateAction } from 'react';
-import { useEffect } from 'react';
 import { CartItem } from 'context/types';
-import { Session } from 'next-auth';
 import { fetchDataToCartItem } from 'utils/cart';
 
-type useCartItemsProps = {
+type cartItemsByAccountProps = {
   setCartItems: Dispatch<SetStateAction<CartItem[]>>;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
-  status: 'unauthenticated' | 'authenticated' | 'loading';
-  session: Session | null;
+
   cartItems: CartItem[];
 };
 
-export const useCartItemsWithAuthSession = ({
+export const cartItemsByAccount = ({
   setCartItems,
   setIsLoading,
-  status,
-  session,
   cartItems,
-}: useCartItemsProps) => {
-  const cartId = session?.user?.cartId!;
+}: cartItemsByAccountProps) => {
+  //
 
-  async function updateData() {
-    const cart = await fetch('/api/cart/cart-items-by-account', {
+  const API_CART_PATH = '/api/cart/cart-items-by-account';
+
+  // -- CONTEXT HANDLERS
+
+  const updateCartItems = async () => {
+    const cart = await fetch(API_CART_PATH, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json;' },
     });
@@ -34,19 +33,10 @@ export const useCartItemsWithAuthSession = ({
       setIsLoading(false);
     }
     return;
-  }
-
-  useEffect(() => {
-    if (status !== 'authenticated' || !cartId) {
-      return;
-    }
-
-    updateData();
-  }, [status]);
-
-  //CONTEXT HANDLERS
+  };
 
   //
+
   const addItemToCart = async (product: CartItem) => {
     setIsLoading(true);
 
@@ -55,7 +45,7 @@ export const useCartItemsWithAuthSession = ({
     const existProduct = cartItems.find((item) => item.productOptionId === productOptionId);
 
     if (!existProduct) {
-      const create = await fetch('/api/cart/cart-items-by-account', {
+      const create = await fetch(API_CART_PATH, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json;' },
         body: JSON.stringify({
@@ -74,7 +64,7 @@ export const useCartItemsWithAuthSession = ({
       return;
     }
 
-    const update = await fetch('/api/cart/cart-items-by-account', {
+    const update = await fetch(API_CART_PATH, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json;' },
       body: JSON.stringify({
@@ -102,7 +92,7 @@ export const useCartItemsWithAuthSession = ({
 
     setIsLoading(true);
 
-    const remove = await fetch('/api/cart/cart-items-by-account', {
+    const remove = await fetch(API_CART_PATH, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json;' },
       body: JSON.stringify({
@@ -124,7 +114,7 @@ export const useCartItemsWithAuthSession = ({
   const clearCartItems = async () => {
     setIsLoading(true);
 
-    const clear = await fetch('/api/cart/cart-items-by-account', {
+    const clear = await fetch(API_CART_PATH, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json;' },
       body: JSON.stringify({
@@ -138,5 +128,10 @@ export const useCartItemsWithAuthSession = ({
     }
   };
 
-  return { addItemToCart, removeItemFromCart, clearCartItems } as const;
+  return {
+    updateCartItems,
+    addItemToCart,
+    removeItemFromCart,
+    clearCartItems,
+  } as const;
 };

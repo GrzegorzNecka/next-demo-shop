@@ -13,7 +13,8 @@ export function productToCartItem(item: CartItem) {
   };
 }
 
-//for authorization cart
+// -- for authorization cart
+
 export function fetchDataToCartItem({ cart }: { cart: GetCartItemsByCartIdQuery['cart'] }) {
   if (!cart) {
     return [];
