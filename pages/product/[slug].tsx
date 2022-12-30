@@ -16,7 +16,6 @@ import { changeToCurrency, moveTheComa } from 'utils/currency';
 
 type ProductSingleSlugPageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
-
 const ProductSingleSlugPage = ({ product }: ProductSingleSlugPageProps) => {
   if (!product) {
     return <div>coś poszło nie tak</div>;
@@ -34,7 +33,7 @@ const ProductSingleSlugPage = ({ product }: ProductSingleSlugPageProps) => {
           slug: product.slug,
           option: product.option,
           // rating: product.rating.rate,
-          // longDescription: product.longDescription,
+          longDescription: product.longDescription,
 
           price: product.price,
           priceWithCurrency: changeToCurrency(moveTheComa(product.price)),
@@ -42,7 +41,6 @@ const ProductSingleSlugPage = ({ product }: ProductSingleSlugPageProps) => {
       />
     </Main>
   );
-
 };
 
 export default ProductSingleSlugPage;
@@ -92,12 +90,10 @@ export const getStaticProps = async ({
     };
   }
 
-
   const markdown: string = data.product.description;
 
-  // const product = { ...data.product, longDescription: await serialize(markdown) };
-  const product = { ...data.product };
-
+  const product = { ...data.product, longDescription: await serialize(markdown) };
+  // const product = { ...data.product };
 
   return {
     props: {

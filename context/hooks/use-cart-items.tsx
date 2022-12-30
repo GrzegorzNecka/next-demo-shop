@@ -11,7 +11,7 @@ export const useCartItems = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { status } = useSession();
 
-  const { data: cookie } = useQuery({
+  const { data: cookie }: { data: { id: string } | undefined } = useQuery({
     queryKey: ['cookieCartId'],
     queryFn: async () => {
       const res = await fetch('/api/cart/cookies/create-id', {
@@ -34,7 +34,7 @@ export const useCartItems = () => {
   const unauth = cartItemsByCookieId({
     setCartItems,
     setIsLoading,
-    cookieCartId: cookie?.id,
+    cookieCartId: cookie?.id!,
     cartItems,
   });
 
