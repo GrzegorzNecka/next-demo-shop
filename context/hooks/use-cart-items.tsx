@@ -25,20 +25,20 @@ export const useCartItems = () => {
     enabled: status === 'unauthenticated' ? true : false,
   });
 
-  const auth = cartItemsByAccount({
+  const byAccount = cartItemsByAccount({
     setCartItems,
     setIsLoading,
     cartItems,
   });
 
-  const unauth = cartItemsByCookieId({
+  const byCookieId = cartItemsByCookieId({
     setCartItems,
     setIsLoading,
     cookieCartId: cookie?.id!,
     cartItems,
   });
 
-  const methods = status === 'authenticated' ? auth : unauth;
+  const methods = status === 'authenticated' ? byAccount : byCookieId;
 
   useEffect(() => {
     methods.updateCartItems();
