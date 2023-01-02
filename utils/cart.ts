@@ -15,7 +15,7 @@ export function productToCartItem(item: CartItem) {
 
 // -- for authorization cart
 
-export function fetchDataToCartItem({ cart }: { cart: GetCartItemsByCartIdQuery['cart'] }) {
+export function fetchedToCartItem({ cart }: { cart: GetCartItemsByCartIdQuery['cart'] }) {
   if (!cart) {
     return [];
   }

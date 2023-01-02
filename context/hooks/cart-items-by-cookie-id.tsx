@@ -31,9 +31,9 @@ export const cartItemsByCookieId = ({
       return;
     }
 
-    const { cartItems }: { cartItems: CartItem[] } = await result.json();
+    const { cartItems: withFetchedCartItems }: { cartItems: CartItem[] } = await result.json();
 
-    setCartItems(cartItems);
+    setCartItems(withFetchedCartItems);
     setIsLoading(false);
   };
 
@@ -50,9 +50,9 @@ export const cartItemsByCookieId = ({
       const create = await updateCart(cookieCartId, [...cartItems, productToCartItem(product)]);
 
       if (create.status === 200) {
-        const { cartItems }: { cartItems: CartItem[] } = await create.json();
+        const { cartItems: withUpdatedCartItem }: { cartItems: CartItem[] } = await create.json();
 
-        setCartItems(cartItems!);
+        setCartItems(withUpdatedCartItem!);
         setIsLoading(false);
       }
       return;
