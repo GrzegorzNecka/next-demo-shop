@@ -1,10 +1,13 @@
-import { useForm } from 'react-hook-form';
+import { FormState, UseFormHandleSubmit, UseFormRegister, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useMutation } from '@tanstack/react-query';
+import { UseMutateFunction, useMutation } from '@tanstack/react-query';
 import FormInput from './form-input';
+import { AssertsShape } from 'yup/lib/object';
+import { RequiredStringSchema } from 'yup/lib/string';
+import { AnyObject } from 'yup/lib/types';
 
-export const useAddToNewsletterMutation = () =>
+const useAddToNewsletterMutation = () =>
   useMutation(['add-to-newsletter'], async ({ email, name }: { email: string; name: string }) => {
     await fetch('http://localhost:3000/api/mailerLite', {
       method: 'POST',
@@ -13,7 +16,39 @@ export const useAddToNewsletterMutation = () =>
     });
   });
 
-const NewsletterForm = () => {
+// -- CONTAINER
+
+export const NewsletterForm = () => {
+  const { mutate, isLoading, isSuccess } = useAddToNewsletterMutation();
+
+  return <NewsletterFormView mutate={mutate} isLoading={isLoading} isSuccess={isSuccess} />;
+};
+
+// -- types for NewsletterFormView
+
+type Shape = {
+  email: RequiredStringSchema<string | undefined, AnyObject>;
+  name: RequiredStringSchema<string | undefined, AnyObject>;
+};
+
+type NewsletterFormViewProps = {
+  mutate: UseMutateFunction<
+    void,
+    unknown,
+    {
+      email: string;
+      name: string;
+    },
+    unknown
+  >;
+  isLoading: boolean;
+  isSuccess: boolean;
+};
+
+// -- PREZENTATION
+
+export const NewsletterFormView = ({ mutate, isLoading, isSuccess }: NewsletterFormViewProps) => {
+  //
   const formSchema = yup
     .object({
       email: yup.string().required('email jest wymagany').email().trim(),
@@ -26,8 +61,6 @@ const NewsletterForm = () => {
   const { register, handleSubmit, formState } = useForm<formData>({
     resolver: yupResolver(formSchema),
   });
-
-  const { mutate, isLoading, isSuccess } = useAddToNewsletterMutation();
 
   const onSubmit = handleSubmit(async (data) => {
     mutate({ email: data.email, name: data.name });
@@ -65,5 +98,3 @@ const NewsletterForm = () => {
     </div>
   );
 };
-
-export default NewsletterForm;

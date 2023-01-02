@@ -55,9 +55,10 @@ export const cartItemsByAccount = ({
       });
 
       if (create.status === 200) {
-        const updateCartItems = await create.json();
-
-        setCartItems(fetchDataToCartItem(updateCartItems)!);
+        // const updateCartItems = await create.json();
+        //  setCartItems(fetchDataToCartItem(updateCartItems)!);
+        const withNewCartItem = fetchDataToCartItem(await create.json())!;
+        setCartItems(withNewCartItem);
         setIsLoading(false);
       }
 
