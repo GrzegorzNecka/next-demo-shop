@@ -4,10 +4,10 @@ import { NewsletterFormView } from './newsletter-form';
 
 describe('NewsletterFormView', () => {
   it('show sucess message when status === isSucess', () => {
-    const mutate = jest.fn();
+    const mockMutate = jest.fn();
     const isLoading = false;
     const isSuccess = true;
-    render(<NewsletterFormView mutate={mutate} isLoading={isLoading} isSuccess={isSuccess} />);
+    render(<NewsletterFormView mutate={mockMutate} isLoading={isLoading} isSuccess={isSuccess} />);
 
     const successMessage = screen.queryByText('subscribe was successed');
 
@@ -15,10 +15,10 @@ describe('NewsletterFormView', () => {
   });
 
   it('do not show sucess message when status === isSucess', () => {
-    const mutate = jest.fn();
+    const mockMutate = jest.fn();
     const isLoading = false;
     const isSuccess = false;
-    render(<NewsletterFormView mutate={mutate} isLoading={isLoading} isSuccess={isSuccess} />);
+    render(<NewsletterFormView mutate={mockMutate} isLoading={isLoading} isSuccess={isSuccess} />);
 
     const successMessage = screen.queryByText('subscribe was failed');
 
@@ -26,11 +26,11 @@ describe('NewsletterFormView', () => {
   });
 
   it('submit form when inputs are filled and button is clicked ', async () => {
-    const mutate = jest.fn();
+    const mockMutate = jest.fn();
     const isLoading = false;
     const isSuccess = false;
 
-    render(<NewsletterFormView mutate={mutate} isLoading={isLoading} isSuccess={isSuccess} />);
+    render(<NewsletterFormView mutate={mockMutate} isLoading={isLoading} isSuccess={isSuccess} />);
 
     const inputName = screen.getByPlaceholderText('Name');
     const inputEmail = screen.getByPlaceholderText('Email');
@@ -40,6 +40,6 @@ describe('NewsletterFormView', () => {
 
     fireEvent.click(screen.getByText('subscribe !'));
 
-    await waitFor(() => expect(mutate).toHaveBeenCalled());
+    await waitFor(() => expect(mockMutate).toHaveBeenCalled());
   });
 });

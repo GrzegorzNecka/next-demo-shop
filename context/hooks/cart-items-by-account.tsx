@@ -1,4 +1,4 @@
-import { CartItem } from 'context/types';
+import type { CartItem } from 'context/types';
 import { fetchedToCartItem } from 'utils/cart';
 import type { Dispatch, SetStateAction } from 'react';
 type cartItemsByAccountProps = {
@@ -41,9 +41,9 @@ export const cartItemsByAccount = ({
 
     const { productOptionId, quantity } = product;
 
-    const existProduct = cartItems.find((item) => item.productOptionId === productOptionId);
+    const existingProduct = cartItems.find((item) => item.productOptionId === productOptionId);
 
-    if (!existProduct) {
+    if (!existingProduct) {
       const create = await fetch(API_CART_PATH, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json;' },
@@ -66,8 +66,8 @@ export const cartItemsByAccount = ({
       method: 'PUT',
       headers: { 'Content-Type': 'application/json;' },
       body: JSON.stringify({
-        itemId: existProduct.itemId,
-        updatedQuantity: existProduct?.quantity! + quantity,
+        itemId: existingProduct.itemId,
+        updatedQuantity: existingProduct?.quantity! + quantity,
       }),
     });
 
@@ -76,15 +76,16 @@ export const cartItemsByAccount = ({
 
       setCartItems(withUpdatedCartItem);
       setIsLoading(false);
+      return;
     }
   };
 
   //
 
   const removeItemFromCart = async (itemId: CartItem['productOptionId']) => {
-    const existItem = cartItems.find((item) => item.itemId === itemId);
+    const existingItem = cartItems.find((item) => item.itemId === itemId);
 
-    if (!existItem) {
+    if (!existingItem) {
       return;
     }
 
@@ -95,7 +96,7 @@ export const cartItemsByAccount = ({
       headers: { 'Content-Type': 'application/json;' },
       body: JSON.stringify({
         itemId,
-        quantity: existItem.quantity,
+        quantity: existingItem.quantity,
       }),
     });
 
