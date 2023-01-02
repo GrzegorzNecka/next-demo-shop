@@ -1,7 +1,6 @@
-import type { Dispatch, SetStateAction } from 'react';
 import { CartItem } from 'context/types';
 import { fetchedToCartItem } from 'utils/cart';
-
+import type { Dispatch, SetStateAction } from 'react';
 type cartItemsByAccountProps = {
   setCartItems: Dispatch<SetStateAction<CartItem[]>>;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
@@ -27,9 +26,9 @@ export const cartItemsByAccount = ({
     });
 
     if (cart.status === 200) {
-      const withFetchedCartItems = fetchedToCartItem(await cart.json())!;
+      const withFetchedCartItem = fetchedToCartItem(await cart.json())!;
 
-      setCartItems(withFetchedCartItems);
+      setCartItems(withFetchedCartItem);
       setIsLoading(false);
     }
     return;

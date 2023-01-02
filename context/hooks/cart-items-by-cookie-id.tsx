@@ -1,5 +1,5 @@
 import type { CartItem } from 'context/types';
-import { Dispatch, SetStateAction } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import { productToCartItem } from 'utils/cart';
 
 type cartItemsByCookieIdProps = {
@@ -22,7 +22,7 @@ export const cartItemsByCookieId = ({
   // -- CONTEXT HANDLERS
 
   const updateCartItems = async () => {
-    let result = await fetch(API_CART_PATH, {
+    const result = await fetch(API_CART_PATH, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json;' },
     });
@@ -41,7 +41,7 @@ export const cartItemsByCookieId = ({
     setIsLoading(true);
 
     const existCartItem = cartItems.find(
-      (item) => item.productOptionId === product.productOptionId,
+      (item?) => item.productOptionId === product.productOptionId,
     );
 
     // -- create new cartItem

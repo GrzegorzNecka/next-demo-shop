@@ -1,11 +1,9 @@
-import { FormState, UseFormHandleSubmit, UseFormRegister, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { UseMutateFunction, useMutation } from '@tanstack/react-query';
+import type { UseMutateFunction } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import FormInput from './form-input';
-import { AssertsShape } from 'yup/lib/object';
-import { RequiredStringSchema } from 'yup/lib/string';
-import { AnyObject } from 'yup/lib/types';
 
 const useAddToNewsletterMutation = () =>
   useMutation(['add-to-newsletter'], async ({ email, name }: { email: string; name: string }) => {
@@ -25,11 +23,6 @@ export const NewsletterForm = () => {
 };
 
 // -- types for NewsletterFormView
-
-type Shape = {
-  email: RequiredStringSchema<string | undefined, AnyObject>;
-  name: RequiredStringSchema<string | undefined, AnyObject>;
-};
 
 type NewsletterFormViewProps = {
   mutate: UseMutateFunction<

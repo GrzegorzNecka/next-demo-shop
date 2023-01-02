@@ -1,4 +1,4 @@
-import { CartItem } from 'context/types';
+import type { CartItem } from 'context/types';
 import { GetCartItemsByCartIdQuery } from 'graphQL/generated/graphql';
 
 export function productToCartItem(item: CartItem) {
