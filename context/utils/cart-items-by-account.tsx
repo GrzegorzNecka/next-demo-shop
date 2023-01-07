@@ -8,14 +8,14 @@ type cartItemsByAccountProps = {
   cartItems: CartItem[];
 };
 
+export const API_CART_PATH = '/api/cart/cart-items-by-account';
+
 export const cartItemsByAccount = ({
   setCartItems,
   setIsLoading,
   cartItems,
 }: cartItemsByAccountProps) => {
   //
-
-  const API_CART_PATH = '/api/cart/cart-items-by-account';
 
   // -- CONTEXT HANDLERS
 
@@ -108,23 +108,20 @@ export const cartItemsByAccount = ({
     }
   };
 
-  //
+  // -- clearCartItems
 
   const clearCartItems = async () => {
     setIsLoading(true);
 
-    const clear = await fetch(API_CART_PATH, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json;' },
-      body: JSON.stringify({
-        setEmpty: true,
-      }),
-    });
+    const withEmptyCart: CartItem[] = await handleClearCartItems();
 
-    if (clear.status === 200) {
-      setCartItems([]);
+    if (!withEmptyCart) {
       setIsLoading(false);
+      return;
     }
+
+    setCartItems(withEmptyCart);
+    setIsLoading(false);
   };
 
   return {
@@ -134,3 +131,33 @@ export const cartItemsByAccount = ({
     clearCartItems,
   } as const;
 };
+
+// HELPERS
+
+export async function handleClearCartItems() {
+  let emptyCartItems: Response;
+
+  try {
+    emptyCartItems = await fetch(API_CART_PATH, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json;' },
+      body: JSON.stringify({
+        setEmpty: true,
+      }),
+    });
+
+    if (emptyCartItems.status !== 200) {
+      throw new Error(`HTTP Response Code: ${emptyCartItems?.status}`);
+    }
+
+    const { cart } = await emptyCartItems.json();
+    return cart.cartItems;
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      console.log('There was a SyntaxError', error);
+    } else {
+      console.log(`There was a during call 'withEmptyCart' method`, error);
+    }
+    return null;
+  }
+}
