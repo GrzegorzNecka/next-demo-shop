@@ -135,10 +135,10 @@ export const cartItemsByAccount = ({
 // HELPERS
 
 export async function handleClearCartItems() {
-  let emptyCartItems: Response;
+  let emptyCart: Response;
 
   try {
-    emptyCartItems = await fetch(API_CART_PATH, {
+    emptyCart = await fetch(API_CART_PATH, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json;' },
       body: JSON.stringify({
@@ -146,17 +146,17 @@ export async function handleClearCartItems() {
       }),
     });
 
-    if (emptyCartItems.status !== 200) {
-      throw new Error(`HTTP Response Code: ${emptyCartItems?.status}`);
+    if (emptyCart.status !== 200) {
+      throw new Error(`HTTP Response Code: ${emptyCart?.status}`);
     }
 
-    const { cart } = await emptyCartItems.json();
+    const { cart } = await emptyCart.json();
     return cart.cartItems;
   } catch (error) {
     if (error instanceof SyntaxError) {
-      console.log('There was a SyntaxError', error);
+      console.error('There was a SyntaxError', error);
     } else {
-      console.log(`There was a during call 'withEmptyCart' method`, error);
+      console.error(`There was a during call 'withEmptyCart' method`, error);
     }
     return null;
   }
