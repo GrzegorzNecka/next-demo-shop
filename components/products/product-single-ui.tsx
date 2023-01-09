@@ -5,7 +5,7 @@ import ProductOption from 'components/products/product-options';
 
 import Markdown from 'components/markdown';
 import { useState } from 'react';
-import { AddToCartBtn } from './add-to-cart-btn';
+import { ButtonAddToCart as ButtonAddToCart } from './button-add-to-cart';
 
 export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
   const isProductOpiotns = data?.option.length > 1 ? true : false;
@@ -42,14 +42,14 @@ export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
 
             {isProductOpiotns && (
               <ProductOption
-                activeOption={activeProductOptionId}
-                updateOption={setActiveProductOptionId}
+                activeOptionId={activeProductOptionId}
+                updateOptionId={setActiveProductOptionId}
                 option={data.option}>
                 warianty
               </ProductOption>
             )}
 
-            <AddToCartBtn data={data} activeProductOptionId={activeProductOptionId} />
+            <ButtonAddToCart data={data} activeOptionId={activeProductOptionId} />
 
             <article className="">{<Markdown>{data.longDescription}</Markdown>}</article>
           </div>

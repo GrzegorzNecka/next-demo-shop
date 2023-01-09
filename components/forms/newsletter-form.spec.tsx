@@ -2,7 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { NewsletterFormView } from './newsletter-form';
 
-describe('NewsletterFormView', () => {
+describe('test NewsletterFormView component', () => {
   it('show sucess message when status === isSucess', () => {
     const mockMutate = jest.fn();
     const isLoading = false;
