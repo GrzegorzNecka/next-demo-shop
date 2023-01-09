@@ -1,13 +1,12 @@
 import type { NextApiHandler } from 'next/types';
 import { authApolloClient } from 'graphQL/apolloClient';
-import {
-  GetUnauthCartDocument,
+import type {
   GetUnauthCartQuery,
   GetUnauthCartQueryVariables,
-  UpdateUnauthCartByIdDocument,
   UpdateUnauthCartByIdMutation,
   UpdateUnauthCartByIdMutationVariables,
 } from 'graphQL/generated/graphql';
+import { GetUnauthCartDocument, UpdateUnauthCartByIdDocument } from 'graphQL/generated/graphql';
 import { getCookieCartId } from 'services/cookies/get-cookie-cart-id';
 
 const handleCartSession: NextApiHandler = async (req, res) => {

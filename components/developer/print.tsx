@@ -1,3 +1,3 @@
-export const Print = (data: any) => {
-    return <pre>{JSON.stringify(data, null, 2)}</pre>;
+export const Print = (data: unknown) => {
+  return <pre>{JSON.stringify(data, null, 2)}</pre>;
 };
