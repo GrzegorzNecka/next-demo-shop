@@ -1,9 +1,10 @@
-import NextAuth, { Account } from 'next-auth';
-import type { NextAuthOptions } from 'next-auth';
+import NextAuth from 'next-auth';
+import type { NextAuthOptions, Account } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import * as bcrypt from 'bcrypt';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { CookieValueTypes, getCookie } from 'cookies-next';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import type { CookieValueTypes } from 'cookies-next';
+import { getCookie } from 'cookies-next';
 import {
   accountByEmailQuery,
   getCartIdByAccountIdQuery,
@@ -104,24 +105,19 @@ const handleSignIn = async ({ account }: handleSignInProps, cookieCartId: Cookie
         });
       }
 
-      if (!!repeatedItem) {
-        type RepeatedItem = typeof repeatedItem;
-
-        function countQuantity(repeatedItem: RepeatedItem) {
-          // check total quantity of store
-          // if quatnity >= total return total
-          const total = repeatedItem.option?.total;
-          let quantity = repeatedItem.quantity + item.quantity;
-          if (total) {
-            quantity = quantity >= total ? total : quantity;
-          }
-          return quantity;
+      if (repeatedItem) {
+        // check total quantity of store
+        // if quatnity >= total return total
+        const total = repeatedItem.option?.total;
+        let quantity = repeatedItem.quantity + item.quantity;
+        if (total) {
+          quantity = quantity >= total ? total : quantity;
         }
 
         const increaseCartItemsByAccount = await updateItemQuantityByCartIdMutation({
           cartId,
           itemId: repeatedItem.id,
-          quantity: countQuantity(repeatedItem),
+          quantity,
         });
       }
     });

@@ -1,11 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { apolloClient, authApolloClient } from 'graphQL/apolloClient';
-import {
-  GetCounterDocument,
-  UpdateCounterDocument,
+import type {
   UpdateCounterMutation,
   UpdateCounterMutationVariables,
 } from 'graphQL/generated/graphql';
+import { GetCounterDocument, UpdateCounterDocument } from 'graphQL/generated/graphql';
 import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
 const handle: NextApiHandler = async (req, res) => {
