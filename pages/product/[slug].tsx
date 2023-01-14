@@ -1,15 +1,15 @@
 import { Main } from 'components/main';
 import { ProductSingleUI } from 'components/products/product-single-ui';
 import { apolloClient } from 'graphQL/apolloClient';
-import {
-  GetProductBySlugDocument,
+import type {
   GetProductBySlugQuery,
   GetProductBySlugQueryVariables,
-  GetProductsSlugsDocument,
   GetProductsSlugsQuery,
 } from 'graphQL/generated/graphql';
+import { GetProductBySlugDocument, GetProductsSlugsDocument } from 'graphQL/generated/graphql';
 
-import { GetStaticPathsResult, GetStaticPropsResult, InferGetStaticPropsType } from 'next';
+import type { InferGetStaticPropsType } from 'next';
+import { GetStaticPathsResult, GetStaticPropsResult } from 'next';
 import { serialize } from 'next-mdx-remote/serialize';
 import type { InferGetStaticPathsType } from 'types/types';
 import { changeToCurrency, moveTheComa } from 'utils/currency';

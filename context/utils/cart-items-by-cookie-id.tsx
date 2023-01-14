@@ -1,5 +1,5 @@
 import type { CartItem } from 'context/types';
-import { Dispatch, SetStateAction } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import { productToCartItem } from 'utils/cart';
 
 type cartItemsByCookieIdProps = {
@@ -22,7 +22,7 @@ export const cartItemsByCookieId = ({
   // -- CONTEXT HANDLERS
 
   const updateCartItems = async () => {
-    let result = await fetch(API_CART_PATH, {
+    const result = await fetch(API_CART_PATH, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json;' },
     });
@@ -31,9 +31,9 @@ export const cartItemsByCookieId = ({
       return;
     }
 
-    const { cartItems }: { cartItems: CartItem[] } = await result.json();
+    const { cartItems: withFetchedCartItems }: { cartItems: CartItem[] } = await result.json();
 
-    setCartItems(cartItems);
+    setCartItems(withFetchedCartItems);
     setIsLoading(false);
   };
 
@@ -41,7 +41,7 @@ export const cartItemsByCookieId = ({
     setIsLoading(true);
 
     const existCartItem = cartItems.find(
-      (item) => item.productOptionId === product.productOptionId,
+      (item?) => item.productOptionId === product.productOptionId,
     );
 
     // -- create new cartItem
@@ -50,9 +50,9 @@ export const cartItemsByCookieId = ({
       const create = await updateCart(cookieCartId, [...cartItems, productToCartItem(product)]);
 
       if (create.status === 200) {
-        const { cartItems }: { cartItems: CartItem[] } = await create.json();
+        const { cartItems: withUpdatedCartItem }: { cartItems: CartItem[] } = await create.json();
 
-        setCartItems(cartItems!);
+        setCartItems(withUpdatedCartItem!);
         setIsLoading(false);
       }
       return;

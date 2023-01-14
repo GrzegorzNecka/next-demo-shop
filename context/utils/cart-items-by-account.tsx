@@ -1,7 +1,6 @@
+import type { CartItem } from 'context/types';
+import { fetchedToCartItem } from 'utils/cart';
 import type { Dispatch, SetStateAction } from 'react';
-import { CartItem } from 'context/types';
-import { fetchDataToCartItem } from 'utils/cart';
-
 type cartItemsByAccountProps = {
   setCartItems: Dispatch<SetStateAction<CartItem[]>>;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
@@ -9,14 +8,14 @@ type cartItemsByAccountProps = {
   cartItems: CartItem[];
 };
 
+export const API_CART_PATH = '/api/cart/cart-items-by-account';
+
 export const cartItemsByAccount = ({
   setCartItems,
   setIsLoading,
   cartItems,
 }: cartItemsByAccountProps) => {
   //
-
-  const API_CART_PATH = '/api/cart/cart-items-by-account';
 
   // -- CONTEXT HANDLERS
 
@@ -27,9 +26,9 @@ export const cartItemsByAccount = ({
     });
 
     if (cart.status === 200) {
-      const getCartItems = await cart.json();
+      const withFetchedCartItem = fetchedToCartItem(await cart.json())!;
 
-      setCartItems(fetchDataToCartItem(getCartItems)!);
+      setCartItems(withFetchedCartItem);
       setIsLoading(false);
     }
     return;
@@ -42,9 +41,9 @@ export const cartItemsByAccount = ({
 
     const { productOptionId, quantity } = product;
 
-    const existProduct = cartItems.find((item) => item.productOptionId === productOptionId);
+    const existingProduct = cartItems.find((item) => item.productOptionId === productOptionId);
 
-    if (!existProduct) {
+    if (!existingProduct) {
       const create = await fetch(API_CART_PATH, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json;' },
@@ -55,9 +54,8 @@ export const cartItemsByAccount = ({
       });
 
       if (create.status === 200) {
-        const updateCartItems = await create.json();
-
-        setCartItems(fetchDataToCartItem(updateCartItems)!);
+        const withNewCartItem = fetchedToCartItem(await create.json())!;
+        setCartItems(withNewCartItem);
         setIsLoading(false);
       }
 
@@ -68,25 +66,26 @@ export const cartItemsByAccount = ({
       method: 'PUT',
       headers: { 'Content-Type': 'application/json;' },
       body: JSON.stringify({
-        itemId: existProduct.itemId,
-        updatedQuantity: existProduct?.quantity! + quantity,
+        itemId: existingProduct.itemId,
+        updatedQuantity: existingProduct?.quantity! + quantity,
       }),
     });
 
     if (update.status === 200) {
-      const updateCartItems = await update.json();
+      const withUpdatedCartItem = fetchedToCartItem(await update.json())!;
 
-      setCartItems(fetchDataToCartItem(updateCartItems)!);
+      setCartItems(withUpdatedCartItem);
       setIsLoading(false);
+      return;
     }
   };
 
   //
 
   const removeItemFromCart = async (itemId: CartItem['productOptionId']) => {
-    const existItem = cartItems.find((item) => item.itemId === itemId);
+    const existingItem = cartItems.find((item) => item.itemId === itemId);
 
-    if (!existItem) {
+    if (!existingItem) {
       return;
     }
 
@@ -97,35 +96,32 @@ export const cartItemsByAccount = ({
       headers: { 'Content-Type': 'application/json;' },
       body: JSON.stringify({
         itemId,
-        quantity: existItem.quantity,
+        quantity: existingItem.quantity,
       }),
     });
 
     if (remove.status === 200) {
-      const updateCartItems = await remove.json();
+      const withRemovedCartItem = fetchedToCartItem(await remove.json())!;
 
-      setCartItems(fetchDataToCartItem(updateCartItems)!);
+      setCartItems(withRemovedCartItem);
       setIsLoading(false);
     }
   };
 
-  //
+  // -- clearCartItems
 
   const clearCartItems = async () => {
     setIsLoading(true);
 
-    const clear = await fetch(API_CART_PATH, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json;' },
-      body: JSON.stringify({
-        setEmpty: true,
-      }),
-    });
+    const withEmptyCart: CartItem[] = await handleClearCartItems();
 
-    if (clear.status === 200) {
-      setCartItems([]);
+    if (!withEmptyCart) {
       setIsLoading(false);
+      return;
     }
+
+    setCartItems(withEmptyCart);
+    setIsLoading(false);
   };
 
   return {
@@ -135,3 +131,33 @@ export const cartItemsByAccount = ({
     clearCartItems,
   } as const;
 };
+
+// HELPERS
+
+export async function handleClearCartItems() {
+  let emptyCart: Response;
+
+  try {
+    emptyCart = await fetch(API_CART_PATH, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json;' },
+      body: JSON.stringify({
+        setEmpty: true,
+      }),
+    });
+
+    if (emptyCart.status !== 200) {
+      throw new Error(`HTTP Response Code: ${emptyCart?.status}`);
+    }
+
+    const { cart } = await emptyCart.json();
+    return cart.cartItems;
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      console.error('There was a SyntaxError', error);
+    } else {
+      console.error(`There was a during call 'withEmptyCart' method`, error);
+    }
+    return null;
+  }
+}

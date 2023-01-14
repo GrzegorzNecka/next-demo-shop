@@ -1,5 +1,6 @@
 import type { NextApiHandler } from 'next/types';
-import { CookieValueTypes, getCookie, hasCookie, setCookie } from 'cookies-next';
+import type { CookieValueTypes } from 'cookies-next';
+
 import { getCookieCartId } from 'services/cookies/get-cookie-cart-id';
 
 interface Response {

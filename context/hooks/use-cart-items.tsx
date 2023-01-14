@@ -1,8 +1,8 @@
 import type { CartItem } from 'context/types';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { cartItemsByAccount } from './cart-items-by-account';
-import { cartItemsByCookieId } from './cart-items-by-cookie-id';
+import { cartItemsByAccount } from 'context/utils/cart-items-by-account';
+import { cartItemsByCookieId } from 'context/utils/cart-items-by-cookie-id';
 import { useQuery } from '@tanstack/react-query';
 
 export const useCartItems = () => {
@@ -11,7 +11,7 @@ export const useCartItems = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { status } = useSession();
 
-  const { data: cookie } = useQuery({
+  const { data: cookie }: { data: { id: string } | undefined } = useQuery({
     queryKey: ['cookieCartId'],
     queryFn: async () => {
       const res = await fetch('/api/cart/cookies/create-id', {
@@ -25,20 +25,20 @@ export const useCartItems = () => {
     enabled: status === 'unauthenticated' ? true : false,
   });
 
-  const auth = cartItemsByAccount({
+  const byAccount = cartItemsByAccount({
     setCartItems,
     setIsLoading,
     cartItems,
   });
 
-  const unauth = cartItemsByCookieId({
+  const byCookieId = cartItemsByCookieId({
     setCartItems,
     setIsLoading,
-    cookieCartId: cookie?.id,
+    cookieCartId: cookie?.id!,
     cartItems,
   });
 
-  const methods = status === 'authenticated' ? auth : unauth;
+  const methods = status === 'authenticated' ? byAccount : byCookieId;
 
   useEffect(() => {
     methods.updateCartItems();

@@ -1,5 +1,7 @@
-import { Option } from 'graphQL/generated/graphql';
-import { MarkdownResult, ValueOf } from 'types/types';
+import type { CartState } from 'context/types';
+import type { Option } from 'graphQL/generated/graphql';
+import type { MarkdownResult } from 'types/types';
+// import { ValueOf } from 'types/types';
 
 export type ProductOption = Pick<Option, 'color' | 'size' | '__typename' | 'id' | 'total'>;
 export type ProductOptionList = Pick<Option, 'id'>;
@@ -32,4 +34,17 @@ export interface ProductListItems extends ProductProps {
 
 export interface ProductListItemProps {
   data: ProductListItems;
+}
+
+//--- AddToCartBtn Component
+
+export interface ButtonAddToCartViewProps {
+  readonly cartState: CartState;
+  readonly product: ProductDetails;
+  readonly activeOptionId: string;
+}
+
+export interface ButtonAddToCartProps {
+  readonly data: ProductDetails;
+  readonly activeOptionId: string;
 }
