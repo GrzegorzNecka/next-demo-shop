@@ -7,27 +7,15 @@ import type { ButtonAddToCartProps, ButtonAddToCartViewProps } from './types';
 
 export const ButtonAddToCart = ({ data, activeOptionId }: ButtonAddToCartProps) => {
   const cartState = useCartState();
-
-  return (
-    <ButtonAddToCartView cartState={cartState} product={data} activeOptionId={activeOptionId} />
-  );
-};
-
-// -- PREZENTATION
-
-export const ButtonAddToCartView = ({
-  cartState,
-  product,
-  activeOptionId,
-}: ButtonAddToCartViewProps) => {
-  //
-
+  
   const [quantity, setQuantity] = useState<number>(1);
   const [availableQuantity, setAvailableQuantity] = useState<number>(0);
 
   const [activeOption] = useMemo(() => {
-    return product.option.filter((option) => option.id === activeOptionId);
-  }, [product.option, activeOptionId]);
+
+    return data.option.filter((option) => option.id === activeOptionId);
+  }, [data.option, activeOptionId]);
+
 
   const cartItemOption = useMemo(() => {
     return cartState.items.find((item) => item.productOptionId === activeOptionId);
@@ -41,6 +29,32 @@ export const ButtonAddToCartView = ({
 
     setAvailableQuantity(activeOption.total);
   }, [cartItemOption, activeOption]);
+
+
+  return (
+    <ButtonAddToCartView
+      cartState={cartState}
+      product={data}
+      activeOptionId={activeOptionId}
+      quantity={quantity}
+      setQuantity={setQuantity}
+      availableQuantity={availableQuantity}
+    />
+  );
+};
+
+// -- PREZENTATION
+
+export const ButtonAddToCartView = ({
+  cartState,
+  product,
+  activeOptionId,
+  quantity,
+  setQuantity,
+  availableQuantity,
+}: ButtonAddToCartViewProps) => {
+  //
+
 
   const handleOnClick = () => {
     const newCartItem = {

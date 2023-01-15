@@ -42,6 +42,10 @@ export interface ButtonAddToCartViewProps {
   readonly cartState: CartState;
   readonly product: ProductDetails;
   readonly activeOptionId: string;
+  readonly quantity: number;
+  readonly setQuantity: React.Dispatch<React.SetStateAction<number>>;
+  readonly availableQuantity: number;
+
 }
 
 export interface ButtonAddToCartProps {

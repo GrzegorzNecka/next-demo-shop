@@ -10,7 +10,7 @@ describe('test "handleClearCartItems"  method', () => {
 
   const mockSuccessResponse = { cart: { cartItems: [] } };
 
-  it(`remove all cartItems and return empty array`, async () => {
+  it(`if remove all cartItems, return empty array`, async () => {
     fetch.mockResponseOnce(JSON.stringify(mockSuccessResponse), { status: 200 });
     const withEmptyCart = await handleClearCartItems();
 
@@ -18,7 +18,7 @@ describe('test "handleClearCartItems"  method', () => {
     expect(fetch).toHaveBeenCalledTimes(1);
   });
 
-  it(`when connection with network is off`, async () => {
+  it(`if network is disconnect, return null `, async () => {
     fetch.mockResponseOnce(JSON.stringify(mockSuccessResponse), { status: 500 });
     const withEmptyCart: CartItem[] = await handleClearCartItems();
 
@@ -41,7 +41,7 @@ describe('test "clearCartItems"  method', () => {
 
   const mockSuccessResponse = { cart: { cartItems: [] } };
 
-  it(`remove all cartItems and return empty array`, async () => {
+  it(`if remove all cartItems, return empty array`, async () => {
     fetch.mockResponseOnce(JSON.stringify(mockSuccessResponse), { status: 200 });
 
     setIsLoading(true);
@@ -65,7 +65,7 @@ describe('test "clearCartItems"  method', () => {
     expect(setIsLoading).toHaveBeenCalledTimes(2);
   });
 
-  it(`withEmptyCart request to API return status 500`, async () => {
+  it(`if status === 500, return null`, async () => {
     fetch.mockResponseOnce(JSON.stringify(mockSuccessResponse), { status: 500 });
 
     setIsLoading(true);
