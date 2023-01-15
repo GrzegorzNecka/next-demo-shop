@@ -9,6 +9,8 @@ import { useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import { CartOptions } from 'components/cart/cart-product-options';
 import { useSession } from 'next-auth/react';
+import { loadStripe } from '@stripe/stripe-js';
+import type Stripe from 'stripe';
 // import Stripe from "stripe";
 
 interface CartContentProps {
@@ -79,49 +81,48 @@ const CartContent = ({ targetButton, setTargetButton }: CartContentProps) => {
   );
 };
 
-// const stripeSecret = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+const stripeSecret = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
 
 const CartSummary = () => {
   const cartState = useCartState();
   const { status } = useSession();
 
-  // if (!stripeSecret) {
-  //     return <div></div>;
-  // }
+  if (!stripeSecret) {
+    return <div></div>;
+  }
 
-  // const stripePromise = loadStripe(stripeSecret);
+  const stripePromise = loadStripe(stripeSecret);
 
-  // const pay = async () => {
-  //     const stripe = await stripePromise;
+  const pay = async () => {
+    const stripe = await stripePromise;
 
-  //     if (!stripe) {
-  //         throw new Error("something went wrong");
-  //     }
+    if (!stripe) {
+      throw new Error('something went wrong');
+    }
 
-  //     const res = await fetch("/api/checkout/stripe/create", {
-  //         method: "POST",
-  //         headers: { "Content-Type": "application/json;" },
-  //         body: JSON.stringify(
-  //             cartState.items.map((cartItem) => {
-  //                 return {
-  //                     slug: cartItem.slug,
-  //                     count: cartItem.count,
-  //                 };
-  //             })
-  //         ),
-  //     });
+    const res = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json;' },
+      body: JSON.stringify(
+        cartState.items.map((cartItem) => {
+          return {
+            slug: cartItem.slug,
+            count: cartItem.quantity,
+          };
+        }),
+      ),
+    });
 
-  //     const { session }: { session: Stripe.Response<Stripe.Checkout.Session> } = await res.json();
+    const { session }: { session: Stripe.Response<Stripe.Checkout.Session> } = await res.json();
 
-  //     await stripe.redirectToCheckout({ sessionId: session.id });
-  // };
+    await stripe.redirectToCheckout({ sessionId: session.id });
+  };
 
   return (
     <div>
       <h2 className="pb-2 font-bold text-lg  divide-gray-200">Podsumowanie koszyka</h2>
       <div>Liczba elementów: {cartState.items.length}</div>
-      {/* <div>Łączna Liczba wszystkich elementów: {cartState.totalCount}</div>
-            <div className="pt-2">Suma: {changeToCurrency(moveTheComa(cartState.totalPrice))}</div> */}
+
       <div className="mt-4">
         <button
           onClick={() => {
@@ -134,10 +135,7 @@ const CartSummary = () => {
       </div>
       <div className="mt-4">
         {status === 'authenticated' ? (
-          <button
-            // onClick={pay}
-            type="button"
-            className="w-full btn-custom-primary">
+          <button onClick={pay} type="button" className="w-full btn-custom-primary">
             złóż zmówienie
           </button>
         ) : (
