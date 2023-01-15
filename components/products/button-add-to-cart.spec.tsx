@@ -4,6 +4,7 @@ import { ButtonAddToCartView } from './button-add-to-cart';
 import type { ProductDetails } from './types';
 import type { CartItem } from 'context/types';
 
+
 const data = {
   id: 'ckdu44mn40gxh010405uwgbtw',
   title: 'Unisex Long Sleeve Tee',
@@ -47,6 +48,7 @@ describe('click add to cart button', () => {
   let availableQuantity = data?.option?.at(0)?.total!;
 
   const addItemToCartMock = jest.fn((product: CartItem) => {
+
     const { productOptionId, quantity } = product;
 
     const existingProduct = cartItems.find((item) => {
@@ -69,6 +71,7 @@ describe('click add to cart button', () => {
       existingProduct.quantity = existingProduct.quantity + quantity;
     }
 
+
     availableQuantity = availableQuantity - quantity;
   });
 
@@ -77,11 +80,13 @@ describe('click add to cart button', () => {
   const cartState = {
     items: cartItems,
     addItemToCart: addItemToCartMock,
+
     removeItemFromCart: jest.fn(),
     clearCartItems: jest.fn(),
     total: 0,
     isLoading: false,
   };
+
 
   it('if cartItems is empty and fire event to add new product, cartItems length will be increase and availableQuantity will decrease', async () => {
     render(
@@ -93,9 +98,11 @@ describe('click add to cart button', () => {
         setQuantity={jest.fn()}
         availableQuantity={availableQuantity}
       />,
+
     );
 
     const addToCartBtn = screen.getByRole('button', { name: /dodaj do koszyka/i });
+
 
     const { getByText } = within(screen.getByTestId('available-total'));
     expect(getByText('11')).toBeInTheDocument();
@@ -125,9 +132,11 @@ describe('click add to cart button', () => {
         setQuantity={jest.fn()}
         availableQuantity={availableQuantity}
       />,
+
     );
 
     const addToCartBtn = screen.getByRole('button', { name: /dodaj do koszyka/i });
+
 
     const { getByText } = within(screen.getByTestId('available-total'));
     expect(getByText('10')).toBeInTheDocument();
@@ -188,5 +197,6 @@ describe('click add to cart button', () => {
     );
 
     expect(getByText('19')).toBeInTheDocument();
+
   });
 });

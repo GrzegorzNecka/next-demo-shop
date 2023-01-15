@@ -7,12 +7,15 @@ import type { ButtonAddToCartProps, ButtonAddToCartViewProps } from './types';
 
 export const ButtonAddToCart = ({ data, activeOptionId }: ButtonAddToCartProps) => {
   const cartState = useCartState();
+  
   const [quantity, setQuantity] = useState<number>(1);
   const [availableQuantity, setAvailableQuantity] = useState<number>(0);
 
   const [activeOption] = useMemo(() => {
+
     return data.option.filter((option) => option.id === activeOptionId);
   }, [data.option, activeOptionId]);
+
 
   const cartItemOption = useMemo(() => {
     return cartState.items.find((item) => item.productOptionId === activeOptionId);
@@ -26,6 +29,7 @@ export const ButtonAddToCart = ({ data, activeOptionId }: ButtonAddToCartProps) 
 
     setAvailableQuantity(activeOption.total);
   }, [cartItemOption, activeOption]);
+
 
   return (
     <ButtonAddToCartView
@@ -50,6 +54,7 @@ export const ButtonAddToCartView = ({
   availableQuantity,
 }: ButtonAddToCartViewProps) => {
   //
+
 
   const handleOnClick = () => {
     const newCartItem = {
