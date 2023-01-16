@@ -1,11 +1,17 @@
 import type { NextApiHandler } from 'next/types';
 import { createCheckout } from 'services/stripe/checkout/create';
 
+export type CheckoutPayload = {
+    slug: string;
+    productOptionId: string;
+    quantity: number;
+}[];
+
 const checkoutHandler: NextApiHandler = async (req, res) => {
     switch (req.method) {
         case 'POST': {
             try {
-                const payload = await JSON.parse(req.body);
+                const payload: CheckoutPayload = await JSON.parse(req.body);
                 const session = await createCheckout(payload);
 
                 res.status(200).json({ status: 'created', session });

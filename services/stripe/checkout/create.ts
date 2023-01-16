@@ -4,15 +4,10 @@ import type {
     GetProductBySlugQueryVariables,
 } from 'graphQL/generated/graphql';
 import { GetProductBySlugDocument } from 'graphQL/generated/graphql';
+import type { CheckoutPayload } from 'pages/api/checkout';
 import Stripe from 'stripe';
 
-type RequestBody = {
-    slug: string;
-    productOptionId: string;
-    quantity: number;
-}[];
-
-export const createCheckout = async (payload: RequestBody) => {
+export const createCheckout = async (payload: CheckoutPayload) => {
     const stripeKey = process.env.STRIPE_SECRET_KEY;
 
     if (!stripeKey) {
@@ -39,7 +34,7 @@ export const createCheckout = async (payload: RequestBody) => {
         }),
     );
 
-    const lineItems = products.map((item) => {
+    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = products.map((item) => {
         return {
             adjustable_quantity: {
                 enabled: true,
@@ -53,24 +48,26 @@ export const createCheckout = async (payload: RequestBody) => {
                     name: item.product!.name,
                     description: `color: ${item.option?.color}, size: ${item.option?.size}`,
                     images: item.product!.images.map((i) => i.url),
-                    // metadata: {
-                    //   slug: item.product!.slug,
-                    //   id: item.option?.id,
-                    // },
+                    metadata: {
+                        slug: item.product!.slug,
+                        id: item.option!.id,
+                    },
                 },
             },
             quantity: item.quantity,
         };
     });
 
-    const session = await stripe.checkout.sessions.create({
+    const paymentObject: Stripe.Checkout.SessionCreateParams = {
+        mode: 'payment',
         locale: 'pl',
         payment_method_types: ['p24', 'card'],
         success_url: `${process.env.NEXT_PUBLIC_HOST}/checkout/success?success=true`,
         cancel_url: `${process.env.NEXT_PUBLIC_HOST}/checkout/cancel?canceled=true`,
         line_items: lineItems,
-        mode: 'payment',
-    });
+    };
+
+    const session = await stripe.checkout.sessions.create(paymentObject);
 
     return session;
 };
