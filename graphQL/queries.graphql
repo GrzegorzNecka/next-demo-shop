@@ -243,3 +243,9 @@ mutation UpdateStripeCheckoutStatus($stripeCheckoutId: String!, $stripeCheckoutS
         }
     }
 }
+
+mutation CreateEmptyOrder {
+    createOrder(data: {}) {
+        id
+    }
+}

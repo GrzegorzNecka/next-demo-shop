@@ -1,12 +1,13 @@
-import { CookieValueTypes, getCookie, hasCookie, setCookie } from "cookies-next";
-import { authApolloClient } from "graphQL/apolloClient";
-import {
-    CreateUnAuthCartDocument,
+import type { CookieValueTypes } from 'cookies-next';
+import { getCookie, hasCookie, setCookie } from 'cookies-next';
+import { authApolloClient } from 'graphQL/apolloClient';
+import type {
     CreateUnAuthCartMutation,
     CreateUnAuthCartMutationVariables,
-} from "graphQL/generated/graphql";
+} from 'graphQL/generated/graphql';
+import { CreateUnAuthCartDocument } from 'graphQL/generated/graphql';
 
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 interface Response {
     readonly message?: string;
@@ -18,7 +19,10 @@ async function getCookieCartId(req: NextApiRequest, res: NextApiResponse<Respons
 
     if (!isCookie) {
         //-
-        const cart = await authApolloClient.mutate<CreateUnAuthCartMutation, CreateUnAuthCartMutationVariables>({
+        const cart = await authApolloClient.mutate<
+            CreateUnAuthCartMutation,
+            CreateUnAuthCartMutationVariables
+        >({
             mutation: CreateUnAuthCartDocument,
         });
 
@@ -27,13 +31,13 @@ async function getCookieCartId(req: NextApiRequest, res: NextApiResponse<Respons
         const id = cart.data?.createUnauthCart?.id;
 
         if (!id) {
-            res.status(500).json({ message: "problem with server (hygraph) connecting" });
+            res.status(500).json({ message: 'problem with server (hygraph) connecting' });
         }
 
         setCookie(`${process.env.NEXT_PUBLIC_COOKIE_CART_ID}`, id, {
             httpOnly: true,
             secure: true,
-            sameSite: "lax",
+            sameSite: 'lax',
             req,
             res,
             // maxAge: 60 * 60 * 24,

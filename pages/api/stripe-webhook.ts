@@ -72,11 +72,8 @@ const checkoutHandler: NextApiHandler = async (req, res) => {
             console.log(`Unhandled event type ${event.type}.`);
     }
 
-    // res.status(200).end;
-    console.log('res 200');
     res.status(200).json({ received: true });
     return;
-    // res.status(200).json({ received: true });
 };
 
 export default checkoutHandler;

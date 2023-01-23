@@ -6597,6 +6597,7 @@ export type OptionConnection = {
 
 export type OptionCreateInput = {
   readonly cl9shfkzq1zk301t879hz487t?: InputMaybe<CartItemCreateManyInlineInput>;
+  readonly cld8y7xd907ii01upgg80869c?: InputMaybe<OrderItemCreateManyInlineInput>;
   /** color input for default locale (en) */
   readonly color?: InputMaybe<ProductColor>;
   readonly createdAt?: InputMaybe<Scalars['DateTime']>;
@@ -6792,6 +6793,7 @@ export enum OptionOrderByInput {
 
 export type OptionUpdateInput = {
   readonly cl9shfkzq1zk301t879hz487t?: InputMaybe<CartItemUpdateManyInlineInput>;
+  readonly cld8y7xd907ii01upgg80869c?: InputMaybe<OrderItemUpdateManyInlineInput>;
   /** color input for default locale (en) */
   readonly color?: InputMaybe<ProductColor>;
   /** Manage document localizations */
@@ -7082,7 +7084,7 @@ export type Order = Node & {
   readonly createdBy?: Maybe<User>;
   /** Get the document in other stages */
   readonly documentInStages: ReadonlyArray<Order>;
-  readonly email: Scalars['String'];
+  readonly email?: Maybe<Scalars['String']>;
   /** List of Order versions */
   readonly history: ReadonlyArray<Version>;
   /** The unique identifier */
@@ -7095,8 +7097,9 @@ export type Order = Node & {
   readonly scheduledIn: ReadonlyArray<ScheduledOperation>;
   /** System stage field */
   readonly stage: Stage;
-  readonly stripeCheckoutId: Scalars['String'];
-  readonly total: Scalars['Int'];
+  readonly stripeCheckoutId?: Maybe<Scalars['String']>;
+  readonly stripePaymentIntentStatus?: Maybe<Scalars['String']>;
+  readonly total?: Maybe<Scalars['Int']>;
   /** The time the document was updated */
   readonly updatedAt: Scalars['DateTime'];
   /** User that last updated this document */
@@ -7180,10 +7183,11 @@ export type OrderConnection = {
 export type OrderCreateInput = {
   readonly cl7np0f7e2mea01up0sutgji6?: InputMaybe<AccountCreateManyInlineInput>;
   readonly createdAt?: InputMaybe<Scalars['DateTime']>;
-  readonly email: Scalars['String'];
+  readonly email?: InputMaybe<Scalars['String']>;
   readonly orderItems?: InputMaybe<OrderItemCreateManyInlineInput>;
-  readonly stripeCheckoutId: Scalars['String'];
-  readonly total: Scalars['Int'];
+  readonly stripeCheckoutId?: InputMaybe<Scalars['String']>;
+  readonly stripePaymentIntentStatus?: InputMaybe<Scalars['String']>;
+  readonly total?: InputMaybe<Scalars['Int']>;
   readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
@@ -7222,8 +7226,9 @@ export type OrderItem = Node & {
   readonly history: ReadonlyArray<Version>;
   /** The unique identifier */
   readonly id: Scalars['ID'];
+  readonly option?: Maybe<Option>;
   readonly order?: Maybe<Order>;
-  readonly product?: Maybe<Product>;
+  readonly price?: Maybe<Scalars['Int']>;
   /** The time the document was published. Null on documents in draft stage. */
   readonly publishedAt?: Maybe<Scalars['DateTime']>;
   /** User that last published this document */
@@ -7232,7 +7237,6 @@ export type OrderItem = Node & {
   readonly scheduledIn: ReadonlyArray<ScheduledOperation>;
   /** System stage field */
   readonly stage: Stage;
-  readonly total: Scalars['Int'];
   /** The time the document was updated */
   readonly updatedAt: Scalars['DateTime'];
   /** User that last updated this document */
@@ -7260,13 +7264,13 @@ export type OrderItemHistoryArgs = {
 };
 
 
-export type OrderItemOrderArgs = {
+export type OrderItemOptionArgs = {
   forceParentLocale?: InputMaybe<Scalars['Boolean']>;
   locales?: InputMaybe<ReadonlyArray<Locale>>;
 };
 
 
-export type OrderItemProductArgs = {
+export type OrderItemOrderArgs = {
   forceParentLocale?: InputMaybe<Scalars['Boolean']>;
   locales?: InputMaybe<ReadonlyArray<Locale>>;
 };
@@ -7314,10 +7318,10 @@ export type OrderItemConnection = {
 
 export type OrderItemCreateInput = {
   readonly createdAt?: InputMaybe<Scalars['DateTime']>;
+  readonly option?: InputMaybe<OptionCreateOneInlineInput>;
   readonly order?: InputMaybe<OrderCreateOneInlineInput>;
-  readonly product?: InputMaybe<ProductCreateOneInlineInput>;
+  readonly price?: InputMaybe<Scalars['Int']>;
   readonly quantity: Scalars['Int'];
-  readonly total: Scalars['Int'];
   readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
@@ -7392,8 +7396,23 @@ export type OrderItemManyWhereInput = {
   readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
   /** All values starting with the given string. */
   readonly id_starts_with?: InputMaybe<Scalars['ID']>;
+  readonly option?: InputMaybe<OptionWhereInput>;
   readonly order?: InputMaybe<OrderWhereInput>;
-  readonly product?: InputMaybe<ProductWhereInput>;
+  readonly price?: InputMaybe<Scalars['Int']>;
+  /** All values greater than the given value. */
+  readonly price_gt?: InputMaybe<Scalars['Int']>;
+  /** All values greater than or equal the given value. */
+  readonly price_gte?: InputMaybe<Scalars['Int']>;
+  /** All values that are contained in given list. */
+  readonly price_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
+  /** All values less than the given value. */
+  readonly price_lt?: InputMaybe<Scalars['Int']>;
+  /** All values less than or equal the given value. */
+  readonly price_lte?: InputMaybe<Scalars['Int']>;
+  /** All values that are not equal to given value. */
+  readonly price_not?: InputMaybe<Scalars['Int']>;
+  /** All values that are not contained in given list. */
+  readonly price_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
   readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -7428,21 +7447,6 @@ export type OrderItemManyWhereInput = {
   readonly scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
   readonly scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
   readonly scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly total?: InputMaybe<Scalars['Int']>;
-  /** All values greater than the given value. */
-  readonly total_gt?: InputMaybe<Scalars['Int']>;
-  /** All values greater than or equal the given value. */
-  readonly total_gte?: InputMaybe<Scalars['Int']>;
-  /** All values that are contained in given list. */
-  readonly total_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
-  /** All values less than the given value. */
-  readonly total_lt?: InputMaybe<Scalars['Int']>;
-  /** All values less than or equal the given value. */
-  readonly total_lte?: InputMaybe<Scalars['Int']>;
-  /** All values that are not equal to given value. */
-  readonly total_not?: InputMaybe<Scalars['Int']>;
-  /** All values that are not contained in given list. */
-  readonly total_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
   readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -7466,21 +7470,21 @@ export enum OrderItemOrderByInput {
   CreatedAtDesc = 'createdAt_DESC',
   IdAsc = 'id_ASC',
   IdDesc = 'id_DESC',
+  PriceAsc = 'price_ASC',
+  PriceDesc = 'price_DESC',
   PublishedAtAsc = 'publishedAt_ASC',
   PublishedAtDesc = 'publishedAt_DESC',
   QuantityAsc = 'quantity_ASC',
   QuantityDesc = 'quantity_DESC',
-  TotalAsc = 'total_ASC',
-  TotalDesc = 'total_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
   UpdatedAtDesc = 'updatedAt_DESC'
 }
 
 export type OrderItemUpdateInput = {
+  readonly option?: InputMaybe<OptionUpdateOneInlineInput>;
   readonly order?: InputMaybe<OrderUpdateOneInlineInput>;
-  readonly product?: InputMaybe<ProductUpdateOneInlineInput>;
+  readonly price?: InputMaybe<Scalars['Int']>;
   readonly quantity?: InputMaybe<Scalars['Int']>;
-  readonly total?: InputMaybe<Scalars['Int']>;
 };
 
 export type OrderItemUpdateManyInlineInput = {
@@ -7501,8 +7505,8 @@ export type OrderItemUpdateManyInlineInput = {
 };
 
 export type OrderItemUpdateManyInput = {
+  readonly price?: InputMaybe<Scalars['Int']>;
   readonly quantity?: InputMaybe<Scalars['Int']>;
-  readonly total?: InputMaybe<Scalars['Int']>;
 };
 
 export type OrderItemUpdateManyWithNestedWhereInput = {
@@ -7602,8 +7606,23 @@ export type OrderItemWhereInput = {
   readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
   /** All values starting with the given string. */
   readonly id_starts_with?: InputMaybe<Scalars['ID']>;
+  readonly option?: InputMaybe<OptionWhereInput>;
   readonly order?: InputMaybe<OrderWhereInput>;
-  readonly product?: InputMaybe<ProductWhereInput>;
+  readonly price?: InputMaybe<Scalars['Int']>;
+  /** All values greater than the given value. */
+  readonly price_gt?: InputMaybe<Scalars['Int']>;
+  /** All values greater than or equal the given value. */
+  readonly price_gte?: InputMaybe<Scalars['Int']>;
+  /** All values that are contained in given list. */
+  readonly price_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
+  /** All values less than the given value. */
+  readonly price_lt?: InputMaybe<Scalars['Int']>;
+  /** All values less than or equal the given value. */
+  readonly price_lte?: InputMaybe<Scalars['Int']>;
+  /** All values that are not equal to given value. */
+  readonly price_not?: InputMaybe<Scalars['Int']>;
+  /** All values that are not contained in given list. */
+  readonly price_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
   readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -7638,21 +7657,6 @@ export type OrderItemWhereInput = {
   readonly scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
   readonly scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
   readonly scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly total?: InputMaybe<Scalars['Int']>;
-  /** All values greater than the given value. */
-  readonly total_gt?: InputMaybe<Scalars['Int']>;
-  /** All values greater than or equal the given value. */
-  readonly total_gte?: InputMaybe<Scalars['Int']>;
-  /** All values that are contained in given list. */
-  readonly total_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
-  /** All values less than the given value. */
-  readonly total_lt?: InputMaybe<Scalars['Int']>;
-  /** All values less than or equal the given value. */
-  readonly total_lte?: InputMaybe<Scalars['Int']>;
-  /** All values that are not equal to given value. */
-  readonly total_not?: InputMaybe<Scalars['Int']>;
-  /** All values that are not contained in given list. */
-  readonly total_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
   readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -7798,6 +7802,25 @@ export type OrderManyWhereInput = {
   readonly stripeCheckoutId_not_starts_with?: InputMaybe<Scalars['String']>;
   /** All values starting with the given string. */
   readonly stripeCheckoutId_starts_with?: InputMaybe<Scalars['String']>;
+  readonly stripePaymentIntentStatus?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  readonly stripePaymentIntentStatus_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  readonly stripePaymentIntentStatus_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  readonly stripePaymentIntentStatus_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  readonly stripePaymentIntentStatus_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  readonly stripePaymentIntentStatus_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  readonly stripePaymentIntentStatus_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  readonly stripePaymentIntentStatus_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  readonly stripePaymentIntentStatus_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  readonly stripePaymentIntentStatus_starts_with?: InputMaybe<Scalars['String']>;
   readonly total?: InputMaybe<Scalars['Int']>;
   /** All values greater than the given value. */
   readonly total_gt?: InputMaybe<Scalars['Int']>;
@@ -7842,6 +7865,8 @@ export enum OrderOrderByInput {
   PublishedAtDesc = 'publishedAt_DESC',
   StripeCheckoutIdAsc = 'stripeCheckoutId_ASC',
   StripeCheckoutIdDesc = 'stripeCheckoutId_DESC',
+  StripePaymentIntentStatusAsc = 'stripePaymentIntentStatus_ASC',
+  StripePaymentIntentStatusDesc = 'stripePaymentIntentStatus_DESC',
   TotalAsc = 'total_ASC',
   TotalDesc = 'total_DESC',
   UpdatedAtAsc = 'updatedAt_ASC',
@@ -7853,6 +7878,7 @@ export type OrderUpdateInput = {
   readonly email?: InputMaybe<Scalars['String']>;
   readonly orderItems?: InputMaybe<OrderItemUpdateManyInlineInput>;
   readonly stripeCheckoutId?: InputMaybe<Scalars['String']>;
+  readonly stripePaymentIntentStatus?: InputMaybe<Scalars['String']>;
   readonly total?: InputMaybe<Scalars['Int']>;
 };
 
@@ -7876,6 +7902,7 @@ export type OrderUpdateManyInlineInput = {
 export type OrderUpdateManyInput = {
   readonly email?: InputMaybe<Scalars['String']>;
   readonly stripeCheckoutId?: InputMaybe<Scalars['String']>;
+  readonly stripePaymentIntentStatus?: InputMaybe<Scalars['String']>;
   readonly total?: InputMaybe<Scalars['Int']>;
 };
 
@@ -8036,6 +8063,25 @@ export type OrderWhereInput = {
   readonly stripeCheckoutId_not_starts_with?: InputMaybe<Scalars['String']>;
   /** All values starting with the given string. */
   readonly stripeCheckoutId_starts_with?: InputMaybe<Scalars['String']>;
+  readonly stripePaymentIntentStatus?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  readonly stripePaymentIntentStatus_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  readonly stripePaymentIntentStatus_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  readonly stripePaymentIntentStatus_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  readonly stripePaymentIntentStatus_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  readonly stripePaymentIntentStatus_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  readonly stripePaymentIntentStatus_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  readonly stripePaymentIntentStatus_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  readonly stripePaymentIntentStatus_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  readonly stripePaymentIntentStatus_starts_with?: InputMaybe<Scalars['String']>;
   readonly total?: InputMaybe<Scalars['Int']>;
   /** All values greater than the given value. */
   readonly total_gt?: InputMaybe<Scalars['Int']>;
@@ -8515,7 +8561,6 @@ export type Product = Node & {
   readonly localizations: ReadonlyArray<Product>;
   readonly name: Scalars['String'];
   readonly option: ReadonlyArray<Option>;
-  readonly orderItems: ReadonlyArray<OrderItem>;
   readonly price: Scalars['Int'];
   /** The time the document was published. Null on documents in draft stage. */
   readonly publishedAt?: Maybe<Scalars['DateTime']>;
@@ -8616,19 +8661,6 @@ export type ProductOptionArgs = {
 };
 
 
-export type ProductOrderItemsArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  orderBy?: InputMaybe<OrderItemOrderByInput>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<OrderItemWhereInput>;
-};
-
-
 export type ProductPublishedAtArgs = {
   variation?: SystemDateTimeFieldVariation;
 };
@@ -8710,7 +8742,6 @@ export type ProductCreateInput = {
   /** name input for default locale (en) */
   readonly name: Scalars['String'];
   readonly option?: InputMaybe<OptionCreateManyInlineInput>;
-  readonly orderItems?: InputMaybe<OrderItemCreateManyInlineInput>;
   /** price input for default locale (en) */
   readonly price: Scalars['Int'];
   readonly reviews?: InputMaybe<ReviewCreateManyInlineInput>;
@@ -8820,9 +8851,6 @@ export type ProductManyWhereInput = {
   readonly option_every?: InputMaybe<OptionWhereInput>;
   readonly option_none?: InputMaybe<OptionWhereInput>;
   readonly option_some?: InputMaybe<OptionWhereInput>;
-  readonly orderItems_every?: InputMaybe<OrderItemWhereInput>;
-  readonly orderItems_none?: InputMaybe<OrderItemWhereInput>;
-  readonly orderItems_some?: InputMaybe<OrderItemWhereInput>;
   readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -8920,7 +8948,6 @@ export type ProductUpdateInput = {
   /** name input for default locale (en) */
   readonly name?: InputMaybe<Scalars['String']>;
   readonly option?: InputMaybe<OptionUpdateManyInlineInput>;
-  readonly orderItems?: InputMaybe<OrderItemUpdateManyInlineInput>;
   /** price input for default locale (en) */
   readonly price?: InputMaybe<Scalars['Int']>;
   readonly reviews?: InputMaybe<ReviewUpdateManyInlineInput>;
@@ -9142,9 +9169,6 @@ export type ProductWhereInput = {
   readonly option_every?: InputMaybe<OptionWhereInput>;
   readonly option_none?: InputMaybe<OptionWhereInput>;
   readonly option_some?: InputMaybe<OptionWhereInput>;
-  readonly orderItems_every?: InputMaybe<OrderItemWhereInput>;
-  readonly orderItems_none?: InputMaybe<OrderItemWhereInput>;
-  readonly orderItems_some?: InputMaybe<OrderItemWhereInput>;
   readonly price?: InputMaybe<Scalars['Int']>;
   /** All values greater than the given value. */
   readonly price_gt?: InputMaybe<Scalars['Int']>;
@@ -13288,6 +13312,11 @@ export type UpdateStripeCheckoutStatusMutationVariables = Exact<{
 
 export type UpdateStripeCheckoutStatusMutation = { readonly __typename?: 'Mutation', readonly updateStripeCheckout?: { readonly __typename?: 'StripeCheckout', readonly id: string, readonly stripeCheckoutId: string, readonly stripeCheckoutStatus?: string | null, readonly stripePaymentIntent?: string | null, readonly cart?: { readonly __typename?: 'Cart', readonly id: string } | null } | null };
 
+export type CreateEmptyOrderMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CreateEmptyOrderMutation = { readonly __typename?: 'Mutation', readonly createOrder?: { readonly __typename?: 'Order', readonly id: string } | null };
+
 export const CartContentQueryWithOptionFragmentDoc = gql`
     fragment cartContentQueryWithOption on Cart {
   id
@@ -14144,3 +14173,35 @@ export function useUpdateStripeCheckoutStatusMutation(baseOptions?: Apollo.Mutat
 export type UpdateStripeCheckoutStatusMutationHookResult = ReturnType<typeof useUpdateStripeCheckoutStatusMutation>;
 export type UpdateStripeCheckoutStatusMutationResult = Apollo.MutationResult<UpdateStripeCheckoutStatusMutation>;
 export type UpdateStripeCheckoutStatusMutationOptions = Apollo.BaseMutationOptions<UpdateStripeCheckoutStatusMutation, UpdateStripeCheckoutStatusMutationVariables>;
+export const CreateEmptyOrderDocument = gql`
+    mutation CreateEmptyOrder {
+  createOrder(data: {}) {
+    id
+  }
+}
+    `;
+export type CreateEmptyOrderMutationFn = Apollo.MutationFunction<CreateEmptyOrderMutation, CreateEmptyOrderMutationVariables>;
+
+/**
+ * __useCreateEmptyOrderMutation__
+ *
+ * To run a mutation, you first call `useCreateEmptyOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateEmptyOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createEmptyOrderMutation, { data, loading, error }] = useCreateEmptyOrderMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCreateEmptyOrderMutation(baseOptions?: Apollo.MutationHookOptions<CreateEmptyOrderMutation, CreateEmptyOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateEmptyOrderMutation, CreateEmptyOrderMutationVariables>(CreateEmptyOrderDocument, options);
+      }
+export type CreateEmptyOrderMutationHookResult = ReturnType<typeof useCreateEmptyOrderMutation>;
+export type CreateEmptyOrderMutationResult = Apollo.MutationResult<CreateEmptyOrderMutation>;
+export type CreateEmptyOrderMutationOptions = Apollo.BaseMutationOptions<CreateEmptyOrderMutation, CreateEmptyOrderMutationVariables>;

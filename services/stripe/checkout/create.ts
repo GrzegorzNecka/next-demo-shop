@@ -1,13 +1,6 @@
-import { apolloClient, authApolloClient } from 'graphQL/apolloClient';
-import type {
-    CreateStripeCheckoutEndpointByCartMutation,
-    CreateStripeCheckoutEndpointByCartMutationVariables,
-    GetProductBySlugQuery,
-    GetProductBySlugQueryVariables,
-} from 'graphQL/generated/graphql';
-import { CreateStripeCheckoutEndpointByCartDocument } from 'graphQL/generated/graphql';
-import { GetProductBySlugDocument } from 'graphQL/generated/graphql';
 import type { CheckoutPayload } from 'pages/api/checkout';
+import { getCartItemsByCartIdQuery } from 'services/hygraph/cart-by-account/get-all';
+import { createEmptyOrder } from 'services/hygraph/order/create-empty-item';
 import Stripe from 'stripe';
 import stripeCreateCheckoutSchema from 'validation/stripe-checkout-create-schema';
 
@@ -28,27 +21,27 @@ export const createCheckout = async (payload: CheckoutPayload) => {
 
     //todo - tutaj powinienem pobierać koszyk ? , a w paylodzie powinien być przekazywany id koszyka
 
-    const products = await Promise.all(
-        payload.products.map(async (cartItem) => {
-            const product = await apolloClient.query<
-                GetProductBySlugQuery,
-                GetProductBySlugQueryVariables
-            >({
-                query: GetProductBySlugDocument,
-                variables: { slug: cartItem.slug },
-            });
+    const getCartItems = await getCartItemsByCartIdQuery({
+        id: payload.cartId,
+    });
 
-            return {
-                product: product.data.product,
-                quantity: cartItem.quantity,
-                option: product.data.product?.option.find((o) => o.id === cartItem.productOptionId),
-            };
-        }),
-    );
+    if (!getCartItems.data.cart?.cartItems) {
+        return { rejected: { message: `cartItems is not exist`, status: 500 } };
+    }
+
+    const cartItems = getCartItems.data.cart.cartItems.map((cartItem) => {
+        return {
+            product: cartItem.option?.product,
+            quantity: cartItem.quantity,
+            option: cartItem.option,
+        };
+    });
+
+    const { orderId } = await createEmptyOrder();
 
     //todo - description powinien być wyskakiwać z pętli
 
-    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = products.map((item) => {
+    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = cartItems.map((item) => {
         return {
             adjustable_quantity: {
                 enabled: true,
@@ -85,7 +78,7 @@ export const createCheckout = async (payload: CheckoutPayload) => {
         cancel_url: `${process.env.NEXT_PUBLIC_HOST}/checkout/cancel?canceled=true`,
         line_items: lineItems,
         payment_intent_data: {
-            metadata: { mail: '123@gmail.com', cartId: 666 },
+            metadata: { orderId: orderId, mail: '123@gmail.com', cartId: payload.cartId },
         },
         metadata: { mail: '123@gmail.com', cartId: 666 }, //todo -  2 - tu najlepiej jakby było id Orderu
     } satisfies Stripe.Checkout.SessionCreateParams;
