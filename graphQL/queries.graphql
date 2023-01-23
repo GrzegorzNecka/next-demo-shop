@@ -88,7 +88,11 @@ query GetCartItemsByCartId($id: ID!) {
 mutation AddItemOptionToCartByCartId($cartId: ID!, $quantity: Int!, $productOptionId: ID!) {
     updateCart(
         where: { id: $cartId }
-        data: { cartItems: { create: { quantity: $quantity, option: { connect: { id: $productOptionId } } } } }
+        data: {
+            cartItems: {
+                create: { quantity: $quantity, option: { connect: { id: $productOptionId } } }
+            }
+        }
     ) {
         ...cartContentQueryWithOption
     }
@@ -190,19 +194,52 @@ mutation DeleteUnauthCart($id: ID!) {
     }
 }
 
-fragment counterContent on TestCache {
-    id
-    counter
-}
-
-query GetCounter {
-    testCache(where: { id: "clby3x1j72z500augjib02ztr" }, stage: DRAFT) {
-        ...counterContent
+mutation CreateStripeCheckoutEndpointByCart(
+    $cartId: ID!
+    $stripeCheckoutId: String!
+    $stripeCheckoutStatus: String!
+    $stripePaymentIntent: String!
+) {
+    createStripeCheckout(
+        data: {
+            cart: { connect: { id: $cartId } }
+            stripeCheckoutId: $stripeCheckoutId
+            stripeCheckoutStatus: $stripeCheckoutStatus
+            stripePaymentIntent: $stripePaymentIntent
+        }
+    ) {
+        id
+        stripeCheckoutId
+        stripeCheckoutStatus
+        stripePaymentIntent
+        cart {
+            id
+        }
     }
 }
 
-mutation UpdateCounter($counter: Int!) {
-    updateTestCache(where: { id: "clby3x1j72z500augjib02ztr" }, data: { counter: $counter }) {
-        ...counterContent
+query getUnpaidStripeCheckoutsByCartId($cartId: ID!) {
+    cart(where: { id: $cartId }) {
+        stripeCheckouts(where: { stripeCheckoutStatus_contains: "unpaid" }) {
+            id
+            stripeCheckoutId
+            stripeCheckoutStatus
+            stripePaymentIntent
+        }
+    }
+}
+
+mutation UpdateStripeCheckoutStatus($stripeCheckoutId: String!, $stripeCheckoutStatus: String!) {
+    updateStripeCheckout(
+        where: { stripeCheckoutId: $stripeCheckoutId }
+        data: { stripeCheckoutStatus: $stripeCheckoutStatus }
+    ) {
+        id
+        stripeCheckoutId
+        stripeCheckoutStatus
+        stripePaymentIntent
+        cart {
+            id
+        }
     }
 }

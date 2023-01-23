@@ -87,7 +87,7 @@ const stripeSecret = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
 
 const CartSummary = () => {
     const cartState = useCartState();
-    const { status } = useSession();
+    const { data, status } = useSession();
 
     if (!stripeSecret) {
         return <div></div>;
@@ -102,13 +102,16 @@ const CartSummary = () => {
             throw new Error('something went wrong');
         }
 
-        const payload = cartState.items.map((cartItem) => {
-            return {
-                slug: cartItem.slug,
-                productOptionId: cartItem.productOptionId,
-                quantity: cartItem.quantity,
-            };
-        });
+        const payload = {
+            products: cartState.items.map((cartItem) => {
+                return {
+                    slug: cartItem.slug,
+                    productOptionId: cartItem.productOptionId,
+                    quantity: cartItem.quantity,
+                };
+            }),
+            cartId: data?.user.cartId,
+        };
 
         const res = await fetch('/api/checkout', {
             method: 'POST',
@@ -119,7 +122,9 @@ const CartSummary = () => {
 
         const { session }: { session: Stripe.Response<Stripe.Checkout.Session> } = await res.json();
 
-        console.log('🚀 ~ file: cart.tsx:121 ~ pay ~ session', session);
+        if (!session?.id) {
+            throw new Error('something went wrong with stripe checkout');
+        }
 
         await stripe.redirectToCheckout({ sessionId: session.id });
     };
