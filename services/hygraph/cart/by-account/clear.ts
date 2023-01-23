@@ -5,7 +5,7 @@ import type {
 } from 'graphQL/generated/graphql';
 import { ClearCartItemsDocument } from 'graphQL/generated/graphql';
 
-export async function clearCartItemsMutation({ cartId }: ClearCartItemsMutationVariables) {
+export default async function clearCartByCartId({ cartId }: ClearCartItemsMutationVariables) {
     //
     const removeAllCartItems = await authApolloClient.mutate<
         ClearCartItemsMutation,

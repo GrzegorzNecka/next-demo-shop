@@ -103,13 +103,7 @@ const CartSummary = () => {
         }
 
         const payload = {
-            products: cartState.items.map((cartItem) => {
-                return {
-                    slug: cartItem.slug,
-                    productOptionId: cartItem.productOptionId,
-                    quantity: cartItem.quantity,
-                };
-            }),
+            email: data?.user.email,
             cartId: data?.user.cartId,
         };
 

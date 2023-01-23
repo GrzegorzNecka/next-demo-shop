@@ -5,7 +5,7 @@ import type {
 } from 'graphQL/generated/graphql';
 import { UpdateItemQuantityByCartIdDocument } from 'graphQL/generated/graphql';
 
-export async function updateItemQuantityByCartIdMutation({
+export default async function updateItemQuantityByCartId({
     cartId,
     quantity,
     itemId,

@@ -5,17 +5,13 @@ import * as bcrypt from 'bcrypt';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { CookieValueTypes } from 'cookies-next';
 import { getCookie } from 'cookies-next';
-import {
-    accountByEmailQuery,
-    getCartIdByAccountIdQuery,
-    getCartItemsByAccount,
-    getCartItemsByCookieId,
-} from 'services/cart/nextauth';
-import { updateItemQuantityByCartIdMutation } from 'services/hygraph/cart-by-account/update-item';
-
-import { addItemOptionToCartByCartIdMutation } from 'services/hygraph/cart-by-account/create-item';
-
-import { clearUnauthCartByIdMutation } from 'services/cart/cart-items-by-cookie-id';
+import getAccountByEmailQuery from 'services/hygraph/account/get-account-by-email';
+import getCartItemsByAccount from 'services/hygraph/account/get-cart-items-by-account';
+import getCartIdByAccountIdQuery from 'services/hygraph/account/get-cart-id-by-account';
+import getCartItemsByCookieId from 'services/hygraph/cart/by-cookie/get-all';
+import createCartItemByCartId from 'services/hygraph/cart/by-account/create-item';
+import updateItemQuantityByCartId from 'services/hygraph/cart/by-account/update-item';
+import clearCartByCookieId from 'services/hygraph/cart/by-cookie/clear';
 
 // -- INIT AUTH_OPTIONS
 
@@ -33,7 +29,7 @@ export const authOptions: NextAuthOptions = {
                     return null;
                 }
 
-                const userByEmail = await accountByEmailQuery(credentials?.username);
+                const userByEmail = await getAccountByEmailQuery(credentials?.username);
 
                 if (!userByEmail.data.account?.password) {
                     return null;
@@ -88,11 +84,11 @@ const handleSignIn = async ({ account }: handleSignInProps, cookieCartId: Cookie
 
     const cartItemsByCookieId = await getCartItemsByCookieId(cookieCartId);
 
-    if (!cartItemsByCookieId || !cartItemsByCookieId.length) {
+    if (!cartItemsByCookieId || !cartItemsByCookieId.length || !account?.providerAccountId) {
         return true;
     }
 
-    const { cartItemsByAccount, cartId } = await getCartItemsByAccount(account?.providerAccountId!);
+    const { cartItemsByAccount, cartId } = await getCartItemsByAccount(account?.providerAccountId);
 
     // compare and join data from server and local state
     if (cartItemsByCookieId.length > 0 && cartItemsByAccount) {
@@ -103,7 +99,7 @@ const handleSignIn = async ({ account }: handleSignInProps, cookieCartId: Cookie
             );
 
             if (!repeatedItem) {
-                const createAuthCartItems = await addItemOptionToCartByCartIdMutation({
+                const createAuthCartItems = await createCartItemByCartId({
                     cartId,
                     quantity: item.quantity,
                     productOptionId: item.productOptionId,
@@ -119,7 +115,7 @@ const handleSignIn = async ({ account }: handleSignInProps, cookieCartId: Cookie
                     quantity = quantity >= total ? total : quantity;
                 }
 
-                const increaseCartItemsByAccount = await updateItemQuantityByCartIdMutation({
+                const increaseCartItemsByAccount = await updateItemQuantityByCartId({
                     cartId,
                     itemId: repeatedItem.id,
                     quantity,
@@ -128,7 +124,7 @@ const handleSignIn = async ({ account }: handleSignInProps, cookieCartId: Cookie
         });
     }
 
-    const clearCartItemsByCookieId = await clearUnauthCartByIdMutation({ id: cookieCartId });
+    const clearCartItemsByCookieId = await clearCartByCookieId({ id: cookieCartId });
 
     return true;
 };

@@ -7,7 +7,7 @@ import { UpdateUnauthCartByIdDocument } from 'graphQL/generated/graphql';
 
 //
 
-export async function clearUnauthCartByIdMutation({ id }: { id: string }) {
+export default async function clearCartByCookieId({ id }: { id: string }) {
     const clearUnauthCart = await authApolloClient.mutate<
         UpdateUnauthCartByIdMutation,
         UpdateUnauthCartByIdMutationVariables

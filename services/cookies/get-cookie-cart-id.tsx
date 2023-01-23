@@ -49,4 +49,4 @@ async function getCookieCartId(req: NextApiRequest, res: NextApiResponse<Respons
     return cookieCartId;
 }
 
-export { getCookieCartId };
+export default getCookieCartId;

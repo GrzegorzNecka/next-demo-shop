@@ -7,7 +7,7 @@ import { AddItemOptionToCartByCartIdDocument } from 'graphQL/generated/graphql';
 
 // -- CREATE
 
-export async function addItemOptionToCartByCartIdMutation({
+export default async function createCartItemByCartId({
     cartId,
     quantity,
     productOptionId,

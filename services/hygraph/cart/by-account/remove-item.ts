@@ -5,7 +5,7 @@ import type {
 } from 'graphQL/generated/graphql';
 import { RemoveItemFromCartByCartIdDocument } from 'graphQL/generated/graphql';
 
-export async function removeItemFromCartByCartIdMutation({
+export default async function removeItemByCartId({
     cartId,
     itemId,
 }: RemoveItemFromCartByCartIdMutationVariables) {

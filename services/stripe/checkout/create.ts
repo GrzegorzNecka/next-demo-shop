@@ -1,10 +1,10 @@
-import type { CheckoutPayload } from 'pages/api/checkout';
-import { getCartItemsByCartIdQuery } from 'services/hygraph/cart-by-account/get-all';
+import getCartItemsByCartId from 'services/hygraph/cart/by-account/get-all';
 import { createEmptyOrder } from 'services/hygraph/order/create-empty-item';
 import Stripe from 'stripe';
-import stripeCreateCheckoutSchema from 'validation/stripe-checkout-create-schema';
+import type { StripeCreateCheckout } from 'validation/stripe-checkout-create-schema';
+import { stripeCreateCheckoutSchema } from 'validation/stripe-checkout-create-schema';
 
-export const createCheckout = async (payload: CheckoutPayload) => {
+export const createCheckout = async (payload: StripeCreateCheckout) => {
     const stripeKey = process.env.STRIPE_SECRET_KEY;
 
     if (!stripeKey) {
@@ -21,7 +21,7 @@ export const createCheckout = async (payload: CheckoutPayload) => {
 
     //todo - tutaj powinienem pobierać koszyk ? , a w paylodzie powinien być przekazywany id koszyka
 
-    const getCartItems = await getCartItemsByCartIdQuery({
+    const getCartItems = await getCartItemsByCartId({
         id: payload.cartId,
     });
 

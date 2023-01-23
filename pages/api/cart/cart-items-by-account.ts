@@ -2,11 +2,12 @@ import { authOptions } from 'pages/api/auth/[...nextauth]';
 import { unstable_getServerSession } from 'next-auth/next';
 import type { NextApiHandler } from 'next/types';
 
-import { clearCartItemsMutation } from 'services/hygraph/cart-by-account/remove-all';
-import { updateItemQuantityByCartIdMutation } from 'services/hygraph/cart-by-account/update-item';
-import { getCartItemsByCartIdQuery } from 'services/hygraph/cart-by-account/get-all';
-import { addItemOptionToCartByCartIdMutation } from 'services/hygraph/cart-by-account/create-item';
-import { removeItemFromCartByCartIdMutation } from 'services/hygraph/cart-by-account/remove-item';
+import clearCartByCartId from 'services/hygraph/cart/by-account/clear';
+import updateItemQuantityByCartId from 'services/hygraph/cart/by-account/update-item';
+import getCartItemsByCartId from 'services/hygraph/cart/by-account/get-all';
+import createCartItemByCartId from 'services/hygraph/cart/by-account/create-item';
+import removeItemByCartId from 'services/hygraph/cart/by-account/remove-item';
+
 const handleCartSession: NextApiHandler = async (req, res) => {
     const session = await unstable_getServerSession(req, res, authOptions);
 
@@ -17,18 +18,22 @@ const handleCartSession: NextApiHandler = async (req, res) => {
 
     const cartId = session.user.cartId;
 
+    //--
+
     if (req.method === 'GET') {
-        const getCartItems = await getCartItemsByCartIdQuery({
+        const getCartItems = await getCartItemsByCartId({
             id: cartId,
         });
 
-        if (getCartItems.networkStatus !== 7) {
-            res.status(500);
-        }
+        // if (getCartItems.networkStatus !== 7) {
+        //     res.status(500);
+        // }
 
         res.status(200).json({ cart: getCartItems.data.cart });
         return;
     }
+
+    //--
 
     if (req.method === 'POST') {
         //add new item
@@ -39,7 +44,7 @@ const handleCartSession: NextApiHandler = async (req, res) => {
             return;
         }
 
-        const createCartItem = await addItemOptionToCartByCartIdMutation({
+        const createCartItem = await createCartItemByCartId({
             cartId,
             quantity,
             productOptionId,
@@ -49,6 +54,8 @@ const handleCartSession: NextApiHandler = async (req, res) => {
         return;
     }
 
+    //--
+
     if (req.method === 'PUT') {
         const { itemId, updatedQuantity: quantity } = await JSON.parse(req.body);
 
@@ -57,7 +64,7 @@ const handleCartSession: NextApiHandler = async (req, res) => {
             return;
         }
 
-        const updateCartItem = await updateItemQuantityByCartIdMutation({
+        const updateCartItem = await updateItemQuantityByCartId({
             cartId,
             itemId,
             quantity,
@@ -68,6 +75,8 @@ const handleCartSession: NextApiHandler = async (req, res) => {
         return;
     }
 
+    //--
+
     if (req.method === 'DELETE') {
         const { itemId, quantity, setEmpty = false } = await JSON.parse(req.body);
 
@@ -75,7 +84,7 @@ const handleCartSession: NextApiHandler = async (req, res) => {
             if (quantity > 1) {
                 //
 
-                const increseCartItem = await updateItemQuantityByCartIdMutation({
+                const increseCartItem = await updateItemQuantityByCartId({
                     cartId,
                     itemId,
                     quantity: quantity - 1,
@@ -85,7 +94,7 @@ const handleCartSession: NextApiHandler = async (req, res) => {
                 return;
             }
 
-            const removeCartItem = await removeItemFromCartByCartIdMutation({
+            const removeCartItem = await removeItemByCartId({
                 cartId,
                 itemId,
             });
@@ -96,7 +105,7 @@ const handleCartSession: NextApiHandler = async (req, res) => {
 
         if (setEmpty) {
             //
-            const removeAllCartItems = await clearCartItemsMutation({ cartId });
+            const removeAllCartItems = await clearCartByCartId({ cartId });
 
             res.status(200).json({ cart: removeAllCartItems.data?.updateCart });
             return;
