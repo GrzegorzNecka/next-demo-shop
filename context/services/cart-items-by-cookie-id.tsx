@@ -1,6 +1,6 @@
 import type { CartItem } from 'context/types';
 import type { Dispatch, SetStateAction } from 'react';
-import { productToCartItem } from 'utils/cart';
+import { transitionProductToCartItemOfContextByCookieId } from 'utils/cart-transitions';
 
 type cartItemsByCookieIdProps = {
     setCartItems: Dispatch<SetStateAction<CartItem[]>>;
@@ -55,7 +55,7 @@ export const cartItemsByCookieId = ({
         if (!existCartItem) {
             const create = await updateCart(cookieCartId, [
                 ...cartItems,
-                productToCartItem(product),
+                transitionProductToCartItemOfContextByCookieId(product),
             ]);
 
             if (create.status === 200) {

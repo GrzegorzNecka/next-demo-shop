@@ -4,7 +4,7 @@ import getCartByCartId from 'services/hygraph/cart/by-account/get-cart';
 import { createEmptyOrder } from 'services/hygraph/order/create-empty-item';
 import { updateOrderByOrderId } from 'services/hygraph/order/update-order';
 import Stripe from 'stripe';
-import createContextCartItem from 'utils/create-context-cart-item';
+
 import type { StripeCreateCheckout } from 'validation/stripe-checkout-create-schema';
 import { stripeCreateCheckoutSchema } from 'validation/stripe-checkout-create-schema';
 

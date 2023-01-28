@@ -2,7 +2,6 @@ import { useCartState } from 'context/cart-context';
 import { useEffect, useMemo, useState } from 'react';
 import React from 'react';
 import type { ButtonAddToCartProps, ButtonAddToCartViewProps } from './types';
-import createContextCartItem from 'utils/create-context-cart-item';
 
 // -- CONTAINER
 
@@ -54,11 +53,20 @@ export const ButtonAddToCartView = ({
     //
 
     const handleOnClick = () => {
-        const newCartItem = createContextCartItem({
-            activeOptionId,
-            product,
+        // const newCartItem = createContextCartItem({
+        //     activeOptionId,
+        //     product,
+        //     quantity,
+        // });
+
+        const newCartItem = {
+            productOptionId: activeOptionId,
+            price: product.price,
+            title: product.title,
             quantity,
-        });
+            imgUrl: product.thumbnailUrl,
+            slug: product.slug,
+        };
 
         cartState.addItemToCart(newCartItem);
 

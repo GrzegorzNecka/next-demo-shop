@@ -1,5 +1,5 @@
 // import type { CartItem } from 'context/types';
-import calculateTotal from 'context/utils/calculate-total';
+import calculateTotal from 'utils/calculate-total';
 import { authApolloClient } from 'graphQL/apolloClient';
 import type {
     UpdateOrderMutation,

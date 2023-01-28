@@ -1,5 +1,5 @@
 import type { CartItem } from 'context/types';
-import { fetchedToCartItem } from 'utils/cart';
+import { transitionFetchedDataToCartOfContext } from 'utils/cart-transitions';
 import type { Dispatch, SetStateAction } from 'react';
 type cartItemsByAccountProps = {
     setCartItems: Dispatch<SetStateAction<CartItem[]>>;
@@ -26,7 +26,7 @@ export const cartItemsByAccount = ({
         });
 
         if (cart.status === 200) {
-            const withFetchedCartItem = fetchedToCartItem(await cart.json())!;
+            const withFetchedCartItem = transitionFetchedDataToCartOfContext(await cart.json())!;
 
             setCartItems(withFetchedCartItem);
             setIsLoading(false);
@@ -54,7 +54,7 @@ export const cartItemsByAccount = ({
             });
 
             if (create.status === 200) {
-                const withNewCartItem = fetchedToCartItem(await create.json())!;
+                const withNewCartItem = transitionFetchedDataToCartOfContext(await create.json())!;
                 setCartItems(withNewCartItem);
                 setIsLoading(false);
             }
@@ -72,7 +72,7 @@ export const cartItemsByAccount = ({
         });
 
         if (update.status === 200) {
-            const withUpdatedCartItem = fetchedToCartItem(await update.json())!;
+            const withUpdatedCartItem = transitionFetchedDataToCartOfContext(await update.json())!;
 
             setCartItems(withUpdatedCartItem);
             setIsLoading(false);
@@ -101,7 +101,7 @@ export const cartItemsByAccount = ({
         });
 
         if (remove.status === 200) {
-            const withRemovedCartItem = fetchedToCartItem(await remove.json())!;
+            const withRemovedCartItem = transitionFetchedDataToCartOfContext(await remove.json())!;
 
             setCartItems(withRemovedCartItem);
             setIsLoading(false);

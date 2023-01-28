@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 import type { CartState } from './types';
 import { useCartItems } from './hooks/use-cart-items';
-import calculateTotal from './utils/calculate-total';
+import calculateTotal from '../utils/calculate-total';
 
 export const CartStateContext = createContext<CartState | null>(null);
 
