@@ -37,7 +37,7 @@ export type Account = Node & {
   readonly history: ReadonlyArray<Version>;
   /** The unique identifier */
   readonly id: Scalars['ID'];
-  readonly order?: Maybe<Order>;
+  readonly orders: ReadonlyArray<Order>;
   readonly password: Scalars['String'];
   /** The time the document was published. Null on documents in draft stage. */
   readonly publishedAt?: Maybe<Scalars['DateTime']>;
@@ -79,9 +79,16 @@ export type AccountHistoryArgs = {
 };
 
 
-export type AccountOrderArgs = {
+export type AccountOrdersArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
   forceParentLocale?: InputMaybe<Scalars['Boolean']>;
+  last?: InputMaybe<Scalars['Int']>;
   locales?: InputMaybe<ReadonlyArray<Locale>>;
+  orderBy?: InputMaybe<OrderOrderByInput>;
+  skip?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<OrderWhereInput>;
 };
 
 
@@ -129,7 +136,7 @@ export type AccountCreateInput = {
   readonly cart?: InputMaybe<CartCreateOneInlineInput>;
   readonly createdAt?: InputMaybe<Scalars['DateTime']>;
   readonly email: Scalars['String'];
-  readonly order?: InputMaybe<OrderCreateOneInlineInput>;
+  readonly orders?: InputMaybe<OrderCreateManyInlineInput>;
   readonly password: Scalars['String'];
   readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
@@ -225,7 +232,9 @@ export type AccountManyWhereInput = {
   readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
   /** All values starting with the given string. */
   readonly id_starts_with?: InputMaybe<Scalars['ID']>;
-  readonly order?: InputMaybe<OrderWhereInput>;
+  readonly orders_every?: InputMaybe<OrderWhereInput>;
+  readonly orders_none?: InputMaybe<OrderWhereInput>;
+  readonly orders_some?: InputMaybe<OrderWhereInput>;
   readonly password?: InputMaybe<Scalars['String']>;
   /** All values containing the given string. */
   readonly password_contains?: InputMaybe<Scalars['String']>;
@@ -300,7 +309,7 @@ export enum AccountOrderByInput {
 export type AccountUpdateInput = {
   readonly cart?: InputMaybe<CartUpdateOneInlineInput>;
   readonly email?: InputMaybe<Scalars['String']>;
-  readonly order?: InputMaybe<OrderUpdateOneInlineInput>;
+  readonly orders?: InputMaybe<OrderUpdateManyInlineInput>;
   readonly password?: InputMaybe<Scalars['String']>;
 };
 
@@ -442,7 +451,9 @@ export type AccountWhereInput = {
   readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
   /** All values starting with the given string. */
   readonly id_starts_with?: InputMaybe<Scalars['ID']>;
-  readonly order?: InputMaybe<OrderWhereInput>;
+  readonly orders_every?: InputMaybe<OrderWhereInput>;
+  readonly orders_none?: InputMaybe<OrderWhereInput>;
+  readonly orders_some?: InputMaybe<OrderWhereInput>;
   readonly password?: InputMaybe<Scalars['String']>;
   /** All values containing the given string. */
   readonly password_contains?: InputMaybe<Scalars['String']>;
@@ -1231,7 +1242,6 @@ export type Cart = Node & {
   readonly scheduledIn: ReadonlyArray<ScheduledOperation>;
   /** System stage field */
   readonly stage: Stage;
-  readonly stripeCheckouts: ReadonlyArray<StripeCheckout>;
   /** The time the document was updated */
   readonly updatedAt: Scalars['DateTime'];
   /** User that last updated this document */
@@ -1296,19 +1306,6 @@ export type CartScheduledInArgs = {
 };
 
 
-export type CartStripeCheckoutsArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  orderBy?: InputMaybe<StripeCheckoutOrderByInput>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<StripeCheckoutWhereInput>;
-};
-
-
 export type CartUpdatedByArgs = {
   forceParentLocale?: InputMaybe<Scalars['Boolean']>;
   locales?: InputMaybe<ReadonlyArray<Locale>>;
@@ -1335,7 +1332,6 @@ export type CartCreateInput = {
   readonly account?: InputMaybe<AccountCreateOneInlineInput>;
   readonly cartItems?: InputMaybe<CartItemCreateManyInlineInput>;
   readonly createdAt?: InputMaybe<Scalars['DateTime']>;
-  readonly stripeCheckouts?: InputMaybe<StripeCheckoutCreateManyInlineInput>;
   readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
 
@@ -1877,9 +1873,6 @@ export type CartManyWhereInput = {
   readonly scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
   readonly scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
   readonly scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly stripeCheckouts_every?: InputMaybe<StripeCheckoutWhereInput>;
-  readonly stripeCheckouts_none?: InputMaybe<StripeCheckoutWhereInput>;
-  readonly stripeCheckouts_some?: InputMaybe<StripeCheckoutWhereInput>;
   readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -1912,7 +1905,6 @@ export enum CartOrderByInput {
 export type CartUpdateInput = {
   readonly account?: InputMaybe<AccountUpdateOneInlineInput>;
   readonly cartItems?: InputMaybe<CartItemUpdateManyInlineInput>;
-  readonly stripeCheckouts?: InputMaybe<StripeCheckoutUpdateManyInlineInput>;
 };
 
 export type CartUpdateManyInlineInput = {
@@ -2057,9 +2049,6 @@ export type CartWhereInput = {
   readonly scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
   readonly scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
   readonly scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly stripeCheckouts_every?: InputMaybe<StripeCheckoutWhereInput>;
-  readonly stripeCheckouts_none?: InputMaybe<StripeCheckoutWhereInput>;
-  readonly stripeCheckouts_some?: InputMaybe<StripeCheckoutWhereInput>;
   readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -3931,8 +3920,6 @@ export type Mutation = {
   readonly createReview?: Maybe<Review>;
   /** Create one scheduledRelease */
   readonly createScheduledRelease?: Maybe<ScheduledRelease>;
-  /** Create one stripeCheckout */
-  readonly createStripeCheckout?: Maybe<StripeCheckout>;
   /** Create one unauthCart */
   readonly createUnauthCart?: Maybe<UnauthCart>;
   /** Delete one account from _all_ existing stages. Returns deleted document. */
@@ -4041,13 +4028,6 @@ export type Mutation = {
   /** Delete many Review documents, return deleted documents */
   readonly deleteManyReviewsConnection: ReviewConnection;
   /**
-   * Delete many StripeCheckout documents
-   * @deprecated Please use the new paginated many mutation (deleteManyStripeCheckoutsConnection)
-   */
-  readonly deleteManyStripeCheckouts: BatchPayload;
-  /** Delete many StripeCheckout documents, return deleted documents */
-  readonly deleteManyStripeCheckoutsConnection: StripeCheckoutConnection;
-  /**
    * Delete many UnauthCart documents
    * @deprecated Please use the new paginated many mutation (deleteManyUnauthCartsConnection)
    */
@@ -4070,8 +4050,6 @@ export type Mutation = {
   readonly deleteScheduledOperation?: Maybe<ScheduledOperation>;
   /** Delete one scheduledRelease from _all_ existing stages. Returns deleted document. */
   readonly deleteScheduledRelease?: Maybe<ScheduledRelease>;
-  /** Delete one stripeCheckout from _all_ existing stages. Returns deleted document. */
-  readonly deleteStripeCheckout?: Maybe<StripeCheckout>;
   /** Delete one unauthCart from _all_ existing stages. Returns deleted document. */
   readonly deleteUnauthCart?: Maybe<UnauthCart>;
   /** Publish one account */
@@ -4180,13 +4158,6 @@ export type Mutation = {
   /** Publish many Review documents */
   readonly publishManyReviewsConnection: ReviewConnection;
   /**
-   * Publish many StripeCheckout documents
-   * @deprecated Please use the new paginated many mutation (publishManyStripeCheckoutsConnection)
-   */
-  readonly publishManyStripeCheckouts: BatchPayload;
-  /** Publish many StripeCheckout documents */
-  readonly publishManyStripeCheckoutsConnection: StripeCheckoutConnection;
-  /**
    * Publish many UnauthCart documents
    * @deprecated Please use the new paginated many mutation (publishManyUnauthCartsConnection)
    */
@@ -4205,8 +4176,6 @@ export type Mutation = {
   readonly publishProduct?: Maybe<Product>;
   /** Publish one review */
   readonly publishReview?: Maybe<Review>;
-  /** Publish one stripeCheckout */
-  readonly publishStripeCheckout?: Maybe<StripeCheckout>;
   /** Publish one unauthCart */
   readonly publishUnauthCart?: Maybe<UnauthCart>;
   /** Schedule to publish one account */
@@ -4235,8 +4204,6 @@ export type Mutation = {
   readonly schedulePublishProduct?: Maybe<Product>;
   /** Schedule to publish one review */
   readonly schedulePublishReview?: Maybe<Review>;
-  /** Schedule to publish one stripeCheckout */
-  readonly schedulePublishStripeCheckout?: Maybe<StripeCheckout>;
   /** Schedule to publish one unauthCart */
   readonly schedulePublishUnauthCart?: Maybe<UnauthCart>;
   /** Unpublish one account from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
@@ -4265,8 +4232,6 @@ export type Mutation = {
   readonly scheduleUnpublishProduct?: Maybe<Product>;
   /** Unpublish one review from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly scheduleUnpublishReview?: Maybe<Review>;
-  /** Unpublish one stripeCheckout from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
-  readonly scheduleUnpublishStripeCheckout?: Maybe<StripeCheckout>;
   /** Unpublish one unauthCart from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly scheduleUnpublishUnauthCart?: Maybe<UnauthCart>;
   /** Unpublish one account from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
@@ -4375,13 +4340,6 @@ export type Mutation = {
   /** Find many Review documents that match criteria in specified stage and unpublish from target stages */
   readonly unpublishManyReviewsConnection: ReviewConnection;
   /**
-   * Unpublish many StripeCheckout documents
-   * @deprecated Please use the new paginated many mutation (unpublishManyStripeCheckoutsConnection)
-   */
-  readonly unpublishManyStripeCheckouts: BatchPayload;
-  /** Find many StripeCheckout documents that match criteria in specified stage and unpublish from target stages */
-  readonly unpublishManyStripeCheckoutsConnection: StripeCheckoutConnection;
-  /**
    * Unpublish many UnauthCart documents
    * @deprecated Please use the new paginated many mutation (unpublishManyUnauthCartsConnection)
    */
@@ -4400,8 +4358,6 @@ export type Mutation = {
   readonly unpublishProduct?: Maybe<Product>;
   /** Unpublish one review from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly unpublishReview?: Maybe<Review>;
-  /** Unpublish one stripeCheckout from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
-  readonly unpublishStripeCheckout?: Maybe<StripeCheckout>;
   /** Unpublish one unauthCart from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only. */
   readonly unpublishUnauthCart?: Maybe<UnauthCart>;
   /** Update one account */
@@ -4510,13 +4466,6 @@ export type Mutation = {
   /** Update many Review documents */
   readonly updateManyReviewsConnection: ReviewConnection;
   /**
-   * Update many stripeCheckouts
-   * @deprecated Please use the new paginated many mutation (updateManyStripeCheckoutsConnection)
-   */
-  readonly updateManyStripeCheckouts: BatchPayload;
-  /** Update many StripeCheckout documents */
-  readonly updateManyStripeCheckoutsConnection: StripeCheckoutConnection;
-  /**
    * Update many unauthCarts
    * @deprecated Please use the new paginated many mutation (updateManyUnauthCartsConnection)
    */
@@ -4537,8 +4486,6 @@ export type Mutation = {
   readonly updateReview?: Maybe<Review>;
   /** Update one scheduledRelease */
   readonly updateScheduledRelease?: Maybe<ScheduledRelease>;
-  /** Update one stripeCheckout */
-  readonly updateStripeCheckout?: Maybe<StripeCheckout>;
   /** Update one unauthCart */
   readonly updateUnauthCart?: Maybe<UnauthCart>;
   /** Upsert one account */
@@ -4567,8 +4514,6 @@ export type Mutation = {
   readonly upsertProduct?: Maybe<Product>;
   /** Upsert one review */
   readonly upsertReview?: Maybe<Review>;
-  /** Upsert one stripeCheckout */
-  readonly upsertStripeCheckout?: Maybe<StripeCheckout>;
   /** Upsert one unauthCart */
   readonly upsertUnauthCart?: Maybe<UnauthCart>;
 };
@@ -4641,11 +4586,6 @@ export type MutationCreateReviewArgs = {
 
 export type MutationCreateScheduledReleaseArgs = {
   data: ScheduledReleaseCreateInput;
-};
-
-
-export type MutationCreateStripeCheckoutArgs = {
-  data: StripeCheckoutCreateInput;
 };
 
 
@@ -4884,21 +4824,6 @@ export type MutationDeleteManyReviewsConnectionArgs = {
 };
 
 
-export type MutationDeleteManyStripeCheckoutsArgs = {
-  where?: InputMaybe<StripeCheckoutManyWhereInput>;
-};
-
-
-export type MutationDeleteManyStripeCheckoutsConnectionArgs = {
-  after?: InputMaybe<Scalars['ID']>;
-  before?: InputMaybe<Scalars['ID']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<StripeCheckoutManyWhereInput>;
-};
-
-
 export type MutationDeleteManyUnauthCartsArgs = {
   where?: InputMaybe<UnauthCartManyWhereInput>;
 };
@@ -4951,11 +4876,6 @@ export type MutationDeleteScheduledOperationArgs = {
 
 export type MutationDeleteScheduledReleaseArgs = {
   where: ScheduledReleaseWhereUniqueInput;
-};
-
-
-export type MutationDeleteStripeCheckoutArgs = {
-  where: StripeCheckoutWhereUniqueInput;
 };
 
 
@@ -5279,24 +5199,6 @@ export type MutationPublishManyReviewsConnectionArgs = {
 };
 
 
-export type MutationPublishManyStripeCheckoutsArgs = {
-  to?: ReadonlyArray<Stage>;
-  where?: InputMaybe<StripeCheckoutManyWhereInput>;
-};
-
-
-export type MutationPublishManyStripeCheckoutsConnectionArgs = {
-  after?: InputMaybe<Scalars['ID']>;
-  before?: InputMaybe<Scalars['ID']>;
-  first?: InputMaybe<Scalars['Int']>;
-  from?: InputMaybe<Stage>;
-  last?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  to?: ReadonlyArray<Stage>;
-  where?: InputMaybe<StripeCheckoutManyWhereInput>;
-};
-
-
 export type MutationPublishManyUnauthCartsArgs = {
   to?: ReadonlyArray<Stage>;
   where?: InputMaybe<UnauthCartManyWhereInput>;
@@ -5354,12 +5256,6 @@ export type MutationPublishProductArgs = {
 export type MutationPublishReviewArgs = {
   to?: ReadonlyArray<Stage>;
   where: ReviewWhereUniqueInput;
-};
-
-
-export type MutationPublishStripeCheckoutArgs = {
-  to?: ReadonlyArray<Stage>;
-  where: StripeCheckoutWhereUniqueInput;
 };
 
 
@@ -5488,14 +5384,6 @@ export type MutationSchedulePublishReviewArgs = {
 };
 
 
-export type MutationSchedulePublishStripeCheckoutArgs = {
-  releaseAt?: InputMaybe<Scalars['DateTime']>;
-  releaseId?: InputMaybe<Scalars['String']>;
-  to?: ReadonlyArray<Stage>;
-  where: StripeCheckoutWhereUniqueInput;
-};
-
-
 export type MutationSchedulePublishUnauthCartArgs = {
   releaseAt?: InputMaybe<Scalars['DateTime']>;
   releaseId?: InputMaybe<Scalars['String']>;
@@ -5615,14 +5503,6 @@ export type MutationScheduleUnpublishReviewArgs = {
   releaseAt?: InputMaybe<Scalars['DateTime']>;
   releaseId?: InputMaybe<Scalars['String']>;
   where: ReviewWhereUniqueInput;
-};
-
-
-export type MutationScheduleUnpublishStripeCheckoutArgs = {
-  from?: ReadonlyArray<Stage>;
-  releaseAt?: InputMaybe<Scalars['DateTime']>;
-  releaseId?: InputMaybe<Scalars['String']>;
-  where: StripeCheckoutWhereUniqueInput;
 };
 
 
@@ -5936,24 +5816,6 @@ export type MutationUnpublishManyReviewsConnectionArgs = {
 };
 
 
-export type MutationUnpublishManyStripeCheckoutsArgs = {
-  from?: ReadonlyArray<Stage>;
-  where?: InputMaybe<StripeCheckoutManyWhereInput>;
-};
-
-
-export type MutationUnpublishManyStripeCheckoutsConnectionArgs = {
-  after?: InputMaybe<Scalars['ID']>;
-  before?: InputMaybe<Scalars['ID']>;
-  first?: InputMaybe<Scalars['Int']>;
-  from?: ReadonlyArray<Stage>;
-  last?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  stage?: InputMaybe<Stage>;
-  where?: InputMaybe<StripeCheckoutManyWhereInput>;
-};
-
-
 export type MutationUnpublishManyUnauthCartsArgs = {
   from?: ReadonlyArray<Stage>;
   where?: InputMaybe<UnauthCartManyWhereInput>;
@@ -6009,12 +5871,6 @@ export type MutationUnpublishProductArgs = {
 export type MutationUnpublishReviewArgs = {
   from?: ReadonlyArray<Stage>;
   where: ReviewWhereUniqueInput;
-};
-
-
-export type MutationUnpublishStripeCheckoutArgs = {
-  from?: ReadonlyArray<Stage>;
-  where: StripeCheckoutWhereUniqueInput;
 };
 
 
@@ -6287,23 +6143,6 @@ export type MutationUpdateManyReviewsConnectionArgs = {
 };
 
 
-export type MutationUpdateManyStripeCheckoutsArgs = {
-  data: StripeCheckoutUpdateManyInput;
-  where?: InputMaybe<StripeCheckoutManyWhereInput>;
-};
-
-
-export type MutationUpdateManyStripeCheckoutsConnectionArgs = {
-  after?: InputMaybe<Scalars['ID']>;
-  before?: InputMaybe<Scalars['ID']>;
-  data: StripeCheckoutUpdateManyInput;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<StripeCheckoutManyWhereInput>;
-};
-
-
 export type MutationUpdateManyUnauthCartsArgs = {
   data: UnauthCartUpdateManyInput;
   where?: InputMaybe<UnauthCartManyWhereInput>;
@@ -6360,12 +6199,6 @@ export type MutationUpdateReviewArgs = {
 export type MutationUpdateScheduledReleaseArgs = {
   data: ScheduledReleaseUpdateInput;
   where: ScheduledReleaseWhereUniqueInput;
-};
-
-
-export type MutationUpdateStripeCheckoutArgs = {
-  data: StripeCheckoutUpdateInput;
-  where: StripeCheckoutWhereUniqueInput;
 };
 
 
@@ -6450,12 +6283,6 @@ export type MutationUpsertProductArgs = {
 export type MutationUpsertReviewArgs = {
   upsert: ReviewUpsertInput;
   where: ReviewWhereUniqueInput;
-};
-
-
-export type MutationUpsertStripeCheckoutArgs = {
-  upsert: StripeCheckoutUpsertInput;
-  where: StripeCheckoutWhereUniqueInput;
 };
 
 
@@ -7078,6 +6905,7 @@ export type OptionWhereUniqueInput = {
 
 export type Order = Node & {
   readonly __typename?: 'Order';
+  readonly account?: Maybe<Account>;
   /** The time the document was created */
   readonly createdAt: Scalars['DateTime'];
   /** User that created this document */
@@ -7104,6 +6932,12 @@ export type Order = Node & {
   readonly updatedAt: Scalars['DateTime'];
   /** User that last updated this document */
   readonly updatedBy?: Maybe<User>;
+};
+
+
+export type OrderAccountArgs = {
+  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
+  locales?: InputMaybe<ReadonlyArray<Locale>>;
 };
 
 
@@ -7181,7 +7015,7 @@ export type OrderConnection = {
 };
 
 export type OrderCreateInput = {
-  readonly cl7np0f7e2mea01up0sutgji6?: InputMaybe<AccountCreateManyInlineInput>;
+  readonly account?: InputMaybe<AccountCreateOneInlineInput>;
   readonly createdAt?: InputMaybe<Scalars['DateTime']>;
   readonly email?: InputMaybe<Scalars['String']>;
   readonly orderItems?: InputMaybe<OrderItemCreateManyInlineInput>;
@@ -7229,6 +7063,7 @@ export type OrderItem = Node & {
   readonly option?: Maybe<Option>;
   readonly order?: Maybe<Order>;
   readonly price?: Maybe<Scalars['Int']>;
+  readonly productName?: Maybe<Scalars['String']>;
   /** The time the document was published. Null on documents in draft stage. */
   readonly publishedAt?: Maybe<Scalars['DateTime']>;
   /** User that last published this document */
@@ -7321,6 +7156,7 @@ export type OrderItemCreateInput = {
   readonly option?: InputMaybe<OptionCreateOneInlineInput>;
   readonly order?: InputMaybe<OrderCreateOneInlineInput>;
   readonly price?: InputMaybe<Scalars['Int']>;
+  readonly productName?: InputMaybe<Scalars['String']>;
   readonly quantity: Scalars['Int'];
   readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
 };
@@ -7413,6 +7249,25 @@ export type OrderItemManyWhereInput = {
   readonly price_not?: InputMaybe<Scalars['Int']>;
   /** All values that are not contained in given list. */
   readonly price_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
+  readonly productName?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  readonly productName_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  readonly productName_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  readonly productName_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  readonly productName_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  readonly productName_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  readonly productName_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  readonly productName_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  readonly productName_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  readonly productName_starts_with?: InputMaybe<Scalars['String']>;
   readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -7472,6 +7327,8 @@ export enum OrderItemOrderByInput {
   IdDesc = 'id_DESC',
   PriceAsc = 'price_ASC',
   PriceDesc = 'price_DESC',
+  ProductNameAsc = 'productName_ASC',
+  ProductNameDesc = 'productName_DESC',
   PublishedAtAsc = 'publishedAt_ASC',
   PublishedAtDesc = 'publishedAt_DESC',
   QuantityAsc = 'quantity_ASC',
@@ -7484,6 +7341,7 @@ export type OrderItemUpdateInput = {
   readonly option?: InputMaybe<OptionUpdateOneInlineInput>;
   readonly order?: InputMaybe<OrderUpdateOneInlineInput>;
   readonly price?: InputMaybe<Scalars['Int']>;
+  readonly productName?: InputMaybe<Scalars['String']>;
   readonly quantity?: InputMaybe<Scalars['Int']>;
 };
 
@@ -7506,6 +7364,7 @@ export type OrderItemUpdateManyInlineInput = {
 
 export type OrderItemUpdateManyInput = {
   readonly price?: InputMaybe<Scalars['Int']>;
+  readonly productName?: InputMaybe<Scalars['String']>;
   readonly quantity?: InputMaybe<Scalars['Int']>;
 };
 
@@ -7623,6 +7482,25 @@ export type OrderItemWhereInput = {
   readonly price_not?: InputMaybe<Scalars['Int']>;
   /** All values that are not contained in given list. */
   readonly price_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['Int']>>>;
+  readonly productName?: InputMaybe<Scalars['String']>;
+  /** All values containing the given string. */
+  readonly productName_contains?: InputMaybe<Scalars['String']>;
+  /** All values ending with the given string. */
+  readonly productName_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are contained in given list. */
+  readonly productName_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
+  /** All values that are not equal to given value. */
+  readonly productName_not?: InputMaybe<Scalars['String']>;
+  /** All values not containing the given string. */
+  readonly productName_not_contains?: InputMaybe<Scalars['String']>;
+  /** All values not ending with the given string */
+  readonly productName_not_ends_with?: InputMaybe<Scalars['String']>;
+  /** All values that are not contained in given list. */
+  readonly productName_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
+  /** All values not starting with the given string. */
+  readonly productName_not_starts_with?: InputMaybe<Scalars['String']>;
+  /** All values starting with the given string. */
+  readonly productName_starts_with?: InputMaybe<Scalars['String']>;
   readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -7704,6 +7582,7 @@ export type OrderManyWhereInput = {
   readonly OR?: InputMaybe<ReadonlyArray<OrderWhereInput>>;
   /** Contains search across all appropriate fields. */
   readonly _search?: InputMaybe<Scalars['String']>;
+  readonly account?: InputMaybe<AccountWhereInput>;
   readonly createdAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly createdAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -7874,7 +7753,7 @@ export enum OrderOrderByInput {
 }
 
 export type OrderUpdateInput = {
-  readonly cl7np0f7e2mea01up0sutgji6?: InputMaybe<AccountUpdateManyInlineInput>;
+  readonly account?: InputMaybe<AccountUpdateOneInlineInput>;
   readonly email?: InputMaybe<Scalars['String']>;
   readonly orderItems?: InputMaybe<OrderItemUpdateManyInlineInput>;
   readonly stripeCheckoutId?: InputMaybe<Scalars['String']>;
@@ -7965,6 +7844,7 @@ export type OrderWhereInput = {
   readonly OR?: InputMaybe<ReadonlyArray<OrderWhereInput>>;
   /** Contains search across all appropriate fields. */
   readonly _search?: InputMaybe<Scalars['String']>;
+  readonly account?: InputMaybe<AccountWhereInput>;
   readonly createdAt?: InputMaybe<Scalars['DateTime']>;
   /** All values greater than the given value. */
   readonly createdAt_gt?: InputMaybe<Scalars['DateTime']>;
@@ -9390,14 +9270,6 @@ export type Query = {
   readonly scheduledReleases: ReadonlyArray<ScheduledRelease>;
   /** Retrieve multiple scheduledReleases using the Relay connection interface */
   readonly scheduledReleasesConnection: ScheduledReleaseConnection;
-  /** Retrieve a single stripeCheckout */
-  readonly stripeCheckout?: Maybe<StripeCheckout>;
-  /** Retrieve document version */
-  readonly stripeCheckoutVersion?: Maybe<DocumentVersion>;
-  /** Retrieve multiple stripeCheckouts */
-  readonly stripeCheckouts: ReadonlyArray<StripeCheckout>;
-  /** Retrieve multiple stripeCheckouts using the Relay connection interface */
-  readonly stripeCheckoutsConnection: StripeCheckoutConnection;
   /** Retrieve a single unauthCart */
   readonly unauthCart?: Maybe<UnauthCart>;
   /** Retrieve document version */
@@ -9979,44 +9851,6 @@ export type QueryScheduledReleasesConnectionArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   stage?: Stage;
   where?: InputMaybe<ScheduledReleaseWhereInput>;
-};
-
-
-export type QueryStripeCheckoutArgs = {
-  locales?: ReadonlyArray<Locale>;
-  stage?: Stage;
-  where: StripeCheckoutWhereUniqueInput;
-};
-
-
-export type QueryStripeCheckoutVersionArgs = {
-  where: VersionWhereInput;
-};
-
-
-export type QueryStripeCheckoutsArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: ReadonlyArray<Locale>;
-  orderBy?: InputMaybe<StripeCheckoutOrderByInput>;
-  skip?: InputMaybe<Scalars['Int']>;
-  stage?: Stage;
-  where?: InputMaybe<StripeCheckoutWhereInput>;
-};
-
-
-export type QueryStripeCheckoutsConnectionArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: ReadonlyArray<Locale>;
-  orderBy?: InputMaybe<StripeCheckoutOrderByInput>;
-  skip?: InputMaybe<Scalars['Int']>;
-  stage?: Stage;
-  where?: InputMaybe<StripeCheckoutWhereInput>;
 };
 
 
@@ -10811,7 +10645,7 @@ export type ScheduledOperationUpdatedByArgs = {
   locales?: InputMaybe<ReadonlyArray<Locale>>;
 };
 
-export type ScheduledOperationAffectedDocument = Account | Asset | Cart | CartItem | Category | Collection | Currency | Option | Order | OrderItem | Person | Product | Review | StripeCheckout | UnauthCart;
+export type ScheduledOperationAffectedDocument = Account | Asset | Cart | CartItem | Category | Collection | Currency | Option | Order | OrderItem | Person | Product | Review | UnauthCart;
 
 export type ScheduledOperationConnectInput = {
   /** Allow to specify document position in list of connected documents, will default to appending at end of list */
@@ -11733,535 +11567,6 @@ export enum Stage {
   /** The Published stage is where you can publish your content to. */
   Published = 'PUBLISHED'
 }
-
-export type StripeCheckout = Node & {
-  readonly __typename?: 'StripeCheckout';
-  readonly cart?: Maybe<Cart>;
-  /** The time the document was created */
-  readonly createdAt: Scalars['DateTime'];
-  /** User that created this document */
-  readonly createdBy?: Maybe<User>;
-  /** Get the document in other stages */
-  readonly documentInStages: ReadonlyArray<StripeCheckout>;
-  /** List of StripeCheckout versions */
-  readonly history: ReadonlyArray<Version>;
-  /** The unique identifier */
-  readonly id: Scalars['ID'];
-  /** The time the document was published. Null on documents in draft stage. */
-  readonly publishedAt?: Maybe<Scalars['DateTime']>;
-  /** User that last published this document */
-  readonly publishedBy?: Maybe<User>;
-  readonly scheduledIn: ReadonlyArray<ScheduledOperation>;
-  /** System stage field */
-  readonly stage: Stage;
-  readonly stripeCheckoutId: Scalars['String'];
-  readonly stripeCheckoutStatus?: Maybe<Scalars['String']>;
-  readonly stripePaymentIntent?: Maybe<Scalars['String']>;
-  /** The time the document was updated */
-  readonly updatedAt: Scalars['DateTime'];
-  /** User that last updated this document */
-  readonly updatedBy?: Maybe<User>;
-};
-
-
-export type StripeCheckoutCartArgs = {
-  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-};
-
-
-export type StripeCheckoutCreatedByArgs = {
-  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-};
-
-
-export type StripeCheckoutDocumentInStagesArgs = {
-  includeCurrent?: Scalars['Boolean'];
-  inheritLocale?: Scalars['Boolean'];
-  stages?: ReadonlyArray<Stage>;
-};
-
-
-export type StripeCheckoutHistoryArgs = {
-  limit?: Scalars['Int'];
-  skip?: Scalars['Int'];
-  stageOverride?: InputMaybe<Stage>;
-};
-
-
-export type StripeCheckoutPublishedByArgs = {
-  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-};
-
-
-export type StripeCheckoutScheduledInArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
-  last?: InputMaybe<Scalars['Int']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-  skip?: InputMaybe<Scalars['Int']>;
-  where?: InputMaybe<ScheduledOperationWhereInput>;
-};
-
-
-export type StripeCheckoutUpdatedByArgs = {
-  forceParentLocale?: InputMaybe<Scalars['Boolean']>;
-  locales?: InputMaybe<ReadonlyArray<Locale>>;
-};
-
-export type StripeCheckoutConnectInput = {
-  /** Allow to specify document position in list of connected documents, will default to appending at end of list */
-  readonly position?: InputMaybe<ConnectPositionInput>;
-  /** Document to connect */
-  readonly where: StripeCheckoutWhereUniqueInput;
-};
-
-/** A connection to a list of items. */
-export type StripeCheckoutConnection = {
-  readonly __typename?: 'StripeCheckoutConnection';
-  readonly aggregate: Aggregate;
-  /** A list of edges. */
-  readonly edges: ReadonlyArray<StripeCheckoutEdge>;
-  /** Information to aid in pagination. */
-  readonly pageInfo: PageInfo;
-};
-
-export type StripeCheckoutCreateInput = {
-  readonly cart?: InputMaybe<CartCreateOneInlineInput>;
-  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
-  readonly stripeCheckoutId: Scalars['String'];
-  readonly stripeCheckoutStatus?: InputMaybe<Scalars['String']>;
-  readonly stripePaymentIntent?: InputMaybe<Scalars['String']>;
-  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
-};
-
-export type StripeCheckoutCreateManyInlineInput = {
-  /** Connect multiple existing StripeCheckout documents */
-  readonly connect?: InputMaybe<ReadonlyArray<StripeCheckoutWhereUniqueInput>>;
-  /** Create and connect multiple existing StripeCheckout documents */
-  readonly create?: InputMaybe<ReadonlyArray<StripeCheckoutCreateInput>>;
-};
-
-export type StripeCheckoutCreateOneInlineInput = {
-  /** Connect one existing StripeCheckout document */
-  readonly connect?: InputMaybe<StripeCheckoutWhereUniqueInput>;
-  /** Create and connect one StripeCheckout document */
-  readonly create?: InputMaybe<StripeCheckoutCreateInput>;
-};
-
-/** An edge in a connection. */
-export type StripeCheckoutEdge = {
-  readonly __typename?: 'StripeCheckoutEdge';
-  /** A cursor for use in pagination. */
-  readonly cursor: Scalars['String'];
-  /** The item at the end of the edge. */
-  readonly node: StripeCheckout;
-};
-
-/** Identifies documents */
-export type StripeCheckoutManyWhereInput = {
-  /** Logical AND on all given filters. */
-  readonly AND?: InputMaybe<ReadonlyArray<StripeCheckoutWhereInput>>;
-  /** Logical NOT on all given filters combined by AND. */
-  readonly NOT?: InputMaybe<ReadonlyArray<StripeCheckoutWhereInput>>;
-  /** Logical OR on all given filters. */
-  readonly OR?: InputMaybe<ReadonlyArray<StripeCheckoutWhereInput>>;
-  /** Contains search across all appropriate fields. */
-  readonly _search?: InputMaybe<Scalars['String']>;
-  readonly cart?: InputMaybe<CartWhereInput>;
-  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than the given value. */
-  readonly createdAt_gt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than or equal the given value. */
-  readonly createdAt_gte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are contained in given list. */
-  readonly createdAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  /** All values less than the given value. */
-  readonly createdAt_lt?: InputMaybe<Scalars['DateTime']>;
-  /** All values less than or equal the given value. */
-  readonly createdAt_lte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not equal to given value. */
-  readonly createdAt_not?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not contained in given list. */
-  readonly createdAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  readonly createdBy?: InputMaybe<UserWhereInput>;
-  readonly documentInStages_every?: InputMaybe<StripeCheckoutWhereStageInput>;
-  readonly documentInStages_none?: InputMaybe<StripeCheckoutWhereStageInput>;
-  readonly documentInStages_some?: InputMaybe<StripeCheckoutWhereStageInput>;
-  readonly id?: InputMaybe<Scalars['ID']>;
-  /** All values containing the given string. */
-  readonly id_contains?: InputMaybe<Scalars['ID']>;
-  /** All values ending with the given string. */
-  readonly id_ends_with?: InputMaybe<Scalars['ID']>;
-  /** All values that are contained in given list. */
-  readonly id_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
-  /** All values that are not equal to given value. */
-  readonly id_not?: InputMaybe<Scalars['ID']>;
-  /** All values not containing the given string. */
-  readonly id_not_contains?: InputMaybe<Scalars['ID']>;
-  /** All values not ending with the given string */
-  readonly id_not_ends_with?: InputMaybe<Scalars['ID']>;
-  /** All values that are not contained in given list. */
-  readonly id_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
-  /** All values not starting with the given string. */
-  readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
-  /** All values starting with the given string. */
-  readonly id_starts_with?: InputMaybe<Scalars['ID']>;
-  readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than the given value. */
-  readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than or equal the given value. */
-  readonly publishedAt_gte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are contained in given list. */
-  readonly publishedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  /** All values less than the given value. */
-  readonly publishedAt_lt?: InputMaybe<Scalars['DateTime']>;
-  /** All values less than or equal the given value. */
-  readonly publishedAt_lte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not equal to given value. */
-  readonly publishedAt_not?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not contained in given list. */
-  readonly publishedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  readonly publishedBy?: InputMaybe<UserWhereInput>;
-  readonly scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly stripeCheckoutId?: InputMaybe<Scalars['String']>;
-  /** All values containing the given string. */
-  readonly stripeCheckoutId_contains?: InputMaybe<Scalars['String']>;
-  /** All values ending with the given string. */
-  readonly stripeCheckoutId_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are contained in given list. */
-  readonly stripeCheckoutId_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
-  /** All values that are not equal to given value. */
-  readonly stripeCheckoutId_not?: InputMaybe<Scalars['String']>;
-  /** All values not containing the given string. */
-  readonly stripeCheckoutId_not_contains?: InputMaybe<Scalars['String']>;
-  /** All values not ending with the given string */
-  readonly stripeCheckoutId_not_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are not contained in given list. */
-  readonly stripeCheckoutId_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
-  /** All values not starting with the given string. */
-  readonly stripeCheckoutId_not_starts_with?: InputMaybe<Scalars['String']>;
-  /** All values starting with the given string. */
-  readonly stripeCheckoutId_starts_with?: InputMaybe<Scalars['String']>;
-  readonly stripeCheckoutStatus?: InputMaybe<Scalars['String']>;
-  /** All values containing the given string. */
-  readonly stripeCheckoutStatus_contains?: InputMaybe<Scalars['String']>;
-  /** All values ending with the given string. */
-  readonly stripeCheckoutStatus_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are contained in given list. */
-  readonly stripeCheckoutStatus_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
-  /** All values that are not equal to given value. */
-  readonly stripeCheckoutStatus_not?: InputMaybe<Scalars['String']>;
-  /** All values not containing the given string. */
-  readonly stripeCheckoutStatus_not_contains?: InputMaybe<Scalars['String']>;
-  /** All values not ending with the given string */
-  readonly stripeCheckoutStatus_not_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are not contained in given list. */
-  readonly stripeCheckoutStatus_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
-  /** All values not starting with the given string. */
-  readonly stripeCheckoutStatus_not_starts_with?: InputMaybe<Scalars['String']>;
-  /** All values starting with the given string. */
-  readonly stripeCheckoutStatus_starts_with?: InputMaybe<Scalars['String']>;
-  readonly stripePaymentIntent?: InputMaybe<Scalars['String']>;
-  /** All values containing the given string. */
-  readonly stripePaymentIntent_contains?: InputMaybe<Scalars['String']>;
-  /** All values ending with the given string. */
-  readonly stripePaymentIntent_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are contained in given list. */
-  readonly stripePaymentIntent_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
-  /** All values that are not equal to given value. */
-  readonly stripePaymentIntent_not?: InputMaybe<Scalars['String']>;
-  /** All values not containing the given string. */
-  readonly stripePaymentIntent_not_contains?: InputMaybe<Scalars['String']>;
-  /** All values not ending with the given string */
-  readonly stripePaymentIntent_not_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are not contained in given list. */
-  readonly stripePaymentIntent_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
-  /** All values not starting with the given string. */
-  readonly stripePaymentIntent_not_starts_with?: InputMaybe<Scalars['String']>;
-  /** All values starting with the given string. */
-  readonly stripePaymentIntent_starts_with?: InputMaybe<Scalars['String']>;
-  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than the given value. */
-  readonly updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than or equal the given value. */
-  readonly updatedAt_gte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are contained in given list. */
-  readonly updatedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  /** All values less than the given value. */
-  readonly updatedAt_lt?: InputMaybe<Scalars['DateTime']>;
-  /** All values less than or equal the given value. */
-  readonly updatedAt_lte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not equal to given value. */
-  readonly updatedAt_not?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not contained in given list. */
-  readonly updatedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  readonly updatedBy?: InputMaybe<UserWhereInput>;
-};
-
-export enum StripeCheckoutOrderByInput {
-  CreatedAtAsc = 'createdAt_ASC',
-  CreatedAtDesc = 'createdAt_DESC',
-  IdAsc = 'id_ASC',
-  IdDesc = 'id_DESC',
-  PublishedAtAsc = 'publishedAt_ASC',
-  PublishedAtDesc = 'publishedAt_DESC',
-  StripeCheckoutIdAsc = 'stripeCheckoutId_ASC',
-  StripeCheckoutIdDesc = 'stripeCheckoutId_DESC',
-  StripeCheckoutStatusAsc = 'stripeCheckoutStatus_ASC',
-  StripeCheckoutStatusDesc = 'stripeCheckoutStatus_DESC',
-  StripePaymentIntentAsc = 'stripePaymentIntent_ASC',
-  StripePaymentIntentDesc = 'stripePaymentIntent_DESC',
-  UpdatedAtAsc = 'updatedAt_ASC',
-  UpdatedAtDesc = 'updatedAt_DESC'
-}
-
-export type StripeCheckoutUpdateInput = {
-  readonly cart?: InputMaybe<CartUpdateOneInlineInput>;
-  readonly stripeCheckoutId?: InputMaybe<Scalars['String']>;
-  readonly stripeCheckoutStatus?: InputMaybe<Scalars['String']>;
-  readonly stripePaymentIntent?: InputMaybe<Scalars['String']>;
-};
-
-export type StripeCheckoutUpdateManyInlineInput = {
-  /** Connect multiple existing StripeCheckout documents */
-  readonly connect?: InputMaybe<ReadonlyArray<StripeCheckoutConnectInput>>;
-  /** Create and connect multiple StripeCheckout documents */
-  readonly create?: InputMaybe<ReadonlyArray<StripeCheckoutCreateInput>>;
-  /** Delete multiple StripeCheckout documents */
-  readonly delete?: InputMaybe<ReadonlyArray<StripeCheckoutWhereUniqueInput>>;
-  /** Disconnect multiple StripeCheckout documents */
-  readonly disconnect?: InputMaybe<ReadonlyArray<StripeCheckoutWhereUniqueInput>>;
-  /** Override currently-connected documents with multiple existing StripeCheckout documents */
-  readonly set?: InputMaybe<ReadonlyArray<StripeCheckoutWhereUniqueInput>>;
-  /** Update multiple StripeCheckout documents */
-  readonly update?: InputMaybe<ReadonlyArray<StripeCheckoutUpdateWithNestedWhereUniqueInput>>;
-  /** Upsert multiple StripeCheckout documents */
-  readonly upsert?: InputMaybe<ReadonlyArray<StripeCheckoutUpsertWithNestedWhereUniqueInput>>;
-};
-
-export type StripeCheckoutUpdateManyInput = {
-  readonly stripeCheckoutStatus?: InputMaybe<Scalars['String']>;
-};
-
-export type StripeCheckoutUpdateManyWithNestedWhereInput = {
-  /** Update many input */
-  readonly data: StripeCheckoutUpdateManyInput;
-  /** Document search */
-  readonly where: StripeCheckoutWhereInput;
-};
-
-export type StripeCheckoutUpdateOneInlineInput = {
-  /** Connect existing StripeCheckout document */
-  readonly connect?: InputMaybe<StripeCheckoutWhereUniqueInput>;
-  /** Create and connect one StripeCheckout document */
-  readonly create?: InputMaybe<StripeCheckoutCreateInput>;
-  /** Delete currently connected StripeCheckout document */
-  readonly delete?: InputMaybe<Scalars['Boolean']>;
-  /** Disconnect currently connected StripeCheckout document */
-  readonly disconnect?: InputMaybe<Scalars['Boolean']>;
-  /** Update single StripeCheckout document */
-  readonly update?: InputMaybe<StripeCheckoutUpdateWithNestedWhereUniqueInput>;
-  /** Upsert single StripeCheckout document */
-  readonly upsert?: InputMaybe<StripeCheckoutUpsertWithNestedWhereUniqueInput>;
-};
-
-export type StripeCheckoutUpdateWithNestedWhereUniqueInput = {
-  /** Document to update */
-  readonly data: StripeCheckoutUpdateInput;
-  /** Unique document search */
-  readonly where: StripeCheckoutWhereUniqueInput;
-};
-
-export type StripeCheckoutUpsertInput = {
-  /** Create document if it didn't exist */
-  readonly create: StripeCheckoutCreateInput;
-  /** Update document if it exists */
-  readonly update: StripeCheckoutUpdateInput;
-};
-
-export type StripeCheckoutUpsertWithNestedWhereUniqueInput = {
-  /** Upsert data */
-  readonly data: StripeCheckoutUpsertInput;
-  /** Unique document search */
-  readonly where: StripeCheckoutWhereUniqueInput;
-};
-
-/** This contains a set of filters that can be used to compare values internally */
-export type StripeCheckoutWhereComparatorInput = {
-  /** This field can be used to request to check if the entry is outdated by internal comparison */
-  readonly outdated_to?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** Identifies documents */
-export type StripeCheckoutWhereInput = {
-  /** Logical AND on all given filters. */
-  readonly AND?: InputMaybe<ReadonlyArray<StripeCheckoutWhereInput>>;
-  /** Logical NOT on all given filters combined by AND. */
-  readonly NOT?: InputMaybe<ReadonlyArray<StripeCheckoutWhereInput>>;
-  /** Logical OR on all given filters. */
-  readonly OR?: InputMaybe<ReadonlyArray<StripeCheckoutWhereInput>>;
-  /** Contains search across all appropriate fields. */
-  readonly _search?: InputMaybe<Scalars['String']>;
-  readonly cart?: InputMaybe<CartWhereInput>;
-  readonly createdAt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than the given value. */
-  readonly createdAt_gt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than or equal the given value. */
-  readonly createdAt_gte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are contained in given list. */
-  readonly createdAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  /** All values less than the given value. */
-  readonly createdAt_lt?: InputMaybe<Scalars['DateTime']>;
-  /** All values less than or equal the given value. */
-  readonly createdAt_lte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not equal to given value. */
-  readonly createdAt_not?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not contained in given list. */
-  readonly createdAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  readonly createdBy?: InputMaybe<UserWhereInput>;
-  readonly documentInStages_every?: InputMaybe<StripeCheckoutWhereStageInput>;
-  readonly documentInStages_none?: InputMaybe<StripeCheckoutWhereStageInput>;
-  readonly documentInStages_some?: InputMaybe<StripeCheckoutWhereStageInput>;
-  readonly id?: InputMaybe<Scalars['ID']>;
-  /** All values containing the given string. */
-  readonly id_contains?: InputMaybe<Scalars['ID']>;
-  /** All values ending with the given string. */
-  readonly id_ends_with?: InputMaybe<Scalars['ID']>;
-  /** All values that are contained in given list. */
-  readonly id_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
-  /** All values that are not equal to given value. */
-  readonly id_not?: InputMaybe<Scalars['ID']>;
-  /** All values not containing the given string. */
-  readonly id_not_contains?: InputMaybe<Scalars['ID']>;
-  /** All values not ending with the given string */
-  readonly id_not_ends_with?: InputMaybe<Scalars['ID']>;
-  /** All values that are not contained in given list. */
-  readonly id_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['ID']>>>;
-  /** All values not starting with the given string. */
-  readonly id_not_starts_with?: InputMaybe<Scalars['ID']>;
-  /** All values starting with the given string. */
-  readonly id_starts_with?: InputMaybe<Scalars['ID']>;
-  readonly publishedAt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than the given value. */
-  readonly publishedAt_gt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than or equal the given value. */
-  readonly publishedAt_gte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are contained in given list. */
-  readonly publishedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  /** All values less than the given value. */
-  readonly publishedAt_lt?: InputMaybe<Scalars['DateTime']>;
-  /** All values less than or equal the given value. */
-  readonly publishedAt_lte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not equal to given value. */
-  readonly publishedAt_not?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not contained in given list. */
-  readonly publishedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  readonly publishedBy?: InputMaybe<UserWhereInput>;
-  readonly scheduledIn_every?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly scheduledIn_none?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly scheduledIn_some?: InputMaybe<ScheduledOperationWhereInput>;
-  readonly stripeCheckoutId?: InputMaybe<Scalars['String']>;
-  /** All values containing the given string. */
-  readonly stripeCheckoutId_contains?: InputMaybe<Scalars['String']>;
-  /** All values ending with the given string. */
-  readonly stripeCheckoutId_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are contained in given list. */
-  readonly stripeCheckoutId_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
-  /** All values that are not equal to given value. */
-  readonly stripeCheckoutId_not?: InputMaybe<Scalars['String']>;
-  /** All values not containing the given string. */
-  readonly stripeCheckoutId_not_contains?: InputMaybe<Scalars['String']>;
-  /** All values not ending with the given string */
-  readonly stripeCheckoutId_not_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are not contained in given list. */
-  readonly stripeCheckoutId_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
-  /** All values not starting with the given string. */
-  readonly stripeCheckoutId_not_starts_with?: InputMaybe<Scalars['String']>;
-  /** All values starting with the given string. */
-  readonly stripeCheckoutId_starts_with?: InputMaybe<Scalars['String']>;
-  readonly stripeCheckoutStatus?: InputMaybe<Scalars['String']>;
-  /** All values containing the given string. */
-  readonly stripeCheckoutStatus_contains?: InputMaybe<Scalars['String']>;
-  /** All values ending with the given string. */
-  readonly stripeCheckoutStatus_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are contained in given list. */
-  readonly stripeCheckoutStatus_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
-  /** All values that are not equal to given value. */
-  readonly stripeCheckoutStatus_not?: InputMaybe<Scalars['String']>;
-  /** All values not containing the given string. */
-  readonly stripeCheckoutStatus_not_contains?: InputMaybe<Scalars['String']>;
-  /** All values not ending with the given string */
-  readonly stripeCheckoutStatus_not_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are not contained in given list. */
-  readonly stripeCheckoutStatus_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
-  /** All values not starting with the given string. */
-  readonly stripeCheckoutStatus_not_starts_with?: InputMaybe<Scalars['String']>;
-  /** All values starting with the given string. */
-  readonly stripeCheckoutStatus_starts_with?: InputMaybe<Scalars['String']>;
-  readonly stripePaymentIntent?: InputMaybe<Scalars['String']>;
-  /** All values containing the given string. */
-  readonly stripePaymentIntent_contains?: InputMaybe<Scalars['String']>;
-  /** All values ending with the given string. */
-  readonly stripePaymentIntent_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are contained in given list. */
-  readonly stripePaymentIntent_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
-  /** All values that are not equal to given value. */
-  readonly stripePaymentIntent_not?: InputMaybe<Scalars['String']>;
-  /** All values not containing the given string. */
-  readonly stripePaymentIntent_not_contains?: InputMaybe<Scalars['String']>;
-  /** All values not ending with the given string */
-  readonly stripePaymentIntent_not_ends_with?: InputMaybe<Scalars['String']>;
-  /** All values that are not contained in given list. */
-  readonly stripePaymentIntent_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['String']>>>;
-  /** All values not starting with the given string. */
-  readonly stripePaymentIntent_not_starts_with?: InputMaybe<Scalars['String']>;
-  /** All values starting with the given string. */
-  readonly stripePaymentIntent_starts_with?: InputMaybe<Scalars['String']>;
-  readonly updatedAt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than the given value. */
-  readonly updatedAt_gt?: InputMaybe<Scalars['DateTime']>;
-  /** All values greater than or equal the given value. */
-  readonly updatedAt_gte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are contained in given list. */
-  readonly updatedAt_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  /** All values less than the given value. */
-  readonly updatedAt_lt?: InputMaybe<Scalars['DateTime']>;
-  /** All values less than or equal the given value. */
-  readonly updatedAt_lte?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not equal to given value. */
-  readonly updatedAt_not?: InputMaybe<Scalars['DateTime']>;
-  /** All values that are not contained in given list. */
-  readonly updatedAt_not_in?: InputMaybe<ReadonlyArray<InputMaybe<Scalars['DateTime']>>>;
-  readonly updatedBy?: InputMaybe<UserWhereInput>;
-};
-
-/** The document in stages filter allows specifying a stage entry to cross compare the same document between different stages */
-export type StripeCheckoutWhereStageInput = {
-  /** Logical AND on all given filters. */
-  readonly AND?: InputMaybe<ReadonlyArray<StripeCheckoutWhereStageInput>>;
-  /** Logical NOT on all given filters combined by AND. */
-  readonly NOT?: InputMaybe<ReadonlyArray<StripeCheckoutWhereStageInput>>;
-  /** Logical OR on all given filters. */
-  readonly OR?: InputMaybe<ReadonlyArray<StripeCheckoutWhereStageInput>>;
-  /** This field contains fields which can be set as true or false to specify an internal comparison */
-  readonly compareWithParent?: InputMaybe<StripeCheckoutWhereComparatorInput>;
-  /** Specify the stage to compare with */
-  readonly stage?: InputMaybe<Stage>;
-};
-
-/** References StripeCheckout record uniquely */
-export type StripeCheckoutWhereUniqueInput = {
-  readonly id?: InputMaybe<Scalars['ID']>;
-  readonly stripeCheckoutId?: InputMaybe<Scalars['String']>;
-  readonly stripePaymentIntent?: InputMaybe<Scalars['String']>;
-};
 
 export enum SystemDateTimeFieldVariation {
   Base = 'BASE',
@@ -13265,6 +12570,13 @@ export type CreateUnAuthCartMutation = { readonly __typename?: 'Mutation', reado
 
 export type UnAuthCartContentFragment = { readonly __typename?: 'UnauthCart', readonly id: string, readonly cartItems?: any | null };
 
+export type GetUnauthCartIdQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetUnauthCartIdQuery = { readonly __typename?: 'Query', readonly unauthCart?: { readonly __typename?: 'UnauthCart', readonly id: string } | null };
+
 export type GetUnauthCartQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -13287,35 +12599,32 @@ export type DeleteUnauthCartMutationVariables = Exact<{
 
 export type DeleteUnauthCartMutation = { readonly __typename?: 'Mutation', readonly deleteUnauthCart?: { readonly __typename?: 'UnauthCart', readonly id: string } | null };
 
-export type CreateStripeCheckoutEndpointByCartMutationVariables = Exact<{
-  cartId: Scalars['ID'];
-  stripeCheckoutId: Scalars['String'];
-  stripeCheckoutStatus: Scalars['String'];
-  stripePaymentIntent: Scalars['String'];
-}>;
-
-
-export type CreateStripeCheckoutEndpointByCartMutation = { readonly __typename?: 'Mutation', readonly createStripeCheckout?: { readonly __typename?: 'StripeCheckout', readonly id: string, readonly stripeCheckoutId: string, readonly stripeCheckoutStatus?: string | null, readonly stripePaymentIntent?: string | null, readonly cart?: { readonly __typename?: 'Cart', readonly id: string } | null } | null };
-
-export type GetUnpaidStripeCheckoutsByCartIdQueryVariables = Exact<{
-  cartId: Scalars['ID'];
-}>;
-
-
-export type GetUnpaidStripeCheckoutsByCartIdQuery = { readonly __typename?: 'Query', readonly cart?: { readonly __typename?: 'Cart', readonly stripeCheckouts: ReadonlyArray<{ readonly __typename?: 'StripeCheckout', readonly id: string, readonly stripeCheckoutId: string, readonly stripeCheckoutStatus?: string | null, readonly stripePaymentIntent?: string | null }> } | null };
-
-export type UpdateStripeCheckoutStatusMutationVariables = Exact<{
-  stripeCheckoutId: Scalars['String'];
-  stripeCheckoutStatus: Scalars['String'];
-}>;
-
-
-export type UpdateStripeCheckoutStatusMutation = { readonly __typename?: 'Mutation', readonly updateStripeCheckout?: { readonly __typename?: 'StripeCheckout', readonly id: string, readonly stripeCheckoutId: string, readonly stripeCheckoutStatus?: string | null, readonly stripePaymentIntent?: string | null, readonly cart?: { readonly __typename?: 'Cart', readonly id: string } | null } | null };
-
 export type CreateEmptyOrderMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CreateEmptyOrderMutation = { readonly __typename?: 'Mutation', readonly createOrder?: { readonly __typename?: 'Order', readonly id: string } | null };
+
+export type UpdateOrderMutationVariables = Exact<{
+  orderId: Scalars['ID'];
+  email: Scalars['String'];
+  total: Scalars['Int'];
+  stripeCheckoutId: Scalars['String'];
+  stripePaymentIntentStatus: Scalars['String'];
+}>;
+
+
+export type UpdateOrderMutation = { readonly __typename?: 'Mutation', readonly updateOrder?: { readonly __typename?: 'Order', readonly id: string } | null };
+
+export type CreateOrderItemByOrderIdMutationVariables = Exact<{
+  orderId: Scalars['ID'];
+  quantity: Scalars['Int'];
+  price: Scalars['Int'];
+  productName: Scalars['String'];
+  optionId: Scalars['ID'];
+}>;
+
+
+export type CreateOrderItemByOrderIdMutation = { readonly __typename?: 'Mutation', readonly createOrderItem?: { readonly __typename?: 'OrderItem', readonly id: string } | null };
 
 export const CartContentQueryWithOptionFragmentDoc = gql`
     fragment cartContentQueryWithOption on Cart {
@@ -13944,6 +13253,41 @@ export function useCreateUnAuthCartMutation(baseOptions?: Apollo.MutationHookOpt
 export type CreateUnAuthCartMutationHookResult = ReturnType<typeof useCreateUnAuthCartMutation>;
 export type CreateUnAuthCartMutationResult = Apollo.MutationResult<CreateUnAuthCartMutation>;
 export type CreateUnAuthCartMutationOptions = Apollo.BaseMutationOptions<CreateUnAuthCartMutation, CreateUnAuthCartMutationVariables>;
+export const GetUnauthCartIdDocument = gql`
+    query GetUnauthCartId($id: ID!) {
+  unauthCart(where: {id: $id}, stage: DRAFT) {
+    id
+  }
+}
+    `;
+
+/**
+ * __useGetUnauthCartIdQuery__
+ *
+ * To run a query within a React component, call `useGetUnauthCartIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUnauthCartIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUnauthCartIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetUnauthCartIdQuery(baseOptions: Apollo.QueryHookOptions<GetUnauthCartIdQuery, GetUnauthCartIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUnauthCartIdQuery, GetUnauthCartIdQueryVariables>(GetUnauthCartIdDocument, options);
+      }
+export function useGetUnauthCartIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUnauthCartIdQuery, GetUnauthCartIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUnauthCartIdQuery, GetUnauthCartIdQueryVariables>(GetUnauthCartIdDocument, options);
+        }
+export type GetUnauthCartIdQueryHookResult = ReturnType<typeof useGetUnauthCartIdQuery>;
+export type GetUnauthCartIdLazyQueryHookResult = ReturnType<typeof useGetUnauthCartIdLazyQuery>;
+export type GetUnauthCartIdQueryResult = Apollo.QueryResult<GetUnauthCartIdQuery, GetUnauthCartIdQueryVariables>;
 export const GetUnauthCartDocument = gql`
     query GetUnauthCart($id: ID!) {
   unauthCart(where: {id: $id}, stage: DRAFT) {
@@ -14046,133 +13390,6 @@ export function useDeleteUnauthCartMutation(baseOptions?: Apollo.MutationHookOpt
 export type DeleteUnauthCartMutationHookResult = ReturnType<typeof useDeleteUnauthCartMutation>;
 export type DeleteUnauthCartMutationResult = Apollo.MutationResult<DeleteUnauthCartMutation>;
 export type DeleteUnauthCartMutationOptions = Apollo.BaseMutationOptions<DeleteUnauthCartMutation, DeleteUnauthCartMutationVariables>;
-export const CreateStripeCheckoutEndpointByCartDocument = gql`
-    mutation CreateStripeCheckoutEndpointByCart($cartId: ID!, $stripeCheckoutId: String!, $stripeCheckoutStatus: String!, $stripePaymentIntent: String!) {
-  createStripeCheckout(
-    data: {cart: {connect: {id: $cartId}}, stripeCheckoutId: $stripeCheckoutId, stripeCheckoutStatus: $stripeCheckoutStatus, stripePaymentIntent: $stripePaymentIntent}
-  ) {
-    id
-    stripeCheckoutId
-    stripeCheckoutStatus
-    stripePaymentIntent
-    cart {
-      id
-    }
-  }
-}
-    `;
-export type CreateStripeCheckoutEndpointByCartMutationFn = Apollo.MutationFunction<CreateStripeCheckoutEndpointByCartMutation, CreateStripeCheckoutEndpointByCartMutationVariables>;
-
-/**
- * __useCreateStripeCheckoutEndpointByCartMutation__
- *
- * To run a mutation, you first call `useCreateStripeCheckoutEndpointByCartMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateStripeCheckoutEndpointByCartMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createStripeCheckoutEndpointByCartMutation, { data, loading, error }] = useCreateStripeCheckoutEndpointByCartMutation({
- *   variables: {
- *      cartId: // value for 'cartId'
- *      stripeCheckoutId: // value for 'stripeCheckoutId'
- *      stripeCheckoutStatus: // value for 'stripeCheckoutStatus'
- *      stripePaymentIntent: // value for 'stripePaymentIntent'
- *   },
- * });
- */
-export function useCreateStripeCheckoutEndpointByCartMutation(baseOptions?: Apollo.MutationHookOptions<CreateStripeCheckoutEndpointByCartMutation, CreateStripeCheckoutEndpointByCartMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateStripeCheckoutEndpointByCartMutation, CreateStripeCheckoutEndpointByCartMutationVariables>(CreateStripeCheckoutEndpointByCartDocument, options);
-      }
-export type CreateStripeCheckoutEndpointByCartMutationHookResult = ReturnType<typeof useCreateStripeCheckoutEndpointByCartMutation>;
-export type CreateStripeCheckoutEndpointByCartMutationResult = Apollo.MutationResult<CreateStripeCheckoutEndpointByCartMutation>;
-export type CreateStripeCheckoutEndpointByCartMutationOptions = Apollo.BaseMutationOptions<CreateStripeCheckoutEndpointByCartMutation, CreateStripeCheckoutEndpointByCartMutationVariables>;
-export const GetUnpaidStripeCheckoutsByCartIdDocument = gql`
-    query getUnpaidStripeCheckoutsByCartId($cartId: ID!) {
-  cart(where: {id: $cartId}) {
-    stripeCheckouts(where: {stripeCheckoutStatus_contains: "unpaid"}) {
-      id
-      stripeCheckoutId
-      stripeCheckoutStatus
-      stripePaymentIntent
-    }
-  }
-}
-    `;
-
-/**
- * __useGetUnpaidStripeCheckoutsByCartIdQuery__
- *
- * To run a query within a React component, call `useGetUnpaidStripeCheckoutsByCartIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUnpaidStripeCheckoutsByCartIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetUnpaidStripeCheckoutsByCartIdQuery({
- *   variables: {
- *      cartId: // value for 'cartId'
- *   },
- * });
- */
-export function useGetUnpaidStripeCheckoutsByCartIdQuery(baseOptions: Apollo.QueryHookOptions<GetUnpaidStripeCheckoutsByCartIdQuery, GetUnpaidStripeCheckoutsByCartIdQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetUnpaidStripeCheckoutsByCartIdQuery, GetUnpaidStripeCheckoutsByCartIdQueryVariables>(GetUnpaidStripeCheckoutsByCartIdDocument, options);
-      }
-export function useGetUnpaidStripeCheckoutsByCartIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUnpaidStripeCheckoutsByCartIdQuery, GetUnpaidStripeCheckoutsByCartIdQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUnpaidStripeCheckoutsByCartIdQuery, GetUnpaidStripeCheckoutsByCartIdQueryVariables>(GetUnpaidStripeCheckoutsByCartIdDocument, options);
-        }
-export type GetUnpaidStripeCheckoutsByCartIdQueryHookResult = ReturnType<typeof useGetUnpaidStripeCheckoutsByCartIdQuery>;
-export type GetUnpaidStripeCheckoutsByCartIdLazyQueryHookResult = ReturnType<typeof useGetUnpaidStripeCheckoutsByCartIdLazyQuery>;
-export type GetUnpaidStripeCheckoutsByCartIdQueryResult = Apollo.QueryResult<GetUnpaidStripeCheckoutsByCartIdQuery, GetUnpaidStripeCheckoutsByCartIdQueryVariables>;
-export const UpdateStripeCheckoutStatusDocument = gql`
-    mutation UpdateStripeCheckoutStatus($stripeCheckoutId: String!, $stripeCheckoutStatus: String!) {
-  updateStripeCheckout(
-    where: {stripeCheckoutId: $stripeCheckoutId}
-    data: {stripeCheckoutStatus: $stripeCheckoutStatus}
-  ) {
-    id
-    stripeCheckoutId
-    stripeCheckoutStatus
-    stripePaymentIntent
-    cart {
-      id
-    }
-  }
-}
-    `;
-export type UpdateStripeCheckoutStatusMutationFn = Apollo.MutationFunction<UpdateStripeCheckoutStatusMutation, UpdateStripeCheckoutStatusMutationVariables>;
-
-/**
- * __useUpdateStripeCheckoutStatusMutation__
- *
- * To run a mutation, you first call `useUpdateStripeCheckoutStatusMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateStripeCheckoutStatusMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateStripeCheckoutStatusMutation, { data, loading, error }] = useUpdateStripeCheckoutStatusMutation({
- *   variables: {
- *      stripeCheckoutId: // value for 'stripeCheckoutId'
- *      stripeCheckoutStatus: // value for 'stripeCheckoutStatus'
- *   },
- * });
- */
-export function useUpdateStripeCheckoutStatusMutation(baseOptions?: Apollo.MutationHookOptions<UpdateStripeCheckoutStatusMutation, UpdateStripeCheckoutStatusMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateStripeCheckoutStatusMutation, UpdateStripeCheckoutStatusMutationVariables>(UpdateStripeCheckoutStatusDocument, options);
-      }
-export type UpdateStripeCheckoutStatusMutationHookResult = ReturnType<typeof useUpdateStripeCheckoutStatusMutation>;
-export type UpdateStripeCheckoutStatusMutationResult = Apollo.MutationResult<UpdateStripeCheckoutStatusMutation>;
-export type UpdateStripeCheckoutStatusMutationOptions = Apollo.BaseMutationOptions<UpdateStripeCheckoutStatusMutation, UpdateStripeCheckoutStatusMutationVariables>;
 export const CreateEmptyOrderDocument = gql`
     mutation CreateEmptyOrder {
   createOrder(data: {}) {
@@ -14205,3 +13422,82 @@ export function useCreateEmptyOrderMutation(baseOptions?: Apollo.MutationHookOpt
 export type CreateEmptyOrderMutationHookResult = ReturnType<typeof useCreateEmptyOrderMutation>;
 export type CreateEmptyOrderMutationResult = Apollo.MutationResult<CreateEmptyOrderMutation>;
 export type CreateEmptyOrderMutationOptions = Apollo.BaseMutationOptions<CreateEmptyOrderMutation, CreateEmptyOrderMutationVariables>;
+export const UpdateOrderDocument = gql`
+    mutation UpdateOrder($orderId: ID!, $email: String!, $total: Int!, $stripeCheckoutId: String!, $stripePaymentIntentStatus: String!) {
+  updateOrder(
+    where: {id: $orderId}
+    data: {email: $email, total: $total, stripeCheckoutId: $stripeCheckoutId, stripePaymentIntentStatus: $stripePaymentIntentStatus, account: {connect: {email: $email}}}
+  ) {
+    id
+  }
+}
+    `;
+export type UpdateOrderMutationFn = Apollo.MutationFunction<UpdateOrderMutation, UpdateOrderMutationVariables>;
+
+/**
+ * __useUpdateOrderMutation__
+ *
+ * To run a mutation, you first call `useUpdateOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateOrderMutation, { data, loading, error }] = useUpdateOrderMutation({
+ *   variables: {
+ *      orderId: // value for 'orderId'
+ *      email: // value for 'email'
+ *      total: // value for 'total'
+ *      stripeCheckoutId: // value for 'stripeCheckoutId'
+ *      stripePaymentIntentStatus: // value for 'stripePaymentIntentStatus'
+ *   },
+ * });
+ */
+export function useUpdateOrderMutation(baseOptions?: Apollo.MutationHookOptions<UpdateOrderMutation, UpdateOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateOrderMutation, UpdateOrderMutationVariables>(UpdateOrderDocument, options);
+      }
+export type UpdateOrderMutationHookResult = ReturnType<typeof useUpdateOrderMutation>;
+export type UpdateOrderMutationResult = Apollo.MutationResult<UpdateOrderMutation>;
+export type UpdateOrderMutationOptions = Apollo.BaseMutationOptions<UpdateOrderMutation, UpdateOrderMutationVariables>;
+export const CreateOrderItemByOrderIdDocument = gql`
+    mutation CreateOrderItemByOrderId($orderId: ID!, $quantity: Int!, $price: Int!, $productName: String!, $optionId: ID!) {
+  createOrderItem(
+    data: {order: {connect: {id: $orderId}}, quantity: $quantity, price: $price, productName: $productName, option: {connect: {id: $optionId}}}
+  ) {
+    id
+  }
+}
+    `;
+export type CreateOrderItemByOrderIdMutationFn = Apollo.MutationFunction<CreateOrderItemByOrderIdMutation, CreateOrderItemByOrderIdMutationVariables>;
+
+/**
+ * __useCreateOrderItemByOrderIdMutation__
+ *
+ * To run a mutation, you first call `useCreateOrderItemByOrderIdMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrderItemByOrderIdMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOrderItemByOrderIdMutation, { data, loading, error }] = useCreateOrderItemByOrderIdMutation({
+ *   variables: {
+ *      orderId: // value for 'orderId'
+ *      quantity: // value for 'quantity'
+ *      price: // value for 'price'
+ *      productName: // value for 'productName'
+ *      optionId: // value for 'optionId'
+ *   },
+ * });
+ */
+export function useCreateOrderItemByOrderIdMutation(baseOptions?: Apollo.MutationHookOptions<CreateOrderItemByOrderIdMutation, CreateOrderItemByOrderIdMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateOrderItemByOrderIdMutation, CreateOrderItemByOrderIdMutationVariables>(CreateOrderItemByOrderIdDocument, options);
+      }
+export type CreateOrderItemByOrderIdMutationHookResult = ReturnType<typeof useCreateOrderItemByOrderIdMutation>;
+export type CreateOrderItemByOrderIdMutationResult = Apollo.MutationResult<CreateOrderItemByOrderIdMutation>;
+export type CreateOrderItemByOrderIdMutationOptions = Apollo.BaseMutationOptions<CreateOrderItemByOrderIdMutation, CreateOrderItemByOrderIdMutationVariables>;

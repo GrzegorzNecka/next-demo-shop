@@ -1,20 +1,23 @@
 import type { CartItem } from 'context/types';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { cartItemsByAccount } from 'context/utils/cart-items-by-account';
-import { cartItemsByCookieId } from 'context/utils/cart-items-by-cookie-id';
 import { useQuery } from '@tanstack/react-query';
+import { cartItemsByAccount } from 'context/services/cart-items-by-account';
+import { cartItemsByCookieId } from 'context/services/cart-items-by-cookie-id';
 
 export const useCartItems = () => {
     //
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
     const { status } = useSession();
 
-    const { data: cookie }: { data: { id: string } | undefined } = useQuery({
+    //  type QueryCookieData = { data: { id: string } | undefined };
+
+    const { data: cookie } = useQuery({
         queryKey: ['cookieCartId'],
         queryFn: async () => {
-            const res = await fetch('/api/cart/cookies/create-id', {
+            const res = await fetch('/api/cookies/get-cookie-cart-id', {
                 method: 'GET',
                 credentials: 'same-origin',
                 headers: { 'Content-Type': 'application/json;' },
@@ -25,24 +28,40 @@ export const useCartItems = () => {
         enabled: status === 'unauthenticated' ? true : false,
     });
 
+    const cookieCartId: string | undefined = cookie?.id;
+
+    // aktualizacja stanu wewnątrz funkcji
     const byAccount = cartItemsByAccount({
         setCartItems,
         setIsLoading,
         cartItems,
     });
 
+    // aktualizacja stanu wewnątrz funkcji
     const byCookieId = cartItemsByCookieId({
         setCartItems,
         setIsLoading,
-        cookieCartId: cookie?.id!,
+        cookieCartId,
         cartItems,
     });
 
-    const methods = status === 'authenticated' ? byAccount : byCookieId;
-
     useEffect(() => {
-        methods.updateCartItems();
-    }, [status]);
+        if (status === 'loading') {
+            return;
+        }
+
+        if (status === 'authenticated') {
+            byAccount.updateCartItems();
+        }
+
+        if (status === 'unauthenticated' && typeof cookieCartId === 'string') {
+            byCookieId.updateCartItems();
+        }
+
+        return;
+    }, [status, cookieCartId]);
+
+    const methods = status === 'authenticated' ? byAccount : byCookieId;
 
     return {
         cartItems,

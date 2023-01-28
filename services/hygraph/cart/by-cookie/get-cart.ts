@@ -6,13 +6,20 @@ import type { CartItem } from 'context/types';
 //
 
 export default async function getCartItemsByCookieId(cookieCartId: string) {
+    //----
     const unauthCart = await apolloClient.query<GetUnauthCartQuery, GetUnauthCartQueryVariables>({
         query: GetUnauthCartDocument,
         variables: { id: cookieCartId },
         fetchPolicy: 'no-cache',
     });
 
-    const unauthCartItems: CartItem[] = JSON.parse(unauthCart.data.unauthCart?.cartItems) || [];
+    let unauthCartItems: CartItem[] = [];
+
+    const cartItems = unauthCart.data.unauthCart?.cartItems;
+
+    if (!!cartItems || Array.isArray(cartItems)) {
+        unauthCartItems = JSON.parse(cartItems);
+    }
 
     return unauthCartItems;
 }

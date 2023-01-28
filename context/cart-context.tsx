@@ -1,41 +1,52 @@
 import { createContext, useContext } from 'react';
 import type { CartState } from './types';
 import { useCartItems } from './hooks/use-cart-items';
+import calculateTotal from './utils/calculate-total';
 
 export const CartStateContext = createContext<CartState | null>(null);
 
 // -- PROVIDER
 
 export const CartStateContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const { cartItems, isLoading, addItemToCart, removeItemFromCart, clearCartItems } =
-    useCartItems();
+    const { cartItems, isLoading, addItemToCart, removeItemFromCart, clearCartItems } =
+        useCartItems();
 
-  const initialCartState: CartState = {
-    items: cartItems || [],
-    total: 0,
-    isLoading,
-    addItemToCart,
-    removeItemFromCart,
-    clearCartItems,
-  };
+    const initialCartState: CartState = {
+        items: cartItems || [],
+        total: 0,
+        isLoading,
+        addItemToCart,
+        removeItemFromCart,
+        clearCartItems,
+    };
 
-  return <CartStateContext.Provider value={initialCartState}>{children}</CartStateContext.Provider>;
+    return (
+        <CartStateContext.Provider value={initialCartState}>{children}</CartStateContext.Provider>
+    );
 };
 
 // -- CLIENT
 
 export const useCartState = () => {
-  const cartState = useContext(CartStateContext);
+    const cartState = useContext(CartStateContext);
 
-  const itemsLength = cartState?.items.map((obj) => {
-    return obj.quantity;
-  });
+    const cartItems = cartState?.items;
+    // todo - use memo
+    // const total = 0;
+    // if (cartItems) {
+    //     const quantities = cartItems.map((item) => ({ quantity: item.quantity })),
+    //         total = calculateTotal(quantities);
+    // }
 
-  const total = itemsLength?.reduce((prev, current) => prev + current, 0);
+    const itemsLength = cartState?.items.map((obj) => {
+        return obj.quantity;
+    });
 
-  if (!cartState) {
-    throw new Error('you forgot CartStateContext.Provider');
-  }
+    const total = itemsLength?.reduce((prev, current) => prev + current, 0);
 
-  return { ...cartState, total };
+    if (!cartState) {
+        throw new Error('you forgot CartStateContext.Provider');
+    }
+
+    return { ...cartState, total };
 };

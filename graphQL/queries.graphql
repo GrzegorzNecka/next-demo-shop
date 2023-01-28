@@ -176,6 +176,12 @@ fragment unAuthCartContent on UnauthCart {
     cartItems
 }
 
+query GetUnauthCartId($id: ID!) {
+    unauthCart(where: { id: $id }, stage: DRAFT) {
+        id
+    }
+}
+
 query GetUnauthCart($id: ID!) {
     unauthCart(where: { id: $id }, stage: DRAFT) {
         ...unAuthCartContent
@@ -194,58 +200,49 @@ mutation DeleteUnauthCart($id: ID!) {
     }
 }
 
-mutation CreateStripeCheckoutEndpointByCart(
-    $cartId: ID!
-    $stripeCheckoutId: String!
-    $stripeCheckoutStatus: String!
-    $stripePaymentIntent: String!
-) {
-    createStripeCheckout(
-        data: {
-            cart: { connect: { id: $cartId } }
-            stripeCheckoutId: $stripeCheckoutId
-            stripeCheckoutStatus: $stripeCheckoutStatus
-            stripePaymentIntent: $stripePaymentIntent
-        }
-    ) {
-        id
-        stripeCheckoutId
-        stripeCheckoutStatus
-        stripePaymentIntent
-        cart {
-            id
-        }
-    }
-}
-
-query getUnpaidStripeCheckoutsByCartId($cartId: ID!) {
-    cart(where: { id: $cartId }) {
-        stripeCheckouts(where: { stripeCheckoutStatus_contains: "unpaid" }) {
-            id
-            stripeCheckoutId
-            stripeCheckoutStatus
-            stripePaymentIntent
-        }
-    }
-}
-
-mutation UpdateStripeCheckoutStatus($stripeCheckoutId: String!, $stripeCheckoutStatus: String!) {
-    updateStripeCheckout(
-        where: { stripeCheckoutId: $stripeCheckoutId }
-        data: { stripeCheckoutStatus: $stripeCheckoutStatus }
-    ) {
-        id
-        stripeCheckoutId
-        stripeCheckoutStatus
-        stripePaymentIntent
-        cart {
-            id
-        }
-    }
-}
-
 mutation CreateEmptyOrder {
     createOrder(data: {}) {
+        id
+    }
+}
+
+mutation UpdateOrder(
+    $orderId: ID!
+    $email: String!
+    $total: Int!
+    $stripeCheckoutId: String!
+    $stripePaymentIntentStatus: String!
+) {
+    updateOrder(
+        where: { id: $orderId }
+        data: {
+            email: $email
+            total: $total
+            stripeCheckoutId: $stripeCheckoutId
+            stripePaymentIntentStatus: $stripePaymentIntentStatus
+            account: { connect: { email: $email } }
+        }
+    ) {
+        id
+    }
+}
+
+mutation CreateOrderItemByOrderId(
+    $orderId: ID!
+    $quantity: Int!
+    $price: Int!
+    $productName: String!
+    $optionId: ID!
+) {
+    createOrderItem(
+        data: {
+            order: { connect: { id: $orderId } }
+            quantity: $quantity
+            price: $price
+            productName: $productName
+            option: { connect: { id: $optionId } }
+        }
+    ) {
         id
     }
 }

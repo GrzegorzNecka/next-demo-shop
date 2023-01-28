@@ -2,9 +2,9 @@ import { authOptions } from 'pages/api/auth/[...nextauth]';
 import { unstable_getServerSession } from 'next-auth/next';
 import type { NextApiHandler } from 'next/types';
 
-import clearCartByCartId from 'services/hygraph/cart/by-account/clear';
+import clearCartByCartId from 'services/hygraph/cart/by-account/clear-cart';
 import updateItemQuantityByCartId from 'services/hygraph/cart/by-account/update-item';
-import getCartItemsByCartId from 'services/hygraph/cart/by-account/get-all';
+import getCartByCartId from 'services/hygraph/cart/by-account/get-cart';
 import createCartItemByCartId from 'services/hygraph/cart/by-account/create-item';
 import removeItemByCartId from 'services/hygraph/cart/by-account/remove-item';
 
@@ -21,7 +21,7 @@ const handleCartSession: NextApiHandler = async (req, res) => {
     //--
 
     if (req.method === 'GET') {
-        const getCartItems = await getCartItemsByCartId({
+        const cart = await getCartByCartId({
             id: cartId,
         });
 
@@ -29,7 +29,7 @@ const handleCartSession: NextApiHandler = async (req, res) => {
         //     res.status(500);
         // }
 
-        res.status(200).json({ cart: getCartItems.data.cart });
+        res.status(200).json({ cart });
         return;
     }
 

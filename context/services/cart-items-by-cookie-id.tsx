@@ -5,7 +5,7 @@ import { productToCartItem } from 'utils/cart';
 type cartItemsByCookieIdProps = {
     setCartItems: Dispatch<SetStateAction<CartItem[]>>;
     setIsLoading: Dispatch<SetStateAction<boolean>>;
-    cookieCartId: string;
+    cookieCartId: string | undefined;
     cartItems: CartItem[];
 };
 
@@ -20,8 +20,12 @@ export const cartItemsByCookieId = ({
     const API_CART_PATH = '/api/cart/cart-items-by-cookie-id';
 
     // -- CONTEXT HANDLERS
-
+    // -- GET
     const updateCartItems = async () => {
+        if (!cookieCartId) {
+            return;
+        }
+
         const result = await fetch(API_CART_PATH, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json;' },
@@ -36,6 +40,8 @@ export const cartItemsByCookieId = ({
         setCartItems(withFetchedCartItems);
         setIsLoading(false);
     };
+
+    // -- ADD
 
     const addItemToCart = async (product: CartItem) => {
         setIsLoading(true);
@@ -76,6 +82,8 @@ export const cartItemsByCookieId = ({
             setIsLoading(false);
         }
     };
+
+    // -- REMOVE
 
     const removeItemFromCart = async (itemId: CartItem['productOptionId']) => {
         if (!cartItems) {
@@ -123,6 +131,8 @@ export const cartItemsByCookieId = ({
         }
         return;
     };
+
+    // -- CLEAR
 
     const clearCartItems = async () => {
         if (!cartItems) {

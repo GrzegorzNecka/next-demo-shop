@@ -8,10 +8,10 @@ import { getCookie } from 'cookies-next';
 import getAccountByEmailQuery from 'services/hygraph/account/get-account-by-email';
 import getCartItemsByAccount from 'services/hygraph/account/get-cart-items-by-account';
 import getCartIdByAccountIdQuery from 'services/hygraph/account/get-cart-id-by-account';
-import getCartItemsByCookieId from 'services/hygraph/cart/by-cookie/get-all';
+import getCartItemsByCookieId from 'services/hygraph/cart/by-cookie/get-cart';
 import createCartItemByCartId from 'services/hygraph/cart/by-account/create-item';
 import updateItemQuantityByCartId from 'services/hygraph/cart/by-account/update-item';
-import clearCartByCookieId from 'services/hygraph/cart/by-cookie/clear';
+import clearCartByCookieId from 'services/hygraph/cart/by-cookie/clear-cart';
 
 // -- INIT AUTH_OPTIONS
 

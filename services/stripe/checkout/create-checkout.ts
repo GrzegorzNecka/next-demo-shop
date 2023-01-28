@@ -1,6 +1,10 @@
-import getCartItemsByCartId from 'services/hygraph/cart/by-account/get-all';
+import type { CartItem } from 'graphQL/generated/graphql';
+import clearCartByCartId from 'services/hygraph/cart/by-account/clear-cart';
+import getCartByCartId from 'services/hygraph/cart/by-account/get-cart';
 import { createEmptyOrder } from 'services/hygraph/order/create-empty-item';
+import { updateOrderByOrderId } from 'services/hygraph/order/update-order';
 import Stripe from 'stripe';
+import createContextCartItem from 'utils/create-context-cart-item';
 import type { StripeCreateCheckout } from 'validation/stripe-checkout-create-schema';
 import { stripeCreateCheckoutSchema } from 'validation/stripe-checkout-create-schema';
 
@@ -21,25 +25,21 @@ export const createCheckout = async (payload: StripeCreateCheckout) => {
 
     //todo - tutaj powinienem pobierać koszyk ? , a w paylodzie powinien być przekazywany id koszyka
 
-    const getCartItems = await getCartItemsByCartId({
+    const cart = await getCartByCartId({
         id: payload.cartId,
     });
 
-    if (!getCartItems.data.cart?.cartItems) {
-        return { rejected: { message: `cartItems is not exist`, status: 500 } };
+    if (!cart?.cartItems) {
+        return { rejected: { message: `cartItems not exist`, status: 500 } };
     }
 
-    const cartItems = getCartItems.data.cart.cartItems.map((cartItem) => {
+    const cartItems = cart.cartItems.map((cartItem) => {
         return {
             product: cartItem.option?.product,
             quantity: cartItem.quantity,
             option: cartItem.option,
         };
     });
-
-    const { orderId } = await createEmptyOrder();
-
-    //todo - description powinien być wyskakiwać z pętli
 
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = cartItems.map((item) => {
         return {
@@ -60,7 +60,6 @@ export const createCheckout = async (payload: StripeCreateCheckout) => {
                     metadata: {
                         slug: item.product!.slug,
                         id: item.option!.id,
-                        //todo - tu muszę odebrać id koszyka
                     },
                 },
             },
@@ -68,7 +67,7 @@ export const createCheckout = async (payload: StripeCreateCheckout) => {
         };
     });
 
-    //todo - 1 -  tu mogę stworzyćpusty order i pobrać jego id
+    const { orderId } = await createEmptyOrder();
 
     const paymentObject = {
         mode: 'payment',
@@ -78,34 +77,23 @@ export const createCheckout = async (payload: StripeCreateCheckout) => {
         cancel_url: `${process.env.NEXT_PUBLIC_HOST}/checkout/cancel?canceled=true`,
         line_items: lineItems,
         payment_intent_data: {
-            metadata: { orderId: orderId, mail: '123@gmail.com', cartId: payload.cartId },
+            metadata: { email: payload.email, cartId: payload.cartId, orderId: orderId },
         },
-        metadata: { mail: '123@gmail.com', cartId: 666 }, //todo -  2 - tu najlepiej jakby było id Orderu
     } satisfies Stripe.Checkout.SessionCreateParams;
 
     const session = await stripe.checkout.sessions.create(paymentObject);
 
-    //todo - 3 - tu uzupełniam dane całego orderu
+    // todo - 3 - tu uzupełniam dane całego orderu
 
-    //
-    //!todo - stworzenie order w graphCms- status unpaid
-    // const createStripeCheckoutEndpoint = await authApolloClient.mutate<
-    //     CreateStripeCheckoutEndpointByCartMutation,
-    //     CreateStripeCheckoutEndpointByCartMutationVariables
-    // >({
-    //     mutation: CreateStripeCheckoutEndpointByCartDocument,
-    //     variables: {
-    //         cartId: payload.cartId,
-    //         stripeCheckoutId: session.id,
-    //         stripeCheckoutStatus: session.payment_status,
-    //         stripePaymentIntent: String(session.payment_intent),
-    //         //todo - powinieneś podać tu listę produktów z ceną i nazwą
-    //     },
-    // });
+    const updateOrder = await updateOrderByOrderId({
+        session,
+        payload,
+        cart,
+        orderId,
+    });
 
-    // console.log('🚀 ~  createStripeCheckoutEndpoint', createStripeCheckoutEndpoint);
+    const clearCart = await clearCartByCartId({ cartId: payload.cartId });
 
-    //todo 1 - koszyk powinien zostać usunięty, a raczej jego stan przeniesiony do order
     //todo 2 - jeśli payment.success = w magazynie zmniejsz liczbę towarów o to oc zostało kupione
     //todo 3 - nowy koszyk powinien zostać utworzony - w sensie rozważ kilka koszyków w ramach konta
     //todo 4 - więc to do koszyka powinien być przypisany idStripa
@@ -117,3 +105,6 @@ export const createCheckout = async (payload: StripeCreateCheckout) => {
 
     return session;
 };
+function removeAllCartItems() {
+    throw new Error('Function not implemented.');
+}

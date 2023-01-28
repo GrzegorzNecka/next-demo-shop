@@ -1,5 +1,5 @@
 import type { NextApiHandler } from 'next/types';
-import { createCheckout } from 'services/stripe/checkout/create';
+import { createCheckout } from 'services/stripe/checkout/create-checkout';
 import type { StripeCreateCheckout } from 'validation/stripe-checkout-create-schema';
 
 const checkoutHandler: NextApiHandler = async (req, res) => {
