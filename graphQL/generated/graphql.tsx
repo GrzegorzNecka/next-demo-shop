@@ -12530,6 +12530,14 @@ export type UpdateItemQuantityByCartIdMutationVariables = Exact<{
 
 export type UpdateItemQuantityByCartIdMutation = { readonly __typename?: 'Mutation', readonly updateCart?: { readonly __typename?: 'Cart', readonly id: string, readonly cartItems: ReadonlyArray<{ readonly __typename?: 'CartItem', readonly id: string, readonly quantity: number, readonly option?: { readonly __typename?: 'Option', readonly id: string, readonly color?: ProductColor | null, readonly size?: ProductSize | null, readonly total: number, readonly product?: { readonly __typename?: 'Product', readonly id: string, readonly name: string, readonly price: number, readonly slug: string, readonly images: ReadonlyArray<{ readonly __typename?: 'Asset', readonly url: string }> } | null } | null }> } | null };
 
+export type SetProductOptionTotalMutationVariables = Exact<{
+  id: Scalars['ID'];
+  total: Scalars['Int'];
+}>;
+
+
+export type SetProductOptionTotalMutation = { readonly __typename?: 'Mutation', readonly updateOption?: { readonly __typename?: 'Option', readonly id: string } | null, readonly publishOption?: { readonly __typename?: 'Option', readonly id: string } | null };
+
 export type ClearCartItemsMutationVariables = Exact<{
   cartId: Scalars['ID'];
 }>;
@@ -13027,6 +13035,43 @@ export function useUpdateItemQuantityByCartIdMutation(baseOptions?: Apollo.Mutat
 export type UpdateItemQuantityByCartIdMutationHookResult = ReturnType<typeof useUpdateItemQuantityByCartIdMutation>;
 export type UpdateItemQuantityByCartIdMutationResult = Apollo.MutationResult<UpdateItemQuantityByCartIdMutation>;
 export type UpdateItemQuantityByCartIdMutationOptions = Apollo.BaseMutationOptions<UpdateItemQuantityByCartIdMutation, UpdateItemQuantityByCartIdMutationVariables>;
+export const SetProductOptionTotalDocument = gql`
+    mutation SetProductOptionTotal($id: ID!, $total: Int!) {
+  updateOption(where: {id: $id}, data: {total: $total}) {
+    id
+  }
+  publishOption(where: {id: $id}) {
+    id
+  }
+}
+    `;
+export type SetProductOptionTotalMutationFn = Apollo.MutationFunction<SetProductOptionTotalMutation, SetProductOptionTotalMutationVariables>;
+
+/**
+ * __useSetProductOptionTotalMutation__
+ *
+ * To run a mutation, you first call `useSetProductOptionTotalMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetProductOptionTotalMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setProductOptionTotalMutation, { data, loading, error }] = useSetProductOptionTotalMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      total: // value for 'total'
+ *   },
+ * });
+ */
+export function useSetProductOptionTotalMutation(baseOptions?: Apollo.MutationHookOptions<SetProductOptionTotalMutation, SetProductOptionTotalMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetProductOptionTotalMutation, SetProductOptionTotalMutationVariables>(SetProductOptionTotalDocument, options);
+      }
+export type SetProductOptionTotalMutationHookResult = ReturnType<typeof useSetProductOptionTotalMutation>;
+export type SetProductOptionTotalMutationResult = Apollo.MutationResult<SetProductOptionTotalMutation>;
+export type SetProductOptionTotalMutationOptions = Apollo.BaseMutationOptions<SetProductOptionTotalMutation, SetProductOptionTotalMutationVariables>;
 export const ClearCartItemsDocument = gql`
     mutation ClearCartItems($cartId: ID!) {
   updateCart(where: {id: $cartId}, data: {cartItems: {set: []}}) {

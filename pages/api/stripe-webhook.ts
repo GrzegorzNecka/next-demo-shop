@@ -39,6 +39,8 @@ const checkoutHandler: NextApiHandler = async (req, res) => {
         return;
     }
 
+    // catch events
+
     switch (event.type) {
         case `payment_intent.succeeded`:
             console.log(`event - payment_intent.succeeded`, event.data.object);
@@ -62,10 +64,7 @@ const checkoutHandler: NextApiHandler = async (req, res) => {
         //     break;
         // case 'checkout.session.async_payment_succeeded':
         //     console.log('checkout.session.async_payment_succeeded status', event.data.object);
-        //     // todo - jeśli status jest succeded to wtedy - zmieniamy status na graph cms ...
-        //     // await finalice(cartId)
-        //     // webhook zawsze musi działąć nie może się psuć -
-        //     // @todo zaktualizuj zamówienie w GraphCms
+
         //     break;
         default:
             // Unexpected event type

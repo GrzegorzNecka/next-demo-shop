@@ -12,6 +12,7 @@ export default async function getAccountByEmailQuery(username: string) {
     >({
         query: GetAccountByEmailDocument,
         variables: { email: username },
+        fetchPolicy: 'no-cache',
     });
     return userByEmail;
 }

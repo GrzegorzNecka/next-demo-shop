@@ -20,6 +20,8 @@ export const ButtonAddToCart = ({ data, activeOptionId }: ButtonAddToCartProps) 
     }, [cartState.items, activeOptionId]);
 
     useEffect(() => {
+        console.log('activeOption', activeOption);
+
         if (cartItemOption) {
             setAvailableQuantity(activeOption.total - cartItemOption.quantity);
             return;

@@ -12,6 +12,7 @@ export const createEmptyOrder = async () => {
     >({
         mutation: CreateEmptyOrderDocument,
         variables: {},
+        fetchPolicy: 'no-cache',
     });
 
     return { orderId: order.data?.createOrder?.id || null };

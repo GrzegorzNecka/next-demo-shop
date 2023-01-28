@@ -3,34 +3,36 @@ import clearCartByCartId from 'services/hygraph/cart/by-account/clear-cart';
 import getCartByCartId from 'services/hygraph/cart/by-account/get-cart';
 import { createEmptyOrder } from 'services/hygraph/order/create-empty-item';
 import { updateOrderByOrderId } from 'services/hygraph/order/update-order';
+import { setProductOptionTotal } from 'services/hygraph/product/set-product-option-total';
 import Stripe from 'stripe';
 
 import type { StripeCreateCheckout } from 'validation/stripe-checkout-create-schema';
 import { stripeCreateCheckoutSchema } from 'validation/stripe-checkout-create-schema';
 
 export const createCheckout = async (payload: StripeCreateCheckout) => {
+    //stripe
     const stripeKey = process.env.STRIPE_SECRET_KEY;
 
     if (!stripeKey) {
-        return { rejected: { message: `missing stripe secret key`, status: 500 } };
+        throw new Error('missing stripe secret key');
     }
 
     const stripe = new Stripe(stripeKey, { apiVersion: '2022-11-15' });
 
+    //yup
     const isValid = await stripeCreateCheckoutSchema.isValid(payload);
 
     if (!isValid) {
-        return { rejected: { message: `payload is not valid`, status: 400 } };
+        throw new Error('payload is not valid');
     }
 
-    //todo - tutaj powinienem pobierać koszyk ? , a w paylodzie powinien być przekazywany id koszyka
-
+    //graphql
     const cart = await getCartByCartId({
         id: payload.cartId,
     });
 
     if (!cart?.cartItems) {
-        return { rejected: { message: `cartItems not exist`, status: 500 } };
+        throw new Error('cartItems not exist');
     }
 
     const cartItems = cart.cartItems.map((cartItem) => {
@@ -42,6 +44,10 @@ export const createCheckout = async (payload: StripeCreateCheckout) => {
     });
 
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = cartItems.map((item) => {
+        // todo - to powinno wynikać z funkcji iterującej po option
+        const color = item.option?.color || '-';
+        const size = item.option?.size || '-';
+
         return {
             adjustable_quantity: {
                 enabled: true,
@@ -53,9 +59,7 @@ export const createCheckout = async (payload: StripeCreateCheckout) => {
                 unit_amount: item.product!.price,
                 product_data: {
                     name: item.product!.name,
-                    description: `color: ${item.option?.color || '-'}, size: ${
-                        item.option?.size || '-'
-                    }`,
+                    description: `color: ${color}, size: ${size}`,
                     images: item.product!.images.map((i) => i.url),
                     metadata: {
                         slug: item.product!.slug,
@@ -67,6 +71,8 @@ export const createCheckout = async (payload: StripeCreateCheckout) => {
         };
     });
 
+    console.log('lineItems', lineItems);
+
     const { orderId } = await createEmptyOrder();
 
     const paymentObject = {
@@ -77,13 +83,19 @@ export const createCheckout = async (payload: StripeCreateCheckout) => {
         cancel_url: `${process.env.NEXT_PUBLIC_HOST}/checkout/cancel?canceled=true`,
         line_items: lineItems,
         payment_intent_data: {
-            metadata: { email: payload.email, cartId: payload.cartId, orderId: orderId },
+            metadata: {
+                email: payload.email,
+                cartId: payload.cartId,
+                orderId: orderId,
+            },
         },
     } satisfies Stripe.Checkout.SessionCreateParams;
 
+    console.log('paymentObject', paymentObject);
+
     const session = await stripe.checkout.sessions.create(paymentObject);
 
-    // todo - 3 - tu uzupełniam dane całego orderu
+    console.log(' session', session);
 
     const updateOrder = await updateOrderByOrderId({
         session,
@@ -94,17 +106,7 @@ export const createCheckout = async (payload: StripeCreateCheckout) => {
 
     const clearCart = await clearCartByCartId({ cartId: payload.cartId });
 
-    //todo 2 - jeśli payment.success = w magazynie zmniejsz liczbę towarów o to oc zostało kupione
-    //todo 3 - nowy koszyk powinien zostać utworzony - w sensie rozważ kilka koszyków w ramach konta
-    //todo 4 - więc to do koszyka powinien być przypisany idStripa
-    // hygaph - też ma webhooki
-    //---stripe webhook
-    //todo - jesli płatność ma status sukcess to wtedy oznaczamy w hygraph jako zakończone
-
-    // dostaję informację, że płatność się dokonała
+    const reduceProductTotalOption = await setProductOptionTotal(cart);
 
     return session;
 };
-function removeAllCartItems() {
-    throw new Error('Function not implemented.');
-}

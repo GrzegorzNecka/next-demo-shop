@@ -40,6 +40,7 @@ export const updateOrderByOrderId = async ({
             stripeCheckoutId: session.id,
             stripePaymentIntentStatus: session.payment_status,
         },
+        fetchPolicy: 'no-cache',
     });
 
     //todo price powinien byćw opcji!
@@ -57,6 +58,7 @@ export const updateOrderByOrderId = async ({
                 productName: item.option?.product?.name!,
                 optionId: item.option?.id!,
             },
+            fetchPolicy: 'no-cache',
         });
     });
     console.log('🚀 ~ file: update-order.ts:59 ~ orderItems ~ orderItems', orderItems);

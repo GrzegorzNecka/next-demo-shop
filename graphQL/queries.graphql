@@ -113,6 +113,15 @@ mutation UpdateItemQuantityByCartId($cartId: ID!, $itemId: ID!, $quantity: Int!)
     }
 }
 
+mutation SetProductOptionTotal($id: ID!, $total: Int!) {
+    updateOption(where: { id: $id }, data: { total: $total }) {
+        id
+    }
+    publishOption(where: { id: $id }) {
+        id
+    }
+}
+
 mutation ClearCartItems($cartId: ID!) {
     updateCart(where: { id: $cartId }, data: { cartItems: { set: [] } }) {
         ...cartContentQueryWithOption

@@ -10,11 +10,11 @@ const checkoutHandler: NextApiHandler = async (req, res) => {
 
                 const session = await createCheckout(payload);
 
-                if ('rejected' in session) {
-                    const { rejected } = session;
-                    res.status(rejected.status).json({ message: rejected.message });
-                    return;
-                }
+                // if ('rejected' in session) {
+                //     const { rejected } = session;
+                //     res.status(rejected.status).json({ message: rejected.message });
+                //     return;
+                // }
 
                 if (!session?.url) {
                     return;
