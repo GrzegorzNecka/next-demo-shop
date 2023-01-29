@@ -12642,6 +12642,13 @@ export type UpdateOrderPaymentStatusMutationVariables = Exact<{
 
 export type UpdateOrderPaymentStatusMutation = { readonly __typename?: 'Mutation', readonly updateOrder?: { readonly __typename?: 'Order', readonly id: string } | null };
 
+export type GetOrderItemsByOrderIdQueryVariables = Exact<{
+  orderId: Scalars['ID'];
+}>;
+
+
+export type GetOrderItemsByOrderIdQuery = { readonly __typename?: 'Query', readonly order?: { readonly __typename?: 'Order', readonly id: string, readonly email?: string | null, readonly stripePaymentIntentStatus?: string | null, readonly orderItems: ReadonlyArray<{ readonly __typename?: 'OrderItem', readonly id: string, readonly quantity: number, readonly price?: number | null, readonly productName?: string | null, readonly option?: { readonly __typename?: 'Option', readonly id: string, readonly color?: ProductColor | null, readonly size?: ProductSize | null } | null }> } | null };
+
 export const CartContentQueryWithOptionFragmentDoc = gql`
     fragment cartContentQueryWithOption on Cart {
   id
@@ -13591,3 +13598,51 @@ export function useUpdateOrderPaymentStatusMutation(baseOptions?: Apollo.Mutatio
 export type UpdateOrderPaymentStatusMutationHookResult = ReturnType<typeof useUpdateOrderPaymentStatusMutation>;
 export type UpdateOrderPaymentStatusMutationResult = Apollo.MutationResult<UpdateOrderPaymentStatusMutation>;
 export type UpdateOrderPaymentStatusMutationOptions = Apollo.BaseMutationOptions<UpdateOrderPaymentStatusMutation, UpdateOrderPaymentStatusMutationVariables>;
+export const GetOrderItemsByOrderIdDocument = gql`
+    query GetOrderItemsByOrderId($orderId: ID!) {
+  order(where: {id: $orderId}, stage: DRAFT) {
+    id
+    email
+    stripePaymentIntentStatus
+    orderItems {
+      id
+      quantity
+      price
+      productName
+      option {
+        id
+        color
+        size
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetOrderItemsByOrderIdQuery__
+ *
+ * To run a query within a React component, call `useGetOrderItemsByOrderIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrderItemsByOrderIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrderItemsByOrderIdQuery({
+ *   variables: {
+ *      orderId: // value for 'orderId'
+ *   },
+ * });
+ */
+export function useGetOrderItemsByOrderIdQuery(baseOptions: Apollo.QueryHookOptions<GetOrderItemsByOrderIdQuery, GetOrderItemsByOrderIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetOrderItemsByOrderIdQuery, GetOrderItemsByOrderIdQueryVariables>(GetOrderItemsByOrderIdDocument, options);
+      }
+export function useGetOrderItemsByOrderIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrderItemsByOrderIdQuery, GetOrderItemsByOrderIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetOrderItemsByOrderIdQuery, GetOrderItemsByOrderIdQueryVariables>(GetOrderItemsByOrderIdDocument, options);
+        }
+export type GetOrderItemsByOrderIdQueryHookResult = ReturnType<typeof useGetOrderItemsByOrderIdQuery>;
+export type GetOrderItemsByOrderIdLazyQueryHookResult = ReturnType<typeof useGetOrderItemsByOrderIdLazyQuery>;
+export type GetOrderItemsByOrderIdQueryResult = Apollo.QueryResult<GetOrderItemsByOrderIdQuery, GetOrderItemsByOrderIdQueryVariables>;

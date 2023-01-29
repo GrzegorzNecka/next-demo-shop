@@ -25,7 +25,9 @@ export const updateOrderByOrderId = async ({
     cart,
     orderId,
 }: UpdateOrderByOrderIdProps) => {
-    const quantities = cart?.cartItems.map((item) => ({ quantity: item.quantity }));
+    //
+
+    // const quantities = cart?.cartItems.map((item) => ({ quantity: item.quantity }));
 
     const updateOrder = await authApolloClient.mutate<
         UpdateOrderMutation,
@@ -43,7 +45,12 @@ export const updateOrderByOrderId = async ({
         fetchPolicy: 'no-cache',
     });
 
-    //todo price powinien byćw opcji!
+    /**
+     *
+     * @todo: total - chyba wywalę wogólę z modelu
+     * @todo: price powinien być w opcji produktu
+     *
+     */
 
     const orderItems = cart?.cartItems.map(async (item) => {
         const orderItem = await authApolloClient.mutate<
@@ -62,6 +69,4 @@ export const updateOrderByOrderId = async ({
         });
     });
     console.log('🚀 ~ file: update-order.ts:59 ~ orderItems ~ orderItems', orderItems);
-
-    //todo - tutaj można zmniejszyć quantity produktów w bazie , a kiedy paid byłby failed wtedy trzeba by je spowrotem wrócić
 };

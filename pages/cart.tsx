@@ -18,6 +18,12 @@ interface CartContentProps {
     setTargetButton: Dispatch<SetStateAction<string | null>>;
 }
 
+/**
+ *
+ * @todo: posprzątaj targetButton
+ *
+ */
+
 const CartContent = ({ targetButton, setTargetButton }: CartContentProps) => {
     const cartState = useCartState();
 
@@ -29,8 +35,6 @@ const CartContent = ({ targetButton, setTargetButton }: CartContentProps) => {
         setTargetButton(existItem.title);
         cartState.removeItemFromCart(existItem.itemId);
     };
-
-    //! if prev cartState.items, current cartState.items use React.memo
 
     return (
         <div className="col-span-2">
@@ -107,7 +111,7 @@ const CartSummary = () => {
             cartId: data?.user.cartId,
         };
 
-        const res = await fetch('/api/checkout', {
+        const res = await fetch('/api/checkout/create', {
             method: 'POST',
             credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json;' },

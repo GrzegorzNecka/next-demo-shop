@@ -55,12 +55,6 @@ export const ButtonAddToCartView = ({
     //
 
     const handleOnClick = () => {
-        // const newCartItem = createContextCartItem({
-        //     activeOptionId,
-        //     product,
-        //     quantity,
-        // });
-
         const newCartItem = {
             productOptionId: activeOptionId,
             price: product.price,

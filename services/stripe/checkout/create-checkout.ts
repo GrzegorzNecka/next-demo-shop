@@ -7,6 +7,15 @@ import Stripe from 'stripe';
 import type { StripeCreateCheckout } from 'validation/stripe-checkout-create-schema';
 import { stripeCreateCheckoutSchema } from 'validation/stripe-checkout-create-schema';
 
+/**
+ *
+ * docs:
+ *  create custom checkout: https://stripe.com/docs/checkout/quickstart
+ *  create checkout: https://stripe.com/docs/api/checkout/sessions/create
+ *  payment intent: https://stripe.com/docs/payments/payment-intents
+ *
+ */
+
 export const createCheckout = async (payload: StripeCreateCheckout) => {
     //stripe
     const stripeKey = process.env.STRIPE_SECRET_KEY;
@@ -42,7 +51,12 @@ export const createCheckout = async (payload: StripeCreateCheckout) => {
     });
 
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = cartItems.map((item) => {
-        // todo - to powinno wynikać z funkcji iterującej po option
+        /**
+         *
+         * @todo: te wartości powinny wynikać z funkcji iterującej po option
+         *
+         */
+
         const color = item.option?.color || '-';
         const size = item.option?.size || '-';
 
@@ -69,7 +83,7 @@ export const createCheckout = async (payload: StripeCreateCheckout) => {
         };
     });
 
-    console.log('lineItems', lineItems);
+    // console.log('lineItems', lineItems);
 
     const { orderId } = await createEmptyOrder();
 
@@ -77,7 +91,7 @@ export const createCheckout = async (payload: StripeCreateCheckout) => {
         mode: 'payment',
         locale: 'pl',
         payment_method_types: ['p24', 'card', 'blik'],
-        success_url: `${process.env.NEXT_PUBLIC_HOST}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+        success_url: `${process.env.NEXT_PUBLIC_HOST}/checkout/success?session_id={CHECKOUT_SESSION_ID}&order_id=${orderId}`,
         cancel_url: `${process.env.NEXT_PUBLIC_HOST}/checkout/cancel?canceled=true`,
         line_items: lineItems,
         payment_intent_data: {
@@ -87,13 +101,18 @@ export const createCheckout = async (payload: StripeCreateCheckout) => {
                 orderId: orderId,
             },
         },
+        metadata: {
+            email: payload.email,
+            cartId: payload.cartId,
+            orderId: orderId,
+        },
     } satisfies Stripe.Checkout.SessionCreateParams;
 
-    console.log('paymentObject', paymentObject);
+    // console.log('paymentObject', paymentObject);
 
     const session = await stripe.checkout.sessions.create(paymentObject);
 
-    console.log(' session', session);
+    // console.log(' session', session);
 
     const updateOrder = await updateOrderByOrderId({
         session,
@@ -101,6 +120,12 @@ export const createCheckout = async (payload: StripeCreateCheckout) => {
         cart,
         orderId,
     });
+
+    /**
+     *
+     * @todo: to powinno być w finalize
+     *
+     */
 
     const clearCart = await clearCartByCartId({ cartId: payload.cartId });
 

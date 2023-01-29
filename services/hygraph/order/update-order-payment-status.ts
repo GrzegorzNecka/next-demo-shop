@@ -1,8 +1,5 @@
-// import type { CartItem } from 'context/types';
-import calculateTotal from 'utils/calculate-total';
 import { authApolloClient } from 'graphQL/apolloClient';
 import type {
-    GetCartItemsByCartIdQuery,
     UpdateOrderPaymentStatusMutation,
     UpdateOrderPaymentStatusMutationVariables,
 } from 'graphQL/generated/graphql';

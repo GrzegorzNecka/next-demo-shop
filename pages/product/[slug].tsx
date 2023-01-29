@@ -96,8 +96,6 @@ export const getStaticProps = async ({
     const markdown: string = data.product.description;
 
     const product = { ...data.product, longDescription: await serialize(markdown) };
-    // const product = { ...data.product };
-    console.log('🚀 ~ file: [slug].tsx:97 ~ product', product);
 
     return {
         props: {

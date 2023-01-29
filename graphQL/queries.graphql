@@ -264,3 +264,22 @@ mutation UpdateOrderPaymentStatus($orderId: ID!, $stripePaymentIntentStatus: Str
         id
     }
 }
+
+query GetOrderItemsByOrderId($orderId: ID!) {
+    order(where: { id: $orderId }, stage: DRAFT) {
+        id
+        email
+        stripePaymentIntentStatus
+        orderItems {
+            id
+            quantity
+            price
+            productName
+            option {
+                id
+                color
+                size
+            }
+        }
+    }
+}

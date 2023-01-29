@@ -9,6 +9,13 @@ import type {
 } from 'graphQL/generated/graphql';
 import { UpdateOrderPaymentStatusDocument } from 'graphQL/generated/graphql';
 import { updateOrderPaymentStatus } from 'services/hygraph/order/update-order-payment-status';
+import { finalizeCheckout } from 'services/stripe/checkout/finalize-checkout';
+
+/**
+ *
+ * docs: https://stripe.com/docs/webhooks/quickstart
+ *
+ */
 
 export const config = {
     api: {
@@ -18,9 +25,8 @@ export const config = {
 
 const stripeKey = process.env.STRIPE_SECRET_KEY;
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-// const endpointSecret = 'whsec_34d50c687371f7d7dba4023a90fe5a8d2997d2587bce1d8b8759a1765d472fde';
 
-const checkoutHandler: NextApiHandler = async (req, res) => {
+const webhookHandler: NextApiHandler = async (req, res) => {
     const buf = await buffer(req);
     const sig = req.headers['stripe-signature'];
 
@@ -48,28 +54,50 @@ const checkoutHandler: NextApiHandler = async (req, res) => {
         console.log(`event - payment_intent.succeeded`, event.data.object);
         console.log(`event processed ...`);
 
-        const updatePaymentStatus = await updateOrderPaymentStatus({
+        const finalize = finalizeCheckout({
+            cartId: event.data.object.metadata.cartId,
             orderId: event.data.object.metadata.orderId,
             stripePaymentIntentStatus: event.data.object.status,
         });
 
-        //todo 1 - zmieniam status orderu
-        //todo 2 - generuję fakturę
-        //todo 3 - wysyłam maila
+        /**
+         *
+         * @todo: zmień status order
+         * @todo: wygeneruj fakturę
+         * @todo: wyślij mail
+         *
+         */
     }
 
     if (event.type === `checkout.session.completed`) {
+        /**
+         *
+         * @todo: zmień status order
+         * @todo: wyślij mail
+         *
+         */
         console.log(`event - checkout.session.completed`, event.data.object);
     }
 
     if (event.type === `checkout.session.async_payment_failed`) {
+        /**
+         *
+         * @todo: zmień status order
+         * @todo: wyślij mail
+         *
+         */
         console.log(`checkout.session.async_payment_failed`, event.data.object);
     }
 
-    // else  console.log(`Unhandled event type ${event.type}.`);
+    /**
+     *
+     * @todo: ze statusów zrób tuple i jeśli żaden waunek
+     *        nie będzie spełniony => console.log(`Unhandled event type ${event.type}.`)
+     *
+     */
 
     res.status(200).json({ received: true });
     return;
 };
 
-export default checkoutHandler;
+export default webhookHandler;
