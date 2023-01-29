@@ -1,8 +1,5 @@
-import type { ApolloQueryResult } from '@apollo/client';
 import { authApolloClient } from 'graphQL/apolloClient';
 import type {
-    CartContentQueryWithOptionFragment,
-    CartItem,
     GetCartItemsByCartIdQuery,
     SetProductOptionTotalMutation,
     SetProductOptionTotalMutationVariables,

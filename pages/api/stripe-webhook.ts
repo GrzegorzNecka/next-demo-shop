@@ -2,6 +2,13 @@ import type { NextApiHandler } from 'next/types';
 import type { StripeWebhookEvents } from 'types/stripeEvents';
 import Stripe from 'stripe';
 import { buffer } from 'micro';
+import { authApolloClient } from 'graphQL/apolloClient';
+import type {
+    UpdateOrderPaymentStatusMutation,
+    UpdateOrderPaymentStatusMutationVariables,
+} from 'graphQL/generated/graphql';
+import { UpdateOrderPaymentStatusDocument } from 'graphQL/generated/graphql';
+import { updateOrderPaymentStatus } from 'services/hygraph/order/update-order-payment-status';
 
 export const config = {
     api: {
@@ -28,8 +35,6 @@ const checkoutHandler: NextApiHandler = async (req, res) => {
 
     try {
         event = stripe.webhooks.constructEvent(buf, sig, endpointSecret) as StripeWebhookEvents;
-
-        // https://stripe.com/docs/webhooks/quickstart
     } catch (err) {
         let message = 'stripe webhook error';
         if (err instanceof Error) {
@@ -39,37 +44,29 @@ const checkoutHandler: NextApiHandler = async (req, res) => {
         return;
     }
 
-    // catch events
+    if (event.type === `payment_intent.succeeded`) {
+        console.log(`event - payment_intent.succeeded`, event.data.object);
+        console.log(`event processed ...`);
 
-    switch (event.type) {
-        case `payment_intent.succeeded`:
-            console.log(`event - payment_intent.succeeded`, event.data.object);
-            console.log(`event processed ...`);
-            break;
-        // case 'checkout.session.completed':
-        //     //todo 1 - zmieniam status orderu
-        //     //todo 2 - generuję fakturę
-        //     //todo 3 - wysyłam maila
+        const updatePaymentStatus = await updateOrderPaymentStatus({
+            orderId: event.data.object.metadata.orderId,
+            stripePaymentIntentStatus: event.data.object.status,
+        });
 
-        //     console.log('heckout.session.completed -status', event.data.object);
-        //     console.log('🚀payment_intent', event.data.object.payment_intent);
-
-        //     console.log('🚀event.data.object.id', event.data.object.id); // checkout.sessions.id
-        //     console.log('🚀event.data.object.id', event.data.object.object); // ===  'checkout.session'
-
-        //     break;
-        // case 'checkout.session.async_payment_failed':
-        //     console.log('checkout.session.async_payment_failed status', event.data.object.status);
-
-        //     break;
-        // case 'checkout.session.async_payment_succeeded':
-        //     console.log('checkout.session.async_payment_succeeded status', event.data.object);
-
-        //     break;
-        default:
-            // Unexpected event type
-            console.log(`Unhandled event type ${event.type}.`);
+        //todo 1 - zmieniam status orderu
+        //todo 2 - generuję fakturę
+        //todo 3 - wysyłam maila
     }
+
+    if (event.type === `checkout.session.completed`) {
+        console.log(`event - checkout.session.completed`, event.data.object);
+    }
+
+    if (event.type === `checkout.session.async_payment_failed`) {
+        console.log(`checkout.session.async_payment_failed`, event.data.object);
+    }
+
+    // else  console.log(`Unhandled event type ${event.type}.`);
 
     res.status(200).json({ received: true });
     return;

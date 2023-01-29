@@ -255,3 +255,12 @@ mutation CreateOrderItemByOrderId(
         id
     }
 }
+
+mutation UpdateOrderPaymentStatus($orderId: ID!, $stripePaymentIntentStatus: String!) {
+    updateOrder(
+        where: { id: $orderId }
+        data: { stripePaymentIntentStatus: $stripePaymentIntentStatus }
+    ) {
+        id
+    }
+}
