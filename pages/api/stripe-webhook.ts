@@ -14,6 +14,7 @@ import { finalizeCheckout } from 'services/stripe/checkout/finalize-checkout';
 /**
  *
  * docs: https://stripe.com/docs/webhooks/quickstart
+ * create webhook: https://dashboard.stripe.com/test/webhooks/create
  *
  */
 
@@ -67,6 +68,26 @@ const webhookHandler: NextApiHandler = async (req, res) => {
          * @todo: wyślij mail
          *
          */
+    }
+
+    if (event.type === `checkout.session.async_payment_succeeded`) {
+        /**
+         *
+         * @todo: zmień status order
+         * @todo: wyślij mail
+         *
+         */
+        console.log(`checkout.session.async_payment_succeeded`, event.data.object);
+    }
+
+    if (event.type === `checkout.session.async_payment_failed`) {
+        /**
+         *
+         * @todo: zmień status order
+         * @todo: wyślij mail
+         *
+         */
+        console.log(`checkout.session.async_payment_failed`, event.data.object);
     }
 
     if (event.type === `checkout.session.completed`) {

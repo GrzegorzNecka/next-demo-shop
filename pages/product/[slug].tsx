@@ -48,6 +48,7 @@ export default ProductSingleSlugPage;
 export const getStaticPaths = async () => {
     const { data } = await apolloClient.query<GetProductsSlugsQuery>({
         query: GetProductsSlugsDocument,
+        fetchPolicy: 'no-cache',
     });
 
     if (!data) {
@@ -57,15 +58,20 @@ export const getStaticPaths = async () => {
         } satisfies GetStaticPathsResult;
     }
 
+    // Get the paths we want to pre-render based on posts
+    const paths = data.products.map((product) => {
+        return {
+            params: {
+                slug: product.slug,
+            },
+        };
+    });
+    // We'll pre-render only these paths at build time.
+    // { fallback: blocking } will server-render pages
+    // on-demand if the path doesn't exist.
     return {
-        paths: data.products.map((product) => {
-            return {
-                params: {
-                    slug: product.slug,
-                },
-            };
-        }),
-        fallback: false,
+        paths: paths,
+        fallback: 'blocking',
     };
 };
 
@@ -84,6 +90,7 @@ export const getStaticProps = async ({
             slug: params.slug,
         },
         query: GetProductBySlugDocument,
+        fetchPolicy: 'no-cache',
     });
 
     if (!data.product) {

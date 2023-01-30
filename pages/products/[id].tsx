@@ -12,13 +12,13 @@ export type ProductListIdPageProps = InferGetStaticPropsType<typeof getStaticPro
 // page
 
 const ProductsListIdPage = ({ data }: ProductListIdPageProps) => {
-  return (
-    <Main>
-      <div className="relative p-16">
-        <ProductListUI data={data} />
-      </div>
-    </Main>
-  );
+    return (
+        <Main>
+            <div className="relative p-16">
+                <ProductListUI data={data} />
+            </div>
+        </Main>
+    );
 };
 
 export default ProductsListIdPage;
@@ -26,38 +26,40 @@ export default ProductsListIdPage;
 // paths
 
 export const getStaticPaths = async () => {
-  const products = [1, 2];
+    const products = [1, 2];
 
-  return {
-    fallback: 'blocking',
-    paths: products.map((id) => {
-      return {
-        params: {
-          id: `${id}`,
-        },
-      };
-    }),
-  } satisfies GetStaticPathsResult;
+    return {
+        fallback: 'blocking',
+        paths: products.map((id) => {
+            return {
+                params: {
+                    id: `${id}`,
+                },
+            };
+        }),
+    } satisfies GetStaticPathsResult;
 };
 
 // prosp
 
 export const getStaticProps = async ({
-  params,
+    params,
 }: InferGetStaticPathsType<typeof getStaticPaths>) => {
-  if (!params?.id) {
-    return { props: {}, notFound: true };
-  }
+    if (!params?.id) {
+        return { props: {}, notFound: true };
+    }
 
-  const {
-    data: { products },
-  } = await apolloClient.query<GetProductsListQuery>({
-    query: GetProductsListDocument,
-  });
+    const {
+        data: { products },
+    } = await apolloClient.query<GetProductsListQuery>({
+        query: GetProductsListDocument,
+        fetchPolicy: 'no-cache',
+    });
 
-  return {
-    props: {
-      data: products.map((product) => product),
-    },
-  } satisfies GetStaticPropsResult<{ data: typeof products }>;
+    return {
+        props: {
+            data: products.map((product) => product),
+        },
+        revalidate: 10,
+    } satisfies GetStaticPropsResult<{ data: typeof products }>;
 };
