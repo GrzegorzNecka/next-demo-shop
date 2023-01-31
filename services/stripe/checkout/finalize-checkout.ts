@@ -5,8 +5,8 @@ import { updateOrderByOrderId } from 'services/hygraph/order/update-order';
 import { updateOrderPaymentStatus } from 'services/hygraph/order/update-order-payment-status';
 import { setProductOptionTotal } from 'services/hygraph/product/set-product-option-total';
 import Stripe from 'stripe';
-import type { StripeCreateCheckout } from 'validation/stripe-checkout-create-schema';
-import { stripeCreateCheckoutSchema } from 'validation/stripe-checkout-create-schema';
+import type { StripeCreateCheckout } from 'validations/stripe-checkout-create-schema';
+import { stripeCreateCheckoutSchema } from 'validations/stripe-checkout-create-schema';
 
 type FinalizeCheckoutProps = {
     cartId: string;

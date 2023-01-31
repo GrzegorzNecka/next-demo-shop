@@ -1,9 +1,9 @@
-import type { CartItem } from 'context/types';
+import type { CartItem } from 'types/context';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { cartItemsByAccount } from 'context/services/cart-items-by-account';
-import { cartItemsByCookieId } from 'context/services/cart-items-by-cookie-id';
+import { cartItemsByAccount } from 'utils/context/by-account';
+import { cartItemsByCookieId } from 'utils/context/by-cookie-id';
 
 export const useCartItems = () => {
     //

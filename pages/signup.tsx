@@ -6,8 +6,8 @@ import { useForm } from 'react-hook-form';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
-import type { SignUpFormData } from 'validation/signup-form-shchema';
-import signUpFormSchema from 'validation/signup-form-shchema';
+import type { SignUpFormData } from 'validations/signup-form-shchema';
+import signUpFormSchema from 'validations/signup-form-shchema';
 
 const SignupPage = () => {
     const session = useSession();

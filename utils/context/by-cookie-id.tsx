@@ -1,4 +1,4 @@
-import type { CartItem } from 'context/types';
+import type { CartItem } from 'types/context';
 import type { Dispatch, SetStateAction } from 'react';
 import { transitionProductToCartItemOfContextByCookieId } from 'utils/cart-transitions';
 
@@ -17,7 +17,7 @@ export const cartItemsByCookieId = ({
 }: cartItemsByCookieIdProps) => {
     //
 
-    const API_CART_PATH = '/api/cart/cart-items-by-cookie-id';
+    const API_CART_PATH = '/api/cart/by-cookie-id';
 
     // -- CONTEXT HANDLERS
     // -- GET
@@ -160,7 +160,7 @@ export const cartItemsByCookieId = ({
 // -- HELPERS
 
 async function updateCart<T, U>(id: T, product: U) {
-    const res = await fetch('/api/cart/cart-items-by-cookie-id', {
+    const res = await fetch('/api/cart/by-cookie-id', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json;' },
         body: JSON.stringify({

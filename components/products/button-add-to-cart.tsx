@@ -1,12 +1,25 @@
 import { useCartState } from 'context/cart-context';
 import { useEffect, useMemo, useState } from 'react';
 import React from 'react';
-import type { ButtonAddToCartProps, ButtonAddToCartViewProps } from './types';
+import type { ButtonAddToCartProps, ButtonAddToCartViewProps } from '../../types/components/types';
+import { useGetProductOptionTotalQuery } from 'graphQL/generated/graphql';
 
 // -- CONTAINER
 
 export const ButtonAddToCart = ({ data, activeOptionId }: ButtonAddToCartProps) => {
     const cartState = useCartState();
+
+    const {
+        data: test,
+        loading,
+        error,
+    } = useGetProductOptionTotalQuery({
+        variables: {
+            id: activeOptionId,
+        },
+    });
+
+    const testTotal = test?.option?.total;
 
     const [quantity, setQuantity] = useState<number>(1);
     const [availableQuantity, setAvailableQuantity] = useState<number>(0);
@@ -20,8 +33,6 @@ export const ButtonAddToCart = ({ data, activeOptionId }: ButtonAddToCartProps) 
     }, [cartState.items, activeOptionId]);
 
     useEffect(() => {
-        console.log('activeOption', activeOption);
-
         if (cartItemOption) {
             setAvailableQuantity(activeOption.total - cartItemOption.quantity);
             return;
@@ -38,6 +49,7 @@ export const ButtonAddToCart = ({ data, activeOptionId }: ButtonAddToCartProps) 
             quantity={quantity}
             setQuantity={setQuantity}
             availableQuantity={availableQuantity}
+            testTotal={testTotal}
         />
     );
 };
@@ -51,6 +63,7 @@ export const ButtonAddToCartView = ({
     quantity,
     setQuantity,
     availableQuantity,
+    testTotal,
 }: ButtonAddToCartViewProps) => {
     //
 
@@ -71,6 +84,7 @@ export const ButtonAddToCartView = ({
 
     return (
         <>
+            <p>test total : {testTotal}</p>
             <div>
                 {availableQuantity ? (
                     <p>

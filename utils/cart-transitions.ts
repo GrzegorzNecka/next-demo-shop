@@ -1,6 +1,6 @@
-import type { CartItem } from 'context/types';
+import type { CartItem } from 'types/context';
 import type { GetCartItemsByCartIdQuery } from 'graphQL/generated/graphql';
-import type { ProductDetails } from 'components/products/types';
+import type { ProductDetails } from 'types/components/types';
 
 export function transitionProductToCartItemOfContextByCookieId(item: CartItem) {
     return {

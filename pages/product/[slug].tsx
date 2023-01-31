@@ -34,7 +34,6 @@ const ProductSingleSlugPage = ({ product }: ProductSingleSlugPageProps) => {
                     option: product.option,
                     // rating: product.rating.rate,
                     longDescription: product.longDescription,
-
                     price: product.price,
                     priceWithCurrency: changeToCurrency(moveTheComa(product.price)),
                 }}
@@ -104,6 +103,7 @@ export const getStaticProps = async ({
 
     const product = { ...data.product, longDescription: await serialize(markdown) };
 
+    // console.log('🚀 ~ file: [slug].tsx:107 ~ product', product);
     return {
         props: {
             product,

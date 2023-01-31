@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
-import { handleClearCartItems } from './cart-items-by-account';
+import { handleClearCartItems } from './by-account';
 import fetch from 'jest-fetch-mock';
-import type { CartItem } from 'context/types';
+import type { CartItem } from 'types/context';
 
 describe('test "handleClearCartItems"  method', () => {
     beforeEach(() => {

@@ -4,8 +4,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import type { UseMutateFunction } from '@tanstack/react-query';
 import { useMutation } from '@tanstack/react-query';
 import FormInput from './form-input';
-import type { NewsletterFormSchema } from 'validation/newsletter-form-schema';
-import { newsletterFormSchema } from 'validation/newsletter-form-schema';
+import type { NewsletterFormSchema } from 'validations/newsletter-form-schema';
+import { newsletterFormSchema } from 'validations/newsletter-form-schema';
 
 const useAddToNewsletterMutation = () =>
     useMutation(['add-to-newsletter'], async ({ email, name }: { email: string; name: string }) => {

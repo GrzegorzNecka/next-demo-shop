@@ -1,7 +1,7 @@
 import { apolloClient } from 'graphQL/apolloClient';
 import type { GetUnauthCartQuery, GetUnauthCartQueryVariables } from 'graphQL/generated/graphql';
 import { GetUnauthCartDocument } from 'graphQL/generated/graphql';
-import type { CartItem } from 'context/types';
+import type { CartItem } from 'types/context';
 
 //
 

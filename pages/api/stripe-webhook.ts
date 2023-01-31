@@ -2,19 +2,14 @@ import type { NextApiHandler } from 'next/types';
 import type { StripeWebhookEvents } from 'types/stripeEvents';
 import Stripe from 'stripe';
 import { buffer } from 'micro';
-import { authApolloClient } from 'graphQL/apolloClient';
-import type {
-    UpdateOrderPaymentStatusMutation,
-    UpdateOrderPaymentStatusMutationVariables,
-} from 'graphQL/generated/graphql';
-import { UpdateOrderPaymentStatusDocument } from 'graphQL/generated/graphql';
-import { updateOrderPaymentStatus } from 'services/hygraph/order/update-order-payment-status';
+
 import { finalizeCheckout } from 'services/stripe/checkout/finalize-checkout';
 
 /**
  *
  * docs: https://stripe.com/docs/webhooks/quickstart
  * create webhook: https://dashboard.stripe.com/test/webhooks/create
+ * type of events: https://stripe.com/docs/api/events/types
  *
  */
 

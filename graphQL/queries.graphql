@@ -39,7 +39,7 @@ query GetCartIdByAccountId($id: ID!) {
 }
 
 query GetProductsList {
-    products(where: { option_some: { productTitle_not: "null" } }) {
+    products(where: { option_some: { id_not: "null" } }) {
         id
         slug
         name
@@ -53,6 +53,12 @@ query GetProductsList {
         option {
             id
         }
+    }
+}
+
+query GetProductOptionTotal($id: ID!) {
+    option(where: { id: $id }) {
+        total
     }
 }
 
@@ -129,7 +135,7 @@ mutation ClearCartItems($cartId: ID!) {
 }
 
 query GetProductsSlugs {
-    products(where: { option_some: { productTitle_not: "null" } }) {
+    products(where: { option_some: { id_not: "null" } }) {
         slug
     }
 }
@@ -218,7 +224,6 @@ mutation CreateEmptyOrder {
 mutation UpdateOrder(
     $orderId: ID!
     $email: String!
-    $total: Int!
     $stripeCheckoutId: String!
     $stripePaymentIntentStatus: String!
 ) {
@@ -226,7 +231,6 @@ mutation UpdateOrder(
         where: { id: $orderId }
         data: {
             email: $email
-            total: $total
             stripeCheckoutId: $stripeCheckoutId
             stripePaymentIntentStatus: $stripePaymentIntentStatus
             account: { connect: { email: $email } }

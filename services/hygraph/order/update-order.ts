@@ -10,7 +10,7 @@ import type {
 } from 'graphQL/generated/graphql';
 import { UpdateOrderDocument, CreateOrderItemByOrderIdDocument } from 'graphQL/generated/graphql';
 import type Stripe from 'stripe';
-import type { StripeCreateCheckout } from 'validation/stripe-checkout-create-schema';
+import type { StripeCreateCheckout } from 'validations/stripe-checkout-create-schema';
 
 type UpdateOrderByOrderIdProps = {
     session: Stripe.Response<Stripe.Checkout.Session>;
@@ -37,8 +37,6 @@ export const updateOrderByOrderId = async ({
         variables: {
             orderId: orderId!,
             email: payload?.email!,
-            // total: calculateTotal(quantities!),
-            total: 10,
             stripeCheckoutId: session.id,
             stripePaymentIntentStatus: session.payment_status,
         },
@@ -68,5 +66,5 @@ export const updateOrderByOrderId = async ({
             fetchPolicy: 'no-cache',
         });
     });
-    console.log('🚀 ~ file: update-order.ts:59 ~ orderItems ~ orderItems', orderItems);
+    console.log('🚀 ~ update-order.ts:59  orderItems', orderItems);
 };

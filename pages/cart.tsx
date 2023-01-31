@@ -4,7 +4,7 @@ import { changeToCurrency, moveTheComa } from 'utils/currency';
 // import { loadStripe } from "@stripe/stripe-js";
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { useCartState } from 'context/cart-context';
-import type { CartItem } from 'context/types';
+import type { CartItem } from 'types/context';
 import { useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import { CartOptions } from 'components/cart/cart-product-options';

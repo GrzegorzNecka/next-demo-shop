@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { NextSeo } from 'next-seo';
-import type { ProductDetailsProps } from './types';
+import type { ProductDetailsProps } from '../../types/components/types';
 import ProductOption from 'components/products/product-options';
 
 import Markdown from 'components/markdown';

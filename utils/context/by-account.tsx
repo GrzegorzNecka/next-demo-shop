@@ -1,4 +1,4 @@
-import type { CartItem } from 'context/types';
+import type { CartItem } from 'types/context';
 import { transitionFetchedDataToCartOfContext } from 'utils/cart-transitions';
 import type { Dispatch, SetStateAction } from 'react';
 type cartItemsByAccountProps = {
@@ -8,7 +8,7 @@ type cartItemsByAccountProps = {
     cartItems: CartItem[];
 };
 
-export const API_CART_PATH = '/api/cart/cart-items-by-account';
+export const API_CART_PATH = '/api/cart/by-account';
 
 export const cartItemsByAccount = ({
     setCartItems,

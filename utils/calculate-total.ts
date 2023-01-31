@@ -1,4 +1,4 @@
-import type { CartItem } from 'context/types';
+import type { CartItem } from 'types/context';
 
 type CalculateTotalProps = Array<Pick<CartItem, 'quantity'>>;
 
