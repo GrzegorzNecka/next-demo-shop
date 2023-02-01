@@ -1,22 +1,24 @@
 import { authOptions } from 'pages/api/auth/[...nextauth]';
 import { unstable_getServerSession } from 'next-auth/next';
-import type { NextApiHandler } from 'next/types';
+import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next/types';
 
 import clearCartByCartId from 'services/hygraph/cart/by-account/clear-cart';
 import updateItemQuantityByCartId from 'services/hygraph/cart/by-account/update-item';
 import getCartByCartId from 'services/hygraph/cart/by-account/get-cart';
 import createCartItemByCartId from 'services/hygraph/cart/by-account/create-item';
 import removeItemByCartId from 'services/hygraph/cart/by-account/remove-item';
+import type { NextApiRequestAuth } from 'middlewares/onlyAuth';
+import onlyAuth from 'middlewares/onlyAuth';
 
-const handleCartSession: NextApiHandler = async (req, res) => {
-    const session = await unstable_getServerSession(req, res, authOptions);
+const handleCartSession = async (req: NextApiRequestAuth, res: NextApiResponse) => {
+    // const session = await unstable_getServerSession(req, res, authOptions);
 
-    if (!session?.user.cartId) {
-        res.status(400).json({ message: 'You should be logged' });
-        return;
-    }
+    // if (!session?.user.cartId) {
+    //     res.status(400).json({ message: 'You should be logged' });
+    //     return;
+    // }
 
-    const cartId = session.user.cartId;
+    const cartId = req.cartId;
 
     //--
 
@@ -119,4 +121,4 @@ const handleCartSession: NextApiHandler = async (req, res) => {
     return;
 };
 
-export default handleCartSession;
+export default onlyAuth(handleCartSession);

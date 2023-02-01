@@ -111,7 +111,7 @@ const CartSummary = () => {
             cartId: data?.user.cartId,
         };
 
-        const res = await fetch('/api/checkout/create', {
+        const res = await fetch('/api/checkout/session', {
             method: 'POST',
             credentials: 'same-origin',
             headers: { 'Content-Type': 'application/json;' },

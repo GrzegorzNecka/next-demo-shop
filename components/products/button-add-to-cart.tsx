@@ -3,23 +3,30 @@ import { useEffect, useMemo, useState } from 'react';
 import React from 'react';
 import type { ButtonAddToCartProps, ButtonAddToCartViewProps } from '../../types/components/types';
 import { useGetProductOptionTotalQuery } from 'graphQL/generated/graphql';
+import { useQuery } from '@tanstack/react-query';
 
 // -- CONTAINER
 
 export const ButtonAddToCart = ({ data, activeOptionId }: ButtonAddToCartProps) => {
     const cartState = useCartState();
 
-    const {
-        data: test,
-        loading,
-        error,
-    } = useGetProductOptionTotalQuery({
-        variables: {
-            id: activeOptionId,
-        },
-    });
+    const { data: test } = useQuery({
+        queryKey: ['total', activeOptionId],
+        queryFn: async () => {
+            const res = await fetch(`/api/products/totals/${activeOptionId}`, {
+                method: 'GET',
+                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/json;' },
+            });
 
-    const testTotal = test?.option?.total;
+            return res.json();
+        },
+        // Refetch the data every second
+        refetchInterval: 10000,
+    });
+    console.log('🚀 ~ file: ButtonAddToCart ~ test', test?.total);
+
+    const testTotal = test?.total;
 
     const [quantity, setQuantity] = useState<number>(1);
     const [availableQuantity, setAvailableQuantity] = useState<number>(0);
@@ -34,12 +41,14 @@ export const ButtonAddToCart = ({ data, activeOptionId }: ButtonAddToCartProps) 
 
     useEffect(() => {
         if (cartItemOption) {
-            setAvailableQuantity(activeOption.total - cartItemOption.quantity);
+            // setAvailableQuantity(activeOption.total - cartItemOption.quantity);
+            setAvailableQuantity(testTotal - cartItemOption.quantity);
             return;
         }
 
-        setAvailableQuantity(activeOption.total);
-    }, [cartItemOption, activeOption]);
+        // setAvailableQuantity(activeOption.total);
+        setAvailableQuantity(testTotal);
+    }, [cartItemOption, testTotal, activeOption]);
 
     return (
         <ButtonAddToCartView

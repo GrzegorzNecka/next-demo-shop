@@ -15,14 +15,14 @@ interface Response {
 }
 
 async function createCookieCartId(req: NextApiRequest, res: NextApiResponse<Response>) {
-    const cart = await authApolloClient.mutate<
+    const { data } = await authApolloClient.mutate<
         CreateUnAuthCartMutation,
         CreateUnAuthCartMutationVariables
     >({
         mutation: CreateUnAuthCartDocument,
     });
 
-    const id = cart.data?.createUnauthCart?.id;
+    const id = data?.createUnauthCart?.id;
 
     if (!id) {
         res.status(500).json({ message: 'problem with server (hygraph) connecting' });

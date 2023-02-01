@@ -17,7 +17,7 @@ export const useCartItems = () => {
     const { data: cookie } = useQuery({
         queryKey: ['cookieCartId'],
         queryFn: async () => {
-            const res = await fetch('/api/cookies/get-cookie-cart-id', {
+            const res = await fetch('/api/cookies/cart-id', {
                 method: 'GET',
                 credentials: 'same-origin',
                 headers: { 'Content-Type': 'application/json;' },

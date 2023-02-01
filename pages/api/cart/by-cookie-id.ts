@@ -7,11 +7,11 @@ import type {
     UpdateUnauthCartByIdMutationVariables,
 } from 'graphQL/generated/graphql';
 import { GetUnauthCartDocument, UpdateUnauthCartByIdDocument } from 'graphQL/generated/graphql';
-import createCookieCartId from 'services/cookies/create-cookie-cart-id';
+import createCookieCartId from 'services/cookies/create-cart-id';
 import { hasCookie } from 'cookies-next';
 import isCartIdExist from 'services/hygraph/cart/by-cookie/is-cart-id-exist';
-import deleteCookieCartId from 'services/cookies/delete-cookie-cart-id';
-import getCookieCartId from 'services/cookies/get-cookie-cart-id';
+import deleteCookieCartId from 'services/cookies/delete-cart-id';
+import getCookieCartId from 'services/cookies/get-cart-id';
 
 const handleCartSession: NextApiHandler = async (req, res) => {
     // ---

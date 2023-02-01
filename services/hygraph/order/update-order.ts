@@ -66,5 +66,5 @@ export const updateOrderByOrderId = async ({
             fetchPolicy: 'no-cache',
         });
     });
-    console.log('🚀 ~ update-order.ts:59  orderItems', orderItems);
+    // console.log('🚀 ~ update-order.ts:59  orderItems', orderItems);
 };

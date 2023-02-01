@@ -9,7 +9,7 @@ import { GetCartItemsByCartIdDocument } from 'graphQL/generated/graphql';
 
 export default async function getCartByCartId({ id }: GetCartItemsByCartIdQueryVariables) {
     //
-    const getCartItems = await authApolloClient.query<
+    const { data } = await authApolloClient.query<
         GetCartItemsByCartIdQuery,
         GetCartItemsByCartIdQueryVariables
     >({
@@ -20,7 +20,7 @@ export default async function getCartByCartId({ id }: GetCartItemsByCartIdQueryV
         fetchPolicy: 'no-cache',
     });
 
-    const cart = getCartItems.data.cart;
+    const cart = data.cart;
 
     return cart;
 }
