@@ -1,32 +1,10 @@
 import type { NextApiHandler } from 'next';
-import * as yup from 'yup';
 import * as bcrypt from 'bcrypt';
-import { authApolloClient } from 'graphQL/apolloClient';
-import type {
-    ConnectAccountWithCartAndPublishMutation,
-    ConnectAccountWithCartAndPublishMutationVariables,
-    CreateAccountMutation,
-    CreateAccountMutationVariables,
-    CreateCartMutation,
-    CreateCartMutationVariables,
-} from 'graphQL/generated/graphql';
-import {
-    ConnectAccountWithCartAndPublishDocument,
-    CreateAccountDocument,
-    CreateCartDocument,
-} from 'graphQL/generated/graphql';
-
-export const signUpFormSchema = yup
-    .object({
-        email: yup.string().required('pole jest wymagane').email(),
-        password: yup.string().required('pole jest wymagane').min(3),
-        passwordConfirmation: yup
-            .string()
-            .oneOf([yup.ref('password')], 'hasła muszą być takie same'),
-    })
-    .required();
-
-type SignUpFormData = yup.InferType<typeof signUpFormSchema>;
+import type { SignUpFormData } from 'validations/signup-form-shchema';
+import signUpFormSchema from 'validations/signup-form-shchema';
+import createAccountId from 'services/hygraph/account/create-account-id';
+import createCart from 'services/hygraph/cart/create-cart';
+import connectAccountWithCart from 'services/hygraph/account/connect-account-with-cart';
 
 const SignupHandler: NextApiHandler = async (req, res) => {
     const { email, password, passwordConfirmation }: SignUpFormData = await JSON.parse(req.body);
@@ -43,55 +21,33 @@ const SignupHandler: NextApiHandler = async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 12);
 
-    // -- HYGRAPH CONNECT
+    /**
+     * Connect to hygraph
+     */
 
-    const { data: account } = await authApolloClient.mutate<
-        CreateAccountMutation,
-        CreateAccountMutationVariables
-    >({
-        mutation: CreateAccountDocument,
-        variables: { email, password: passwordHash },
-    });
-
-    const accountId = account?.createAccount?.id;
+    const accountId = await createAccountId(email, passwordHash);
 
     if (!accountId) {
         res.status(500).json({ message: 'fixed create account' });
         return;
     }
 
-    const { data: cart } = await authApolloClient.mutate<
-        CreateCartMutation,
-        CreateCartMutationVariables
-    >({
-        mutation: CreateCartDocument,
-        fetchPolicy: 'no-cache',
-    });
-
-    const cartId = cart?.createCart?.id;
+    const cartId = await createCart();
 
     if (!cartId) {
         res.status(500).json({ message: 'fixed create cart' });
         return;
     }
 
-    const connectAccountWithCartAndPublishAll = await authApolloClient.mutate<
-        ConnectAccountWithCartAndPublishMutation,
-        ConnectAccountWithCartAndPublishMutationVariables
-    >({
-        mutation: ConnectAccountWithCartAndPublishDocument,
-        variables: {
-            accountId,
-            cartId,
-        },
-    });
+    const connect = await connectAccountWithCart(accountId, cartId);
 
-    if (!connectAccountWithCartAndPublishAll) {
+    if (!connect) {
         res.status(500).json({ message: 'fixed publish' });
         return;
     }
 
     res.json({ status: 'created' });
+    // res.status(201).json({ status: 'created' });
     return;
 };
 

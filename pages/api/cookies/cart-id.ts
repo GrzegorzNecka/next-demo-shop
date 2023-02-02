@@ -12,31 +12,50 @@ interface Response {
 }
 
 const handler: NextApiHandler<Response> = async (req, res) => {
-    if (req.method !== 'GET') {
-        res.status(400).json({ message: 'bad request method' });
-        return;
+    switch (req.method) {
+        case 'GET': {
+            try {
+                /**
+                 * is id exist on cookie
+                 */
+
+                const isCookie = hasCookie(`${process.env.NEXT_PUBLIC_COOKIE_CART_ID}`, {
+                    req,
+                    res,
+                });
+
+                if (!isCookie) {
+                    const create = await createCookieCartId(req, res);
+                }
+
+                let cookieCartId = await getCookieCartId(req, res);
+
+                /**
+                 * is id exist on db
+                 */
+
+                const isExist = await isCartIdExist(cookieCartId as string);
+
+                if (!isExist) {
+                    /**
+                     * @todo usuń nieistniejące id w bazie danych
+                     */
+
+                    await deleteCookieCartId(req, res);
+                    await createCookieCartId(req, res);
+                    cookieCartId = await getCookieCartId(req, res);
+                }
+
+                return res.status(200).json({ id: cookieCartId });
+            } catch (err) {
+                return res
+                    .status(400)
+                    .json({ message: 'Bad Request - check that cookieCartId is exist ' });
+            }
+        }
+        default:
+            return res.status(400).json({ message: 'Bad Request method' });
     }
-
-    // is id exist on cookie
-    const isCookie = hasCookie(`${process.env.NEXT_PUBLIC_COOKIE_CART_ID}`, { req, res });
-
-    if (!isCookie) {
-        const create = await createCookieCartId(req, res);
-    }
-
-    let cookieCartId = await getCookieCartId(req, res);
-
-    // is id exist on db
-    const isExist = await isCartIdExist(cookieCartId as string);
-
-    if (!isExist) {
-        await deleteCookieCartId(req, res);
-        await createCookieCartId(req, res);
-        cookieCartId = await getCookieCartId(req, res);
-    }
-
-    res.status(200).json({ id: cookieCartId });
-    return;
 };
 
 export default handler;

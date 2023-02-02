@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-const signUpFormSchema = yup
+export const signUpFormSchema = yup
     .object({
         email: yup.string().required('pole jest wymagane').email(),
         password: yup.string().required('pole jest wymagane').min(3),

@@ -8,7 +8,7 @@ type cartItemsByAccountProps = {
     cartItems: CartItem[];
 };
 
-export const API_CART_PATH = '/api/cart/by-account';
+export const API_CART_ENDPOINT = '/api/cart/by-account';
 
 export const cartItemsByAccount = ({
     setCartItems,
@@ -22,7 +22,7 @@ export const cartItemsByAccount = ({
      */
 
     async function updateCartItems() {
-        const cart = await fetch(API_CART_PATH, {
+        const cart = await fetch(API_CART_ENDPOINT, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json;' },
         });
@@ -46,7 +46,7 @@ export const cartItemsByAccount = ({
          */
 
         if (!existingProduct) {
-            const create = await fetch(API_CART_PATH, {
+            const create = await fetch(API_CART_ENDPOINT, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json;' },
                 body: JSON.stringify({
@@ -68,7 +68,7 @@ export const cartItemsByAccount = ({
          * Update existing product in Cart
          */
 
-        const update = await fetch(API_CART_PATH, {
+        const update = await fetch(API_CART_ENDPOINT, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json;' },
             body: JSON.stringify({
@@ -101,7 +101,7 @@ export const cartItemsByAccount = ({
         console.log('existingItem.quantity', existingItem.quantity);
 
         if (existingItem.quantity > 1) {
-            const update = await fetch(API_CART_PATH, {
+            const update = await fetch(API_CART_ENDPOINT, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json;' },
                 body: JSON.stringify({
@@ -125,7 +125,7 @@ export const cartItemsByAccount = ({
          * Remove existing Cart Item
          */
 
-        const remove = await fetch(API_CART_PATH, {
+        const remove = await fetch(API_CART_ENDPOINT, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json;' },
             body: JSON.stringify({
@@ -148,7 +148,7 @@ export const cartItemsByAccount = ({
     async function clearCartItems() {
         setIsLoading(true);
 
-        const emptyCart = await fetch(API_CART_PATH, {
+        const emptyCart = await fetch(API_CART_ENDPOINT, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json;' },
             body: JSON.stringify({
@@ -185,7 +185,7 @@ export const cartItemsByAccount = ({
 //     let emptyCart: Response;
 
 //     try {
-//         emptyCart = await fetch(API_CART_PATH, {
+//         emptyCart = await fetch(API_CART_ENDPOINT, {
 //             method: 'DELETE',
 //             headers: { 'Content-Type': 'application/json;' },
 //             body: JSON.stringify({

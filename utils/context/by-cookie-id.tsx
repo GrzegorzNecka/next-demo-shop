@@ -15,7 +15,7 @@ export const cartItemsByCookieId = ({
     cookieCartId,
     cartItems,
 }: cartItemsByCookieIdProps) => {
-    const API_CART_PATH = '/api/cart/by-cookie-id';
+    const API_CART_ENDPOINT = '/api/cart/by-cookie-id';
 
     /**
      *
@@ -28,7 +28,7 @@ export const cartItemsByCookieId = ({
             return;
         }
 
-        const result = await fetch(API_CART_PATH, {
+        const result = await fetch(API_CART_ENDPOINT, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json;' },
         });
@@ -55,7 +55,7 @@ export const cartItemsByCookieId = ({
          */
 
         if (!existCartItem) {
-            const create = await fetch(API_CART_PATH, {
+            const create = await fetch(API_CART_ENDPOINT, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json;' },
                 body: JSON.stringify({
@@ -87,7 +87,7 @@ export const cartItemsByCookieId = ({
             (item) => item.productOptionId !== product.productOptionId,
         );
 
-        const increase = await fetch(API_CART_PATH, {
+        const increase = await fetch(API_CART_ENDPOINT, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json;' },
             body: JSON.stringify({
@@ -129,7 +129,7 @@ export const cartItemsByCookieId = ({
                 return item;
             });
 
-            const decrease = await fetch(API_CART_PATH, {
+            const decrease = await fetch(API_CART_ENDPOINT, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json;' },
                 body: JSON.stringify({
@@ -152,7 +152,7 @@ export const cartItemsByCookieId = ({
 
         const restCartItems = cartItems.filter((item) => item.itemId !== itemId);
 
-        const remove = await fetch(API_CART_PATH, {
+        const remove = await fetch(API_CART_ENDPOINT, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json;' },
             body: JSON.stringify({
@@ -176,7 +176,7 @@ export const cartItemsByCookieId = ({
 
         // const clear = await updateCart(cookieCartId, []);
 
-        const clear = await fetch(API_CART_PATH, {
+        const clear = await fetch(API_CART_ENDPOINT, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json;' },
             body: JSON.stringify({
