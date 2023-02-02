@@ -15,11 +15,13 @@ export const cartItemsByAccount = ({
     setIsLoading,
     cartItems,
 }: cartItemsByAccountProps) => {
-    //
+    /**
+     *
+     * Context handlers
+     *
+     */
 
-    // -- CONTEXT HANDLERS
-
-    const updateCartItems = async () => {
+    async function updateCartItems() {
         const cart = await fetch(API_CART_PATH, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json;' },
@@ -32,16 +34,16 @@ export const cartItemsByAccount = ({
             setIsLoading(false);
         }
         return;
-    };
+    }
 
-    //
-
-    const addItemToCart = async (product: CartItem) => {
+    async function addItemToCart(product: CartItem) {
         setIsLoading(true);
-
         const { productOptionId, quantity } = product;
-
         const existingProduct = cartItems.find((item) => item.productOptionId === productOptionId);
+
+        /**
+         * Add new product to Cart
+         */
 
         if (!existingProduct) {
             const create = await fetch(API_CART_PATH, {
@@ -62,6 +64,10 @@ export const cartItemsByAccount = ({
             return;
         }
 
+        /**
+         * Update existing product in Cart
+         */
+
         const update = await fetch(API_CART_PATH, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json;' },
@@ -78,11 +84,9 @@ export const cartItemsByAccount = ({
             setIsLoading(false);
             return;
         }
-    };
+    }
 
-    //
-
-    const removeItemFromCart = async (itemId: CartItem['productOptionId']) => {
+    async function removeItemFromCart(itemId: CartItem['productOptionId']) {
         const existingItem = cartItems.find((item) => item.itemId === itemId);
 
         if (!existingItem) {
@@ -91,38 +95,82 @@ export const cartItemsByAccount = ({
 
         setIsLoading(true);
 
+        /**
+         * Update existing Cart Item
+         */
+        console.log('existingItem.quantity', existingItem.quantity);
+
+        if (existingItem.quantity > 1) {
+            const update = await fetch(API_CART_PATH, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json;' },
+                body: JSON.stringify({
+                    itemId,
+                    updatedQuantity: existingItem.quantity - 1,
+                }),
+            });
+
+            if (update.status === 200) {
+                const withRemovedCartItem = transitionFetchedDataToCartOfContext(
+                    await update.json(),
+                );
+
+                setCartItems(withRemovedCartItem);
+                setIsLoading(false);
+            }
+            return;
+        }
+
+        /**
+         * Remove existing Cart Item
+         */
+
         const remove = await fetch(API_CART_PATH, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json;' },
             body: JSON.stringify({
+                setEmpty: false,
                 itemId,
-                quantity: existingItem.quantity,
             }),
         });
 
         if (remove.status === 200) {
-            const withRemovedCartItem = transitionFetchedDataToCartOfContext(await remove.json())!;
+            const withRemovedCartItem = transitionFetchedDataToCartOfContext(await remove.json());
 
             setCartItems(withRemovedCartItem);
             setIsLoading(false);
         }
-    };
+
+        return;
+    }
 
     // -- clearCartItems
-
-    const clearCartItems = async () => {
+    async function clearCartItems() {
         setIsLoading(true);
 
-        const withEmptyCart: CartItem[] = await handleClearCartItems();
+        // const withEmptyCart: CartItem[] = await handleClearCartItems();
 
-        if (!withEmptyCart) {
+        const emptyCart = await fetch(API_CART_PATH, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json;' },
+            body: JSON.stringify({
+                setEmpty: true,
+            }),
+        });
+
+        if (emptyCart.status === 200) {
+            const { cart } = await emptyCart.json();
+
+            const withEmptyCart = cart.cartItems;
+
+            setCartItems(withEmptyCart);
             setIsLoading(false);
             return;
         }
 
-        setCartItems(withEmptyCart);
         setIsLoading(false);
-    };
+        return;
+    }
 
     return {
         updateCartItems,
@@ -134,30 +182,30 @@ export const cartItemsByAccount = ({
 
 // HELPERS
 
-export async function handleClearCartItems() {
-    let emptyCart: Response;
+// export async function handleClearCartItems() {
+//     let emptyCart: Response;
 
-    try {
-        emptyCart = await fetch(API_CART_PATH, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json;' },
-            body: JSON.stringify({
-                setEmpty: true,
-            }),
-        });
+//     try {
+//         emptyCart = await fetch(API_CART_PATH, {
+//             method: 'DELETE',
+//             headers: { 'Content-Type': 'application/json;' },
+//             body: JSON.stringify({
+//                 setEmpty: true,
+//             }),
+//         });
 
-        if (emptyCart.status !== 200) {
-            throw new Error(`HTTP Response Code: ${emptyCart?.status}`);
-        }
+//         if (emptyCart.status !== 200) {
+//             throw new Error(`HTTP Response Code: ${emptyCart?.status}`);
+//         }
 
-        const { cart } = await emptyCart.json();
-        return cart.cartItems;
-    } catch (error) {
-        if (error instanceof SyntaxError) {
-            console.error('There was a SyntaxError', error);
-        } else {
-            console.error(`There was a during call 'withEmptyCart' method`, error);
-        }
-        return null;
-    }
-}
+//         const { cart } = await emptyCart.json();
+//         return cart.cartItems;
+//     } catch (error) {
+//         if (error instanceof SyntaxError) {
+//             console.error('There was a SyntaxError', error);
+//         } else {
+//             console.error(`There was a during call 'withEmptyCart' method`, error);
+//         }
+//         return null;
+//     }
+// }

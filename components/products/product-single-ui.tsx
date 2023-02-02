@@ -10,10 +10,10 @@ import { ButtonAddToCart as ButtonAddToCart } from './button-add-to-cart';
 export const ProductSingleUI = ({ data }: ProductDetailsProps) => {
     const isProductOpiotns = data?.option.length > 1 ? true : false;
     const [activeProductOptionId, setActiveProductOptionId] = useState<string>(data.option?.[0].id);
-    console.log(
-        '🚀 ~ file: product-single-ui.tsx:13 ~ ProductSingleUI ~ activeProductOptionId',
-        activeProductOptionId,
-    );
+    // console.log(
+    //     '🚀 ~ file: product-single-ui.tsx:13 ~ ProductSingleUI ~ activeProductOptionId',
+    //     activeProductOptionId,
+    // );
 
     return (
         <>
