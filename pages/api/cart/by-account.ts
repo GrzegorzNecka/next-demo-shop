@@ -1,13 +1,13 @@
 import type { NextApiResponse } from 'next/types';
-import type { NextApiRequestAuth } from 'middlewares/onlyAuth';
+import type { NextApiRequestAuth } from 'middlewares/only-auth';
 import clearCartByCartId from 'services/hygraph/cart/by-account/clear-cart';
 import updateItemQuantityByCartId from 'services/hygraph/cart/by-account/update-item';
 import getCartByCartId from 'services/hygraph/cart/by-account/get-cart';
 import createCartItemByCartId from 'services/hygraph/cart/by-account/create-item';
 import removeItemByCartId from 'services/hygraph/cart/by-account/remove-item';
-import onlyAuth from 'middlewares/onlyAuth';
+import onlyAuth from 'middlewares/only-auth';
 
-const handleCartSession = async (req: NextApiRequestAuth, res: NextApiResponse) => {
+const handleCartActionsWithAccount = async (req: NextApiRequestAuth, res: NextApiResponse) => {
     switch (req.method) {
         case 'GET': {
             try {
@@ -130,4 +130,4 @@ const handleCartSession = async (req: NextApiRequestAuth, res: NextApiResponse) 
     }
 };
 
-export default onlyAuth(handleCartSession);
+export default onlyAuth(handleCartActionsWithAccount);

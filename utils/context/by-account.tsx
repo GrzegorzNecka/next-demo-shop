@@ -148,8 +148,6 @@ export const cartItemsByAccount = ({
     async function clearCartItems() {
         setIsLoading(true);
 
-        // const withEmptyCart: CartItem[] = await handleClearCartItems();
-
         const emptyCart = await fetch(API_CART_PATH, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json;' },
@@ -165,6 +163,7 @@ export const cartItemsByAccount = ({
 
             setCartItems(withEmptyCart);
             setIsLoading(false);
+
             return;
         }
 

@@ -15,13 +15,15 @@ export const cartItemsByCookieId = ({
     cookieCartId,
     cartItems,
 }: cartItemsByCookieIdProps) => {
-    //
-
     const API_CART_PATH = '/api/cart/by-cookie-id';
 
-    // -- CONTEXT HANDLERS
-    // -- GET
-    const updateCartItems = async () => {
+    /**
+     *
+     * Context handlers
+     *
+     */
+
+    async function updateCartItems() {
         if (!cookieCartId) {
             return;
         }
@@ -39,24 +41,31 @@ export const cartItemsByCookieId = ({
 
         setCartItems(withFetchedCartItems);
         setIsLoading(false);
-    };
+    }
 
-    // -- ADD
-
-    const addItemToCart = async (product: CartItem) => {
+    async function addItemToCart(product: CartItem) {
         setIsLoading(true);
 
         const existCartItem = cartItems.find(
             (item?) => item.productOptionId === product.productOptionId,
         );
 
-        // -- create new cartItem
+        /**
+         * Add new product to Cart
+         */
 
         if (!existCartItem) {
-            const create = await updateCart(cookieCartId, [
-                ...cartItems,
-                transitionProductToCartItemOfContextByCookieId(product),
-            ]);
+            const create = await fetch(API_CART_PATH, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json;' },
+                body: JSON.stringify({
+                    id: cookieCartId,
+                    product: [
+                        ...cartItems,
+                        transitionProductToCartItemOfContextByCookieId(product),
+                    ],
+                }),
+            });
 
             if (create.status === 200) {
                 const { cartItems: withUpdatedCartItem }: { cartItems: CartItem[] } =
@@ -68,24 +77,33 @@ export const cartItemsByCookieId = ({
             return;
         }
 
-        // -- update existing cartItem (increase quantity)
+        /**
+         * Update existing product in Cart
+         */
 
         existCartItem.quantity = existCartItem.quantity + product.quantity;
+
         const restCartItems = cartItems.filter(
             (item) => item.productOptionId !== product.productOptionId,
         );
-        const increase = await updateCart(cookieCartId, [...restCartItems, existCartItem]);
+
+        const increase = await fetch(API_CART_PATH, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json;' },
+            body: JSON.stringify({
+                id: cookieCartId,
+                product: [...restCartItems, existCartItem],
+            }),
+        });
 
         if (increase.status === 200) {
             const { cartItems }: { cartItems: CartItem[] } = await increase.json();
             setCartItems(cartItems!);
             setIsLoading(false);
         }
-    };
+    }
 
-    // -- REMOVE
-
-    const removeItemFromCart = async (itemId: CartItem['productOptionId']) => {
+    async function removeItemFromCart(itemId: CartItem['productOptionId']) {
         if (!cartItems) {
             return;
         }
@@ -98,7 +116,9 @@ export const cartItemsByCookieId = ({
 
         setIsLoading(true);
 
-        // -- decrease cartItem quantity
+        /**
+         * Update cartItem quantity
+         */
 
         if (existCartItem.quantity > 1) {
             const updateCartItems = cartItems.map((item) => {
@@ -109,7 +129,14 @@ export const cartItemsByCookieId = ({
                 return item;
             });
 
-            const decrease = await updateCart(cookieCartId, updateCartItems);
+            const decrease = await fetch(API_CART_PATH, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json;' },
+                body: JSON.stringify({
+                    id: cookieCartId,
+                    product: updateCartItems,
+                }),
+            });
 
             if (decrease.status === 200) {
                 const { cartItems }: { cartItems: CartItem[] } = await decrease.json();
@@ -119,10 +146,20 @@ export const cartItemsByCookieId = ({
             return;
         }
 
-        // -- delete cartItem
+        /**
+         * Delete Cart
+         */
 
         const restCartItems = cartItems.filter((item) => item.itemId !== itemId);
-        const remove = await updateCart(cookieCartId, restCartItems);
+
+        const remove = await fetch(API_CART_PATH, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json;' },
+            body: JSON.stringify({
+                id: cookieCartId,
+                product: restCartItems,
+            }),
+        });
 
         if (remove.status === 200) {
             const { cartItems }: { cartItems: CartItem[] } = await remove.json();
@@ -130,16 +167,23 @@ export const cartItemsByCookieId = ({
             setIsLoading(false);
         }
         return;
-    };
+    }
 
-    // -- CLEAR
-
-    const clearCartItems = async () => {
+    async function clearCartItems() {
         if (!cartItems) {
             return;
         }
 
-        const clear = await updateCart(cookieCartId, []);
+        // const clear = await updateCart(cookieCartId, []);
+
+        const clear = await fetch(API_CART_PATH, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json;' },
+            body: JSON.stringify({
+                id: cookieCartId,
+                product: [],
+            }),
+        });
 
         if (clear.status === 200) {
             const { cartItems }: { cartItems: CartItem[] } = await clear.json();
@@ -147,7 +191,7 @@ export const cartItemsByCookieId = ({
             setIsLoading(false);
         }
         return;
-    };
+    }
 
     return {
         updateCartItems,
@@ -156,17 +200,3 @@ export const cartItemsByCookieId = ({
         clearCartItems,
     } as const;
 };
-
-// -- HELPERS
-
-async function updateCart<T, U>(id: T, product: U) {
-    const res = await fetch('/api/cart/by-cookie-id', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json;' },
-        body: JSON.stringify({
-            id,
-            product,
-        }),
-    });
-    return res;
-}

@@ -20,12 +20,9 @@ export default async function updateCartItemByCookieId(id: string, product: Cart
         },
     });
 
-    console.log('🚀 ~  updateCartItem', updateCartItem);
     if (!updateCartItem.data?.updateUnauthCart?.cartItems) {
         return [];
     }
-
-    // todo - do obsłużenia przypadek kiedy w cookies wyczyszczę pamięć podręczną
 
     return JSON.parse(updateCartItem.data.updateUnauthCart.cartItems) as CartItem[];
 }
