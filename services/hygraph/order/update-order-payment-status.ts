@@ -15,7 +15,7 @@ export const updateOrderPaymentStatus = async ({
     stripePaymentIntentStatus,
 }: UpdateOrderPaymentStatus) => {
     //--
-    const updatePaymentStatus = await authApolloClient.mutate<
+    const { data } = await authApolloClient.mutate<
         UpdateOrderPaymentStatusMutation,
         UpdateOrderPaymentStatusMutationVariables
     >({
@@ -26,4 +26,6 @@ export const updateOrderPaymentStatus = async ({
         },
         fetchPolicy: 'no-cache',
     });
+
+    return data;
 };

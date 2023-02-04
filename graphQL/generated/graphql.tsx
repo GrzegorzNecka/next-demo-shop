@@ -12539,12 +12539,19 @@ export type CreateEmptyOrderMutationVariables = Exact<{ [key: string]: never; }>
 
 export type CreateEmptyOrderMutation = { readonly __typename?: 'Mutation', readonly createOrder?: { readonly __typename?: 'Order', readonly id: string } | null };
 
+export type PublishOrderMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type PublishOrderMutation = { readonly __typename?: 'Mutation', readonly publishOrder?: { readonly __typename?: 'Order', readonly id: string } | null };
+
 export type GetOrderQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type GetOrderQuery = { readonly __typename?: 'Query', readonly order?: { readonly __typename?: 'Order', readonly stripeCheckoutId?: string | null, readonly stripePaymentIntentStatus?: string | null } | null };
+export type GetOrderQuery = { readonly __typename?: 'Query', readonly order?: { readonly __typename?: 'Order', readonly id: string, readonly stripeCheckoutId?: string | null, readonly stripePaymentIntentStatus?: string | null } | null };
 
 export type ConnectStripeCheckoutWithOrderMutationVariables = Exact<{
   orderId: Scalars['ID'];
@@ -12581,6 +12588,13 @@ export type GetOrderItemsByOrderIdQueryVariables = Exact<{
 
 
 export type GetOrderItemsByOrderIdQuery = { readonly __typename?: 'Query', readonly order?: { readonly __typename?: 'Order', readonly id: string, readonly email?: string | null, readonly stripePaymentIntentStatus?: string | null, readonly orderItems: ReadonlyArray<{ readonly __typename?: 'OrderItem', readonly id: string, readonly quantity: number, readonly price?: number | null, readonly productName?: string | null, readonly option?: { readonly __typename?: 'Option', readonly id: string, readonly color?: ProductColor | null, readonly size?: ProductSize | null } | null }> } | null };
+
+export type PublishOrderItemMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type PublishOrderItemMutation = { readonly __typename?: 'Mutation', readonly publishOrderItem?: { readonly __typename?: 'OrderItem', readonly id: string } | null };
 
 export const CartContentQueryWithOptionFragmentDoc = gql`
     fragment cartContentQueryWithOption on Cart {
@@ -13450,9 +13464,43 @@ export function useCreateEmptyOrderMutation(baseOptions?: Apollo.MutationHookOpt
 export type CreateEmptyOrderMutationHookResult = ReturnType<typeof useCreateEmptyOrderMutation>;
 export type CreateEmptyOrderMutationResult = Apollo.MutationResult<CreateEmptyOrderMutation>;
 export type CreateEmptyOrderMutationOptions = Apollo.BaseMutationOptions<CreateEmptyOrderMutation, CreateEmptyOrderMutationVariables>;
+export const PublishOrderDocument = gql`
+    mutation PublishOrder($id: ID) {
+  publishOrder(to: PUBLISHED, where: {id: $id}) {
+    id
+  }
+}
+    `;
+export type PublishOrderMutationFn = Apollo.MutationFunction<PublishOrderMutation, PublishOrderMutationVariables>;
+
+/**
+ * __usePublishOrderMutation__
+ *
+ * To run a mutation, you first call `usePublishOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePublishOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [publishOrderMutation, { data, loading, error }] = usePublishOrderMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function usePublishOrderMutation(baseOptions?: Apollo.MutationHookOptions<PublishOrderMutation, PublishOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PublishOrderMutation, PublishOrderMutationVariables>(PublishOrderDocument, options);
+      }
+export type PublishOrderMutationHookResult = ReturnType<typeof usePublishOrderMutation>;
+export type PublishOrderMutationResult = Apollo.MutationResult<PublishOrderMutation>;
+export type PublishOrderMutationOptions = Apollo.BaseMutationOptions<PublishOrderMutation, PublishOrderMutationVariables>;
 export const GetOrderDocument = gql`
     query GetOrder($id: ID!) {
   order(where: {id: $id}) {
+    id
     stripeCheckoutId
     stripePaymentIntentStatus
   }
@@ -13649,3 +13697,36 @@ export function useGetOrderItemsByOrderIdLazyQuery(baseOptions?: Apollo.LazyQuer
 export type GetOrderItemsByOrderIdQueryHookResult = ReturnType<typeof useGetOrderItemsByOrderIdQuery>;
 export type GetOrderItemsByOrderIdLazyQueryHookResult = ReturnType<typeof useGetOrderItemsByOrderIdLazyQuery>;
 export type GetOrderItemsByOrderIdQueryResult = Apollo.QueryResult<GetOrderItemsByOrderIdQuery, GetOrderItemsByOrderIdQueryVariables>;
+export const PublishOrderItemDocument = gql`
+    mutation PublishOrderItem($id: ID) {
+  publishOrderItem(to: PUBLISHED, where: {id: $id}) {
+    id
+  }
+}
+    `;
+export type PublishOrderItemMutationFn = Apollo.MutationFunction<PublishOrderItemMutation, PublishOrderItemMutationVariables>;
+
+/**
+ * __usePublishOrderItemMutation__
+ *
+ * To run a mutation, you first call `usePublishOrderItemMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePublishOrderItemMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [publishOrderItemMutation, { data, loading, error }] = usePublishOrderItemMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function usePublishOrderItemMutation(baseOptions?: Apollo.MutationHookOptions<PublishOrderItemMutation, PublishOrderItemMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PublishOrderItemMutation, PublishOrderItemMutationVariables>(PublishOrderItemDocument, options);
+      }
+export type PublishOrderItemMutationHookResult = ReturnType<typeof usePublishOrderItemMutation>;
+export type PublishOrderItemMutationResult = Apollo.MutationResult<PublishOrderItemMutation>;
+export type PublishOrderItemMutationOptions = Apollo.BaseMutationOptions<PublishOrderItemMutation, PublishOrderItemMutationVariables>;

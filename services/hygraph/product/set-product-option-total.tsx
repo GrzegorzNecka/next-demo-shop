@@ -12,38 +12,42 @@ export const setProductOptionTotal = async (cart: GetCartItemsByCartIdQuery['car
     if (!cart?.cartItems) {
         return;
     }
+    const reduce = await Promise.all(
+        cart.cartItems.map(async (item) => {
+            //
+            if (!item?.option?.total || !item.option?.id) {
+                throw new Error('required data missing');
+            }
 
-    cart.cartItems.map(async (item) => {
-        //
-        if (!item?.option?.total || !item.option?.id) {
-            throw new Error('required data missing');
-        }
+            const quantity = item.quantity;
+            const total = item.option.total;
+            const optionId = item.option.id;
 
-        const quantity = item.quantity;
-        const total = item.option.total;
-        const optionId = item.option.id;
+            let nextTotal = total - quantity;
 
-        let nextTotal = total - quantity;
+            if (total < quantity) {
+                nextTotal = 0;
+            }
 
-        if (total < quantity) {
-            nextTotal = 0;
-        }
+            if (total < 1) {
+                nextTotal = 0;
+            }
 
-        if (total < 1) {
-            nextTotal = 0;
-        }
+            if (nextTotal < 0) {
+                throw new Error('to much quantity products! Out of stock');
+            }
 
-        if (nextTotal < 0) {
-            throw new Error('to much quantity products! Out of stock');
-        }
+            const { data } = await authApolloClient.mutate<
+                SetProductOptionTotalMutation,
+                SetProductOptionTotalMutationVariables
+            >({
+                mutation: SetProductOptionTotalDocument,
+                variables: { id: optionId, total: nextTotal },
+                fetchPolicy: 'no-cache',
+            });
+            return data;
+        }),
+    );
 
-        await authApolloClient.mutate<
-            SetProductOptionTotalMutation,
-            SetProductOptionTotalMutationVariables
-        >({
-            mutation: SetProductOptionTotalDocument,
-            variables: { id: optionId, total: nextTotal },
-            fetchPolicy: 'no-cache',
-        });
-    });
+    return reduce;
 };

@@ -1,51 +1,46 @@
-import clearCartByCartId from 'services/hygraph/cart/by-account/clear-cart';
-import getCartByCartId from 'services/hygraph/cart/by-account/get-cart';
-import { createEmptyOrder } from 'services/hygraph/order/create-empty-item';
-
+import { getOrder } from 'services/hygraph/order/get-order';
 import { updateOrderPaymentStatus } from 'services/hygraph/order/update-order-payment-status';
-import { setProductOptionTotal } from 'services/hygraph/product/set-product-option-total';
 import Stripe from 'stripe';
+import { stripeClient } from 'utils/stripe-client';
 
 type FinalizeCheckoutProps = {
-    cartId: string;
     orderId: string;
     stripePaymentIntentStatus: string;
 };
 
 export const finalizeCheckout = async ({
-    cartId,
     orderId,
     stripePaymentIntentStatus,
 }: FinalizeCheckoutProps) => {
-    //stripe
-    // const stripeKey = process.env.STRIPE_SECRET_KEY;
+    console.log(
+        '🚀 ~ file: finalize-checkout.ts:16 ~ stripePaymentIntentStatus',
+        stripePaymentIntentStatus,
+    );
+    console.log('🚀 ~ file: finalize-checkout.ts:16 ~ orderId', orderId);
+    const stripe = await stripeClient();
 
-    // if (!stripeKey) {
-    //     throw new Error('missing stripe secret key');
-    // }
+    const { order } = await getOrder(orderId);
+    console.log('🚀 ~ file: finalize-checkout.ts:24 ~ order ', order);
+    console.log('order?.stripeCheckoutId', order?.stripeCheckoutId);
 
-    // const stripe = new Stripe(stripeKey, { apiVersion: '2022-11-15' });
+    if (typeof order?.stripeCheckoutId !== 'string') {
+        console.log('coś poszło nie tak !order?.stripeCheckoutId', order?.stripeCheckoutId);
+        return;
+    }
+
+    const checkout = await stripe.checkout.sessions.retrieve(order.stripeCheckoutId);
+
+    console.log('🚀 ~ file: finalize-checkout.ts:32 ~ checkout', checkout);
+
+    if (order?.stripePaymentIntentStatus === 'succeeded' || checkout.payment_status === 'unpaid') {
+        return;
+    }
 
     const updatePaymentStatus = await updateOrderPaymentStatus({
         orderId,
         stripePaymentIntentStatus,
     });
 
-    /**
-     *
-     * @todo: przeniesione z create checkout
-     *
-     */
-
-    // const clearCart = await clearCartByCartId({ cartId });
-    // const cart = await getCartByCartId({
-    //     id: cartId,
-    // });
-    // const reduceProductTotalOption = await setProductOptionTotal(cart);
-
-    /**
-     *
-     * @todo: utwórz list przewozowy
-     *
-     */
+    console.log('🚀 ~ file: finalize-checkout.ts:41 ~ updatePaymentStatu', updatePaymentStatus);
+    return updatePaymentStatus;
 };

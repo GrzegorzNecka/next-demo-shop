@@ -113,13 +113,14 @@ export const createCheckout = async (payload: StripeCreateCheckout) => {
 
     const session = await stripe.checkout.sessions.create(paymentObject);
 
-    // console.log(' session', session);
+    console.log(' session', session);
 
     const connectOrderWithStripeCheckout = await connectWithStripeCheckout({
         session,
         payload,
         orderId,
     });
+    console.log('🚀 ~ ~ connectOrderWithStripeCheckout', connectOrderWithStripeCheckout);
 
     /**
      *

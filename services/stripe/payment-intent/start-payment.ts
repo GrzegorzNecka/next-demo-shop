@@ -18,19 +18,27 @@ export const startPayment = async ({
     const cart = await getCartByCartId({
         id: cartId,
     });
+    console.log('🚀 ~ file: start-payment.ts:21 ~ cart', cart);
 
-    if (!cart?.cartItems) {
-        throw new Error('cartItems not exist');
+    if (!cart) {
+        console.log('cart no exist');
     }
 
-    const createOrderItems = updateOrderItems({ cart, orderId });
+    const createOrderItems = await updateOrderItems({ cart, orderId });
+    console.log('🚀 ~ file: start-payment.ts:27 ~ createOrderItems', createOrderItems);
 
     const clearCart = await clearCartByCartId({ cartId });
+    console.log('🚀 ~ file: start-payment.ts:30 ~ clearCart', clearCart);
 
     const reduceProductTotalOption = await setProductOptionTotal(cart);
+    console.log(
+        '🚀 ~ file: start-payment.ts:33 ~ reduceProductTotalOption ',
+        reduceProductTotalOption,
+    );
 
     const updatePaymentStatus = await updateOrderPaymentStatus({
         orderId,
         stripePaymentIntentStatus,
     });
+    console.log('🚀 ~ file: start-payment.ts:42 ~ updatePaymentStatus', updatePaymentStatus);
 };

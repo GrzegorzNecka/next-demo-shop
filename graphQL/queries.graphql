@@ -221,8 +221,15 @@ mutation CreateEmptyOrder {
     }
 }
 
+mutation PublishOrder($id: ID) {
+    publishOrder(to: PUBLISHED, where: { id: $id }) {
+        id
+    }
+}
+
 query GetOrder($id: ID!) {
     order(where: { id: $id }) {
+        id
         stripeCheckoutId
         stripePaymentIntentStatus
     }
@@ -292,5 +299,11 @@ query GetOrderItemsByOrderId($orderId: ID!) {
                 size
             }
         }
+    }
+}
+
+mutation PublishOrderItem($id: ID) {
+    publishOrderItem(to: PUBLISHED, where: { id: $id }) {
+        id
     }
 }

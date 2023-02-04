@@ -86,8 +86,7 @@ const webhookHandler: NextApiHandler = async (req, res) => {
     if (event.type === `payment_intent.succeeded`) {
         console.log(`event - payment_intent.succeeded`, event.data.object);
 
-        const finalize = finalizeCheckout({
-            cartId: event.data.object.metadata.cartId,
+        const finalize = await finalizeCheckout({
             orderId: event.data.object.metadata.orderId,
             stripePaymentIntentStatus: event.data.object.status,
         });

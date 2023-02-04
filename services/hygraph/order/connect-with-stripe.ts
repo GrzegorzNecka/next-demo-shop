@@ -26,7 +26,7 @@ export const connectWithStripeCheckout = async ({
 
     // const quantities = cart?.cartItems.map((item) => ({ quantity: item.quantity }));
 
-    const connect = await authApolloClient.mutate<
+    const { data } = await authApolloClient.mutate<
         ConnectStripeCheckoutWithOrderMutation,
         ConnectStripeCheckoutWithOrderMutationVariables
     >({
@@ -40,5 +40,5 @@ export const connectWithStripeCheckout = async ({
         fetchPolicy: 'no-cache',
     });
 
-    // console.log('🚀 ~ update-order.ts:59  orderItems', orderItems);
+    return data?.updateOrder?.id;
 };

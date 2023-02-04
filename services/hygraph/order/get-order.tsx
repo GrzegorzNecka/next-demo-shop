@@ -8,6 +8,7 @@ export const getOrder = async (id: string) => {
         variables: { id },
         fetchPolicy: 'no-cache',
     });
+    console.log('🚀 ~ file: get-order.tsx:11 ~ getOrder ~ data', data);
 
-    return { order: data.order || null };
+    return { order: data.order };
 };
