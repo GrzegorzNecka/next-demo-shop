@@ -2,47 +2,20 @@
 import calculateTotal from 'utils/calculate-total';
 import { authApolloClient } from 'graphQL/apolloClient';
 import type {
-    UpdateOrderMutation,
-    UpdateOrderMutationVariables,
     CreateOrderItemByOrderIdMutation,
     CreateOrderItemByOrderIdMutationVariables,
     GetCartItemsByCartIdQuery,
 } from 'graphQL/generated/graphql';
-import { UpdateOrderDocument, CreateOrderItemByOrderIdDocument } from 'graphQL/generated/graphql';
+import { CreateOrderItemByOrderIdDocument } from 'graphQL/generated/graphql';
 import type Stripe from 'stripe';
 import type { StripeCreateCheckout } from 'validations/stripe-checkout-create-schema';
 
-type UpdateOrderByOrderIdProps = {
-    session: Stripe.Response<Stripe.Checkout.Session>;
-    payload: StripeCreateCheckout;
+type UpdateOrderItemsProps = {
     cart: GetCartItemsByCartIdQuery['cart'];
     orderId: string | null;
 };
 
-export const updateOrderByOrderId = async ({
-    session,
-    payload,
-    cart,
-    orderId,
-}: UpdateOrderByOrderIdProps) => {
-    //
-
-    // const quantities = cart?.cartItems.map((item) => ({ quantity: item.quantity }));
-
-    const updateOrder = await authApolloClient.mutate<
-        UpdateOrderMutation,
-        UpdateOrderMutationVariables
-    >({
-        mutation: UpdateOrderDocument,
-        variables: {
-            orderId: orderId!,
-            email: payload?.email!,
-            stripeCheckoutId: session.id,
-            stripePaymentIntentStatus: session.payment_status,
-        },
-        fetchPolicy: 'no-cache',
-    });
-
+export const updateOrderItems = async ({ cart, orderId }: UpdateOrderItemsProps) => {
     /**
      *
      * @todo: total - chyba wywalę wogólę z modelu
@@ -50,7 +23,7 @@ export const updateOrderByOrderId = async ({
      *
      */
 
-    const orderItems = cart?.cartItems.map(async (item) => {
+    const update = cart?.cartItems.map(async (item) => {
         const orderItem = await authApolloClient.mutate<
             CreateOrderItemByOrderIdMutation,
             CreateOrderItemByOrderIdMutationVariables
@@ -66,5 +39,4 @@ export const updateOrderByOrderId = async ({
             fetchPolicy: 'no-cache',
         });
     });
-    // console.log('🚀 ~ update-order.ts:59  orderItems', orderItems);
 };

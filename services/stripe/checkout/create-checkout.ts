@@ -1,7 +1,8 @@
 import clearCartByCartId from 'services/hygraph/cart/by-account/clear-cart';
 import getCartByCartId from 'services/hygraph/cart/by-account/get-cart';
+import { connectWithStripeCheckout } from 'services/hygraph/order/connect-with-stripe';
 import { createEmptyOrder } from 'services/hygraph/order/create-empty-item';
-import { updateOrderByOrderId } from 'services/hygraph/order/update-order';
+import { updateOrderItems } from 'services/hygraph/order/update-order-items';
 import { setProductOptionTotal } from 'services/hygraph/product/set-product-option-total';
 import Stripe from 'stripe';
 import type { StripeCreateCheckout } from 'validations/stripe-checkout-create-schema';
@@ -114,22 +115,22 @@ export const createCheckout = async (payload: StripeCreateCheckout) => {
 
     // console.log(' session', session);
 
-    const updateOrder = await updateOrderByOrderId({
+    const connectOrderWithStripeCheckout = await connectWithStripeCheckout({
         session,
         payload,
-        cart,
         orderId,
     });
 
     /**
      *
-     * @todo: to powinno być w finalize
+     * @next - webhook events:
+     *  - payment_intent.created
      *
      */
 
-    const clearCart = await clearCartByCartId({ cartId: payload.cartId });
+    // const clearCart = await clearCartByCartId({ cartId: payload.cartId });
 
-    const reduceProductTotalOption = await setProductOptionTotal(cart);
+    // const reduceProductTotalOption = await setProductOptionTotal(cart);
 
     return session;
 };

@@ -13,16 +13,14 @@ const createCheckoutHandler: NextApiHandler = async (req, res) => {
                     return;
                 }
 
-                res.status(200).json({ status: 'created', session });
-                return;
+                return res.status(201).json({ status: 'created', session });
+                // res.status(200).json({ status: 'created', session });
             } catch (err) {
-                res.status(422).json({ status: 'not_created', err });
-                return;
+                return res.status(422).json({ status: 'not_created', err });
             }
         }
         default:
-            res.status(400);
-            return;
+            return res.status(400);
     }
 };
 

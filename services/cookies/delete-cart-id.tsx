@@ -9,6 +9,10 @@ interface Response {
 }
 
 async function deleteCookieCartId(req: NextApiRequest, res: NextApiResponse<Response>) {
+    /**
+     * @todo usuń nieistniejące id w bazie danych
+     */
+
     deleteCookie(`${process.env.NEXT_PUBLIC_COOKIE_CART_ID}`);
 }
 

@@ -12539,7 +12539,14 @@ export type CreateEmptyOrderMutationVariables = Exact<{ [key: string]: never; }>
 
 export type CreateEmptyOrderMutation = { readonly __typename?: 'Mutation', readonly createOrder?: { readonly __typename?: 'Order', readonly id: string } | null };
 
-export type UpdateOrderMutationVariables = Exact<{
+export type GetOrderQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetOrderQuery = { readonly __typename?: 'Query', readonly order?: { readonly __typename?: 'Order', readonly stripeCheckoutId?: string | null, readonly stripePaymentIntentStatus?: string | null } | null };
+
+export type ConnectStripeCheckoutWithOrderMutationVariables = Exact<{
   orderId: Scalars['ID'];
   email: Scalars['String'];
   stripeCheckoutId: Scalars['String'];
@@ -12547,7 +12554,7 @@ export type UpdateOrderMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOrderMutation = { readonly __typename?: 'Mutation', readonly updateOrder?: { readonly __typename?: 'Order', readonly id: string } | null };
+export type ConnectStripeCheckoutWithOrderMutation = { readonly __typename?: 'Mutation', readonly updateOrder?: { readonly __typename?: 'Order', readonly id: string } | null };
 
 export type CreateOrderItemByOrderIdMutationVariables = Exact<{
   orderId: Scalars['ID'];
@@ -13443,8 +13450,44 @@ export function useCreateEmptyOrderMutation(baseOptions?: Apollo.MutationHookOpt
 export type CreateEmptyOrderMutationHookResult = ReturnType<typeof useCreateEmptyOrderMutation>;
 export type CreateEmptyOrderMutationResult = Apollo.MutationResult<CreateEmptyOrderMutation>;
 export type CreateEmptyOrderMutationOptions = Apollo.BaseMutationOptions<CreateEmptyOrderMutation, CreateEmptyOrderMutationVariables>;
-export const UpdateOrderDocument = gql`
-    mutation UpdateOrder($orderId: ID!, $email: String!, $stripeCheckoutId: String!, $stripePaymentIntentStatus: String!) {
+export const GetOrderDocument = gql`
+    query GetOrder($id: ID!) {
+  order(where: {id: $id}) {
+    stripeCheckoutId
+    stripePaymentIntentStatus
+  }
+}
+    `;
+
+/**
+ * __useGetOrderQuery__
+ *
+ * To run a query within a React component, call `useGetOrderQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrderQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrderQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetOrderQuery(baseOptions: Apollo.QueryHookOptions<GetOrderQuery, GetOrderQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetOrderQuery, GetOrderQueryVariables>(GetOrderDocument, options);
+      }
+export function useGetOrderLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrderQuery, GetOrderQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetOrderQuery, GetOrderQueryVariables>(GetOrderDocument, options);
+        }
+export type GetOrderQueryHookResult = ReturnType<typeof useGetOrderQuery>;
+export type GetOrderLazyQueryHookResult = ReturnType<typeof useGetOrderLazyQuery>;
+export type GetOrderQueryResult = Apollo.QueryResult<GetOrderQuery, GetOrderQueryVariables>;
+export const ConnectStripeCheckoutWithOrderDocument = gql`
+    mutation ConnectStripeCheckoutWithOrder($orderId: ID!, $email: String!, $stripeCheckoutId: String!, $stripePaymentIntentStatus: String!) {
   updateOrder(
     where: {id: $orderId}
     data: {email: $email, stripeCheckoutId: $stripeCheckoutId, stripePaymentIntentStatus: $stripePaymentIntentStatus, account: {connect: {email: $email}}}
@@ -13453,20 +13496,20 @@ export const UpdateOrderDocument = gql`
   }
 }
     `;
-export type UpdateOrderMutationFn = Apollo.MutationFunction<UpdateOrderMutation, UpdateOrderMutationVariables>;
+export type ConnectStripeCheckoutWithOrderMutationFn = Apollo.MutationFunction<ConnectStripeCheckoutWithOrderMutation, ConnectStripeCheckoutWithOrderMutationVariables>;
 
 /**
- * __useUpdateOrderMutation__
+ * __useConnectStripeCheckoutWithOrderMutation__
  *
- * To run a mutation, you first call `useUpdateOrderMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateOrderMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useConnectStripeCheckoutWithOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useConnectStripeCheckoutWithOrderMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updateOrderMutation, { data, loading, error }] = useUpdateOrderMutation({
+ * const [connectStripeCheckoutWithOrderMutation, { data, loading, error }] = useConnectStripeCheckoutWithOrderMutation({
  *   variables: {
  *      orderId: // value for 'orderId'
  *      email: // value for 'email'
@@ -13475,13 +13518,13 @@ export type UpdateOrderMutationFn = Apollo.MutationFunction<UpdateOrderMutation,
  *   },
  * });
  */
-export function useUpdateOrderMutation(baseOptions?: Apollo.MutationHookOptions<UpdateOrderMutation, UpdateOrderMutationVariables>) {
+export function useConnectStripeCheckoutWithOrderMutation(baseOptions?: Apollo.MutationHookOptions<ConnectStripeCheckoutWithOrderMutation, ConnectStripeCheckoutWithOrderMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateOrderMutation, UpdateOrderMutationVariables>(UpdateOrderDocument, options);
+        return Apollo.useMutation<ConnectStripeCheckoutWithOrderMutation, ConnectStripeCheckoutWithOrderMutationVariables>(ConnectStripeCheckoutWithOrderDocument, options);
       }
-export type UpdateOrderMutationHookResult = ReturnType<typeof useUpdateOrderMutation>;
-export type UpdateOrderMutationResult = Apollo.MutationResult<UpdateOrderMutation>;
-export type UpdateOrderMutationOptions = Apollo.BaseMutationOptions<UpdateOrderMutation, UpdateOrderMutationVariables>;
+export type ConnectStripeCheckoutWithOrderMutationHookResult = ReturnType<typeof useConnectStripeCheckoutWithOrderMutation>;
+export type ConnectStripeCheckoutWithOrderMutationResult = Apollo.MutationResult<ConnectStripeCheckoutWithOrderMutation>;
+export type ConnectStripeCheckoutWithOrderMutationOptions = Apollo.BaseMutationOptions<ConnectStripeCheckoutWithOrderMutation, ConnectStripeCheckoutWithOrderMutationVariables>;
 export const CreateOrderItemByOrderIdDocument = gql`
     mutation CreateOrderItemByOrderId($orderId: ID!, $quantity: Int!, $price: Int!, $productName: String!, $optionId: ID!) {
   createOrderItem(

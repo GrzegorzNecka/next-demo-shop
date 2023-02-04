@@ -16,7 +16,7 @@ const handler: NextApiHandler<Response> = async (req, res) => {
         case 'GET': {
             try {
                 /**
-                 * is id exist on cookie
+                 * is id exist on cookie ?
                  */
 
                 const isCookie = hasCookie(`${process.env.NEXT_PUBLIC_COOKIE_CART_ID}`, {
@@ -31,16 +31,12 @@ const handler: NextApiHandler<Response> = async (req, res) => {
                 let cookieCartId = await getCookieCartId(req, res);
 
                 /**
-                 * is id exist on db
+                 * is id exist on db ?
                  */
 
                 const isExist = await isCartIdExist(cookieCartId as string);
 
                 if (!isExist) {
-                    /**
-                     * @todo usuń nieistniejące id w bazie danych
-                     */
-
                     await deleteCookieCartId(req, res);
                     await createCookieCartId(req, res);
                     cookieCartId = await getCookieCartId(req, res);

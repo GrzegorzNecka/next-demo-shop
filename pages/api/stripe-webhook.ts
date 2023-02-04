@@ -2,14 +2,26 @@ import type { NextApiHandler } from 'next/types';
 import type { StripeWebhookEvents } from 'types/stripeEvents';
 import Stripe from 'stripe';
 import { buffer } from 'micro';
-
 import { finalizeCheckout } from 'services/stripe/checkout/finalize-checkout';
+import { startPayment } from 'services/stripe/payment-intent/start-payment';
 
 /**
  *
  * docs: https://stripe.com/docs/webhooks/quickstart
  * create webhook: https://dashboard.stripe.com/test/webhooks/create
  * type of events: https://stripe.com/docs/api/events/types
+ *
+ *  - PaymentIntent:
+ *      - payment_intent.created - Occurs when a new PaymentIntent is created.
+ *      - payment_intent.succeeded - Occurs when a PaymentIntent has successfully completed payment.
+ *      - payment_intent.canceled  -
+ *      - payment_intent.payment_failed - Occurs when a PaymentIntent has failed the attempt to create a payment method or a payment.
+ *
+ *  - CheckoutSession:
+ *      - checkout.session.async_payment_succeeded - Occurs when a payment intent using a delayed payment method finally succeeds.
+ *      - checkout.session.async_payment_failed - Occurs when a payment intent using a delayed payment method fails.
+ *      - checkout.session.completed - Occurs when a Checkout Session has been successfully completed.
+ *      - checkout.session.expired - Occurs when a Checkout Session is expired.
  *
  */
 
@@ -26,7 +38,7 @@ const webhookHandler: NextApiHandler = async (req, res) => {
     const buf = await buffer(req);
     const sig = req.headers['stripe-signature'];
 
-    let event = req.body;
+    let event: StripeWebhookEvents = req.body;
 
     if (!stripeKey || !endpointSecret || !sig) {
         res.status(500).json({ message: 'missing STRIPE_SECRET_KEY' });
@@ -46,15 +58,51 @@ const webhookHandler: NextApiHandler = async (req, res) => {
         return;
     }
 
+    /**
+     *
+     *  Execution
+     *
+     */
+
+    if (event.type === `payment_intent.created`) {
+        console.log(`event - payment_intent.created `, event.data.object);
+
+        const start = await startPayment({
+            cartId: event.data.object.metadata.cartId,
+            orderId: event.data.object.metadata.orderId,
+            stripePaymentIntentStatus: event.data.object.id,
+        });
+
+        /**
+         *
+         * @todo: wygeneruj fakturę
+         * @todo: wyślij mail
+         *
+         */
+
+        console.log(`event - payment_intent.created `, event.data.object);
+    }
+
     if (event.type === `payment_intent.succeeded`) {
         console.log(`event - payment_intent.succeeded`, event.data.object);
-        console.log(`event processed ...`);
 
         const finalize = finalizeCheckout({
             cartId: event.data.object.metadata.cartId,
             orderId: event.data.object.metadata.orderId,
             stripePaymentIntentStatus: event.data.object.status,
         });
+
+        /**
+         *
+         * @todo: wygeneruj list przewozowy
+         * @todo: wyślij mail
+         *
+         */
+    }
+
+    if (event.type === `payment_intent.payment_failed`) {
+        console.log(`event - payment_intent.payment_failed`, event.data.object);
+        console.log(`event processed ...`);
 
         /**
          *
@@ -79,6 +127,7 @@ const webhookHandler: NextApiHandler = async (req, res) => {
         /**
          *
          * @todo: zmień status order
+         * @todo: przywróć towar na sklep
          * @todo: wyślij mail
          *
          */
@@ -99,7 +148,7 @@ const webhookHandler: NextApiHandler = async (req, res) => {
         /**
          *
          * @todo: zmień status order
-         * @todo: wyślij mail
+         * @todo: wyślij mail o możliwości ponowienia płatności
          *
          */
         console.log(`checkout.session.async_payment_failed`, event.data.object);
