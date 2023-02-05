@@ -1,48 +1,70 @@
-# next-demo-shop
+# Next.js Demo Sjop
 
-## środowisko
+Next.js e-commerce
 
-- System:
-  - OS: Windows 10 10.0.19043
-- Binaries:
-  - Node: 16.15.1
-  - Yarn: 1.22.17
-  - npm: 8.11.0
-  - git: 2.31.1.windows.1
-- Browsers:
-  - Brave
-- npmPackages:
-  - next: 12.3.1 => 12.3.1
-  - react: 18.2.0 => 18.2.0
+## 🧰 What This Includes
 
-## git
+-   [Yarn](https://yarnpkg.com/en/)
+-   [Next.js](https://nextjs.org/)
+-   [Hygraph CMS](https://hygraph.com/docs)
+-   [ApolloGraphQL](https://www.apollographql.com/docs/)
+-   [Stripe](https://stripe.com/docs)
 
-[git-folw](https://frontstack.pl/praca-z-git-git-flow/)
+## 🚀 Getting Started
 
-### branche
+## 🍃 Envirolment
 
-- main – produkcyjna wersja aplikacji. Do tego brancha będziemy mergować tylko te zmiany, które już zostały wydane na produkcję oraz krytyczne hotfixy.
-- hotfix – jedyna gałąź bazująca ma masterze. To właśnie ona służy do szybkiego naprawiania krytycznych błędów występujących na produkcji.
-- release – na tym branchu przygotowywany jest release kolejnej wersji aplikacji. To właśnie wersja aplikacji z tego brancha trafia na produkcję.
-- develop – gałąź ta jest „nieoficjalnym” masterem podczas pracy nad releasem. Z tego brancha programiści tworzą swoje gałęzie robocze i do niego mergują (rebase-ują) swoją pracę. Gdy praca nad wszystkimi funkcjonalnościami w danym releasie jest gotowa, branch ten jest mergowany do gałęzi „release”.
-- feature/nazwa – na tych gałęziach pracujemy na co dzień i tworzymy nowe funkcjonalności.
+-   System:
+    -   OS: Windows 10 10.0.19043
+-   Binaries:
+    -   Node: 16.15.1
+    -   Yarn: 1.22.17
+    -   npm: 8.11.0
+    -   git: 2.31.1.windows.1
+-   Browsers:
+    -   Brave
+-   npmPackages:
+    -   next: 12.3.1 => 12.3.1
+    -   react: 18.2.0 => 18.2.0
 
-### prefixy
+### Requirements
 
-- feat(feature): ...
-- fix(bug fix): ...
-- docs(documentation): ...
-- style(formatting, missing semicolons): ...
-- refactor: ...
-- test(when adding missing tests): ...
+-   [Yarn](https://yarnpkg.com/en/)
 
-## linki, pomoce, pomysły
+### Quick Start
 
-[git-tag](https://stormit.pl/git-tag/#git-tag-tagowanie-w-git-add-push-checkout-wprowadzenie)
-[prefixy](https://piecioshka.pl/blog/2019/03/23/husky-commitlint-git-changelog.html)
-[prettier](https://prettier.io/docs/en/options.html)
-[Jak git rebase pomoże Ci posprzątać w commitach](https://bulldogjob.pl/readme/jak-git-rebase-pomoze-ci-posprzatac-w-commitachv)
+````
+yarn create next-app -e https://github.com/GrzegorzNecka/next-demo-shop
 
-- sipmle browser
-- better graphQl package -> [urql](https://formidable.com/open-source/urql/)
-- graphql-code-generator -> [link](https://www.the-guild.dev/graphql/codegen)
+
+### Running the Project
+First, run the development server:
+
+```bash
+yarn dev
+````
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+
+## Git
+
+[Git-folw](https://frontstack.pl/praca-z-git-git-flow/)
+
+### Branches
+
+-   main – produkcyjna wersja aplikacji. Do tego brancha będziemy mergować tylko te zmiany, które już zostały wydane na produkcję oraz krytyczne hotfixy.
+-   hotfix – jedyna gałąź bazująca ma masterze. To właśnie ona służy do szybkiego naprawiania krytycznych błędów występujących na produkcji.
+-   release – na tym branchu przygotowywany jest release kolejnej wersji aplikacji. To właśnie wersja aplikacji z tego brancha trafia na produkcję.
+-   develop – gałąź ta jest „nieoficjalnym” masterem podczas pracy nad releasem. Z tego brancha programiści tworzą swoje gałęzie robocze i do niego mergują (rebase-ują) swoją pracę. Gdy praca nad wszystkimi funkcjonalnościami w danym releasie jest gotowa, branch ten jest mergowany do gałęzi „release”.
+-   feature/nazwa – na tych gałęziach pracujemy na co dzień i tworzymy nowe funkcjonalności.
+
+### Prefixes
+
+-   feat(feature): ...
+-   fix(bug fix): ...
+-   docs(documentation): ...
+-   style(formatting, missing semicolons): ...
+-   refactor: ...
+-   test(when adding missing tests): ...
