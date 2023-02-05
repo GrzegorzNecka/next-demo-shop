@@ -1,13 +1,17 @@
+import type { PaymentIntent } from '@stripe/stripe-js/types/api';
 import { authApolloClient } from 'graphQL/apolloClient';
 import type {
+    PublishOrderMutation,
+    PublishOrderMutationVariables,
     UpdateOrderPaymentStatusMutation,
     UpdateOrderPaymentStatusMutationVariables,
 } from 'graphQL/generated/graphql';
+import { PublishOrderDocument } from 'graphQL/generated/graphql';
 import { UpdateOrderPaymentStatusDocument } from 'graphQL/generated/graphql';
 
 type UpdateOrderPaymentStatus = {
     orderId: string;
-    stripePaymentIntentStatus: string;
+    stripePaymentIntentStatus: PaymentIntent.Status;
 };
 
 export const updateOrderPaymentStatus = async ({
@@ -27,5 +31,14 @@ export const updateOrderPaymentStatus = async ({
         fetchPolicy: 'no-cache',
     });
 
-    return data;
+    const publishCart = await authApolloClient.mutate<
+        PublishOrderMutation,
+        PublishOrderMutationVariables
+    >({
+        mutation: PublishOrderDocument,
+        variables: { id: orderId },
+        fetchPolicy: 'no-cache',
+    });
+
+    return data?.updateOrder?.id;
 };

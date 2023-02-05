@@ -284,7 +284,7 @@ mutation UpdateOrderPaymentStatus($orderId: ID!, $stripePaymentIntentStatus: Str
 }
 
 query GetOrderItemsByOrderId($orderId: ID!) {
-    order(where: { id: $orderId }, stage: DRAFT) {
+    order(where: { id: $orderId }) {
         id
         email
         stripePaymentIntentStatus

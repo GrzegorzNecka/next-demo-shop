@@ -5,6 +5,7 @@ import { createEmptyOrder } from 'services/hygraph/order/create-empty-item';
 import { updateOrderItems } from 'services/hygraph/order/update-order-items';
 import { setProductOptionTotal } from 'services/hygraph/product/set-product-option-total';
 import Stripe from 'stripe';
+import { stripeClient } from 'utils/stripe-client';
 import type { StripeCreateCheckout } from 'validations/stripe-checkout-create-schema';
 import { stripeCreateCheckoutSchema } from 'validations/stripe-checkout-create-schema';
 
@@ -19,13 +20,8 @@ import { stripeCreateCheckoutSchema } from 'validations/stripe-checkout-create-s
 
 export const createCheckout = async (payload: StripeCreateCheckout) => {
     //stripe
-    const stripeKey = process.env.STRIPE_SECRET_KEY;
 
-    if (!stripeKey) {
-        throw new Error('missing stripe secret key');
-    }
-
-    const stripe = new Stripe(stripeKey, { apiVersion: '2022-11-15' });
+    const stripe = await stripeClient();
 
     //yup
     const isValid = await stripeCreateCheckoutSchema.isValid(payload);
@@ -113,14 +109,14 @@ export const createCheckout = async (payload: StripeCreateCheckout) => {
 
     const session = await stripe.checkout.sessions.create(paymentObject);
 
-    console.log(' session', session);
+    // console.log(' session', session);
 
     const connectOrderWithStripeCheckout = await connectWithStripeCheckout({
         session,
         payload,
         orderId,
     });
-    console.log('🚀 ~ ~ connectOrderWithStripeCheckout', connectOrderWithStripeCheckout);
+    // console.log('🚀 ~ ~ connectOrderWithStripeCheckout', connectOrderWithStripeCheckout);
 
     /**
      *

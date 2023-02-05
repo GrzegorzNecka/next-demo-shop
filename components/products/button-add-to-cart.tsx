@@ -10,7 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 export const ButtonAddToCart = ({ data, activeOptionId }: ButtonAddToCartProps) => {
     const cartState = useCartState();
 
-    const { data: test } = useQuery({
+    const { data: test, isFetched } = useQuery({
         queryKey: ['total', activeOptionId],
         queryFn: async () => {
             const res = await fetch(`/api/products/totals/${activeOptionId}`, {
@@ -26,7 +26,7 @@ export const ButtonAddToCart = ({ data, activeOptionId }: ButtonAddToCartProps) 
     });
     console.log('🚀 ~ file: ButtonAddToCart ~ test', test?.total);
 
-    const testTotal = test?.total;
+    const refetchTotal = test?.total;
 
     const [quantity, setQuantity] = useState<number>(1);
     const [availableQuantity, setAvailableQuantity] = useState<number>(0);
@@ -41,14 +41,23 @@ export const ButtonAddToCart = ({ data, activeOptionId }: ButtonAddToCartProps) 
 
     useEffect(() => {
         if (cartItemOption) {
-            // setAvailableQuantity(activeOption.total - cartItemOption.quantity);
-            setAvailableQuantity(testTotal - cartItemOption.quantity);
+            setAvailableQuantity(activeOption.total - cartItemOption.quantity);
+
+            if (isFetched) {
+                setAvailableQuantity(refetchTotal - cartItemOption.quantity);
+            }
+
             return;
         }
 
-        // setAvailableQuantity(activeOption.total);
-        setAvailableQuantity(testTotal);
-    }, [cartItemOption, testTotal, activeOption]);
+        setAvailableQuantity(activeOption.total);
+
+        if (isFetched) {
+            setAvailableQuantity(refetchTotal);
+        }
+
+        return;
+    }, [cartItemOption, refetchTotal, isFetched, activeOption]);
 
     return (
         <ButtonAddToCartView
@@ -58,7 +67,7 @@ export const ButtonAddToCart = ({ data, activeOptionId }: ButtonAddToCartProps) 
             quantity={quantity}
             setQuantity={setQuantity}
             availableQuantity={availableQuantity}
-            testTotal={testTotal}
+            refetchTotal={refetchTotal}
         />
     );
 };
@@ -72,7 +81,7 @@ export const ButtonAddToCartView = ({
     quantity,
     setQuantity,
     availableQuantity,
-    testTotal,
+    refetchTotal,
 }: ButtonAddToCartViewProps) => {
     //
 
@@ -93,7 +102,7 @@ export const ButtonAddToCartView = ({
 
     return (
         <>
-            <p>test total : {testTotal}</p>
+            <p>test total : {refetchTotal}</p>
             <div>
                 {availableQuantity ? (
                     <p>

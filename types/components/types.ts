@@ -45,7 +45,7 @@ export interface ButtonAddToCartViewProps {
     readonly quantity: number;
     readonly setQuantity: React.Dispatch<React.SetStateAction<number>>;
     readonly availableQuantity: number;
-    readonly testTotal: number | undefined;
+    readonly refetchTotal: number | undefined;
 }
 
 export interface ButtonAddToCartProps {

@@ -13651,7 +13651,7 @@ export type UpdateOrderPaymentStatusMutationResult = Apollo.MutationResult<Updat
 export type UpdateOrderPaymentStatusMutationOptions = Apollo.BaseMutationOptions<UpdateOrderPaymentStatusMutation, UpdateOrderPaymentStatusMutationVariables>;
 export const GetOrderItemsByOrderIdDocument = gql`
     query GetOrderItemsByOrderId($orderId: ID!) {
-  order(where: {id: $orderId}, stage: DRAFT) {
+  order(where: {id: $orderId}) {
     id
     email
     stripePaymentIntentStatus

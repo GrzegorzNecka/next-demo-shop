@@ -4,6 +4,7 @@ import Stripe from 'stripe';
 import { buffer } from 'micro';
 import { finalizeCheckout } from 'services/stripe/checkout/finalize-checkout';
 import { startPayment } from 'services/stripe/payment-intent/start-payment';
+import { stripeClient } from 'utils/stripe-client';
 
 /**
  *
@@ -31,7 +32,6 @@ export const config = {
     },
 };
 
-const stripeKey = process.env.STRIPE_SECRET_KEY;
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 const webhookHandler: NextApiHandler = async (req, res) => {
@@ -40,12 +40,12 @@ const webhookHandler: NextApiHandler = async (req, res) => {
 
     let event: StripeWebhookEvents = req.body;
 
-    if (!stripeKey || !endpointSecret || !sig) {
-        res.status(500).json({ message: 'missing STRIPE_SECRET_KEY' });
+    if (!endpointSecret || !sig) {
+        res.status(500).json({ message: 'missing STRIPE_ENDPOINT_SECRET_KEY' });
         return;
     }
 
-    const stripe = new Stripe(stripeKey, { apiVersion: '2022-11-15' });
+    const stripe = await stripeClient();
 
     try {
         event = stripe.webhooks.constructEvent(buf, sig, endpointSecret) as StripeWebhookEvents;
@@ -66,11 +66,12 @@ const webhookHandler: NextApiHandler = async (req, res) => {
 
     if (event.type === `payment_intent.created`) {
         console.log(`event - payment_intent.created `, event.data.object);
+        console.log('event - payment_intent.created,', event.data.object.status);
 
         const start = await startPayment({
             cartId: event.data.object.metadata.cartId,
             orderId: event.data.object.metadata.orderId,
-            stripePaymentIntentStatus: event.data.object.id,
+            stripePaymentIntentStatus: event.data.object.status,
         });
 
         /**
@@ -79,12 +80,11 @@ const webhookHandler: NextApiHandler = async (req, res) => {
          * @todo: wyślij mail
          *
          */
-
-        console.log(`event - payment_intent.created `, event.data.object);
     }
 
     if (event.type === `payment_intent.succeeded`) {
         console.log(`event - payment_intent.succeeded`, event.data.object);
+        console.log('event - payment_intent.succeeded,', event.data.object.status);
 
         const finalize = await finalizeCheckout({
             orderId: event.data.object.metadata.orderId,

@@ -12,7 +12,6 @@ import { changeToCurrency, moveTheComa } from 'utils/currency';
 
 const CheckoutSuccessPage = () => {
     const router = useRouter();
-    // const { status } = useSession();
 
     const checkoutSessionId = router.query.session_id;
 
@@ -56,9 +55,14 @@ const CheckoutSuccessPage = () => {
                                 return (
                                     <li key={item.productName}>
                                         <p>
-                                            {item.productName} x {item.quantity} ={' '}
+                                            {item.productName}{' '}
                                             {item?.price &&
-                                                changeToCurrency(moveTheComa(item.price))}
+                                                changeToCurrency(moveTheComa(item.price))}{' '}
+                                            x {item.quantity} ={' '}
+                                            {item?.price &&
+                                                changeToCurrency(
+                                                    moveTheComa(item.quantity * item.price),
+                                                )}
                                         </p>
                                     </li>
                                 );
